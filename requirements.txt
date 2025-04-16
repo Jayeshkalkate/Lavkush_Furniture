@@ -33,14 +33,6 @@ email_validator==2.2.0
 executing==2.2.0
 fastjsonschema==2.21.1
 file==0.3.0
-Flask==2.3.3
-Flask-AppBuilder==4.5.0
-Flask-Babel==2.0.0
-Flask-JWT-Extended==4.6.0
-Flask-Limiter==3.7.0
-Flask-Login==0.6.3
-Flask-SQLAlchemy==2.5.1
-Flask-WTF==1.2.1
 fonttools==4.57.0
 fqdn==1.5.1
 greenlet==3.0.3
@@ -73,7 +65,7 @@ nbclient==0.10.2
 nbconvert==7.16.6
 nbformat==5.10.4
 nest-asyncio==1.6.0
-numpy==2.2.4
+numpy==1.24.4
 ordered-set==4.1.0
 overrides==7.7.0
 packaging==24.1
@@ -97,8 +89,6 @@ python-dateutil==2.9.0.post0
 python-decouple==3.8
 python-json-logger==3.3.0
 pytz==2024.1
-pywin32==310
-pywinpty==2.0.15
 PyYAML==6.0.1
 pyzmq==26.3.0
 referencing==0.35.1
@@ -107,7 +97,7 @@ rfc3339-validator==0.1.4
 rfc3986-validator==0.1.1
 rich==13.7.1
 rpds-py==0.18.1
-scipy==1.15.2
+scipy==1.10.1
 Send2Trash==1.8.3
 setuptools==78.1.0
 six==1.16.0
