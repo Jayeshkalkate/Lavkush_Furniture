@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right,#4083be , #9cbfdd);
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+            background: #2f4f4f;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 70%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background-color: #232426;
+            color: #000000;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .login-link a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <h2>ℝ𝕖𝕘𝕚𝕤𝕥𝕖𝕣 𝕥𝕠 𝕃𝕒𝕧𝕜𝕦𝕤𝕙 𝔽𝕦𝕣𝕟𝕚𝕥𝕦𝕣𝕖</h2>
+
+        <form method="post">
+            {% csrf_token %}
+        
+            <label for="full_name">👤 Full Name :</label>
+            <input type="text" id="full_name" name="full_name" required autofocus>
+        
+            <label for="email">📧 Email :</label>
+            <input type="email" id="email" name="email" required>
+        
+            <label for="phone_number">📞 Phone :</label>
+            <input type="number" id="phone_number" name="phone_number" required pattern="[0-9]{10}" title="Enter 10 digit phone number">
+        
+            <label for="address">🏠 Address :</label>
+            <textarea type="text" id="address" name="address" rows="3" required></textarea>
+        
+            <label for="city">🏙️ City :</label>
+            <input type="text" id="city" name="city" required>
+        
+            <label for="username">🙍 Username :</label>
+            <input type="text" id="username" name="username" required>
+        
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        
+            <button type="submit">✅ Register</button>
+        </form>
+        
+        <div class="login-link">
+            Already have an account ❓ 
+            <br>
+            <br>
+            <a href="{% url 'login' %}">🚪 Login</a>
+        </div>
+        <div class="messages">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

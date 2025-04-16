@@ -1,0 +1,58 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Untree.co">
+  <meta name="description" content="Lavkush Furniture - Elegant handcrafted furniture for your perfect space.">
+  <meta name="keywords" content="Lavkush Furniture, furniture, home decor, handcrafted furniture">
+
+  <link rel="shortcut icon" href="{% static 'images/lavkushfurniturelogo.jpeg' %}">
+
+  <title>Lavkush Furniture Website</title>
+
+  <!-- Stylesheets -->
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="{% static 'css/tiny-slider.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  
+</head>
+
+<body>
+
+  <!-- Google Translate -->
+  <div id="google_translate_element"></div>
+
+  <!-- Start Header/Navigation -->
+  <nav class="custom-navbar navbar navbar-expand-md navbar-dark bg-dark" aria-label="Lavkush Furniture navigation bar">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{% url 'homepage' %}">
+        <img src="{% static 'images/lavkushfurniturelogo.jpeg' %}" alt="Lavkush Furniture Logo" style="height: 70px; width: 70px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+        <span style="font-family: 'Courier New', Courier, monospace;">𝕃𝕒𝕧𝕜𝕦𝕤𝕙 𝔽𝕦𝕣𝕟𝕚𝕥𝕦𝕣𝕖</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+          <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'homepage' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'gallery' %}">Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'aboutus' %}">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'blog' %}">Blog</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'contactus' %}">Contact</a></li>
+          <!-- Button to toggle Dark/Light Mode -->
+        </ul>
+
+        <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-4">
+          <li><a class="nav-link" href="{% url 'userprofile' %}"><img src="{% static 'images/user.svg' %}" alt="User Profile"></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- End Header/Navigation -->

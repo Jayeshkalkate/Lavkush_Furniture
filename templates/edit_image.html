@@ -1,0 +1,22 @@
+{% load static %}
+{% load cloudinary %}
+{% include "header.html" %}
+
+<div class="container my-5">
+    <h2>Edit Image and Caption</h2>
+    <form method="POST" enctype="multipart/form-data" class="bg-light p-4 rounded shadow">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.image.label_tag }}
+            {{ form.image }}
+        </div>
+        <div class="mb-3">
+            {{ form.caption.label_tag }}
+            {{ form.caption }}
+        </div>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <a href="{% url 'gallery' %}" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+
+{% include "footer.html" %}
