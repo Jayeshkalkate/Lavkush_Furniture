@@ -17,12 +17,13 @@ DATABASES = {
     }
 }
 
+
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = config('SECRET_KEY')  # Use a secret key from your .env file
+SECRET_KEY = config('SECRET_KEY') # Use a secret key from your .env file
 
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=lambda v: v.split(','))
+ALLOWED_HOSTS = ['lavkushfurniture.onrender.com', 'localhost']
 
 # Application definition
 INSTALLED_APPS = [

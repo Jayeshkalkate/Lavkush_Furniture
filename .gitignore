@@ -1,6 +1,33 @@
-__pycache__/
+# Python files
 *.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.db
 *.sqlite3
-env/
-.env
+
+# Django files
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+/media/
 staticfiles/
+
+# Cloudinary files
+*.cloudinary
+
+# VS Code files
+.vscode/
+
+# IDE files
+.idea/
+
+# environment variables
+.env
+
+# Render specific (for deployments)
+render.yaml

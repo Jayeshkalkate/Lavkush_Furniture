@@ -1,21 +1,23 @@
 services:
   - type: web
-    name: lavkush-furniture
+    name: lavkushfurniture
     env: python
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn lavkushfurniture.wsgi:application"
     envVars:
-      - key: DEBUG
-        value: "False"
       - key: SECRET_KEY
-        value: your-secret-key
-      - key: CLOUDINARY_CLOUD_NAME
-        value: your-cloud-name
-      - key: CLOUDINARY_API_KEY
-        value: your-api-key
-      - key: CLOUDINARY_API_SECRET
-        value: your-api-secret
-      - key: EMAIL_HOST_PASSWORD
-        value: your-app-password
+        value: &src3*3rk&y*bgpo*1i=ml_h%#+4ygbol3vc(y%-fb33ow2e^p
+      - key: DEBUG
+        value: 'False'
       - key: ALLOWED_HOSTS
-        value: lavkush-furniture.onrender.com
+        value: lavkushfurniture.onrender.com
+      - key: EMAIL_HOST_PASSWORD
+        value: dhty ygvj cgxm nrkw
+      - key: CLOUDINARY_CLOUD_NAME
+        value: dqsl4l7l2
+      - key: CLOUDINARY_API_KEY
+        value: 674687165713424
+      - key: CLOUDINARY_API_SECRET
+        value: DgxOAwtXMgewi-5DrenIuB2X_4U
+      - key: CLOUDINARY_URL
+        value: cloudinary://674687165713424:DgxOAwtXMgewi-5DrenIuB2X_4U@dqsl4l7l2
