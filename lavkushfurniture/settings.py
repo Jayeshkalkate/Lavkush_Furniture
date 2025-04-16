@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 from decouple import config
 import cloudinary
-import dj_database_url
+# import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,7 +16,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = config('SECRET_KEY') # Use a secret key from your .env file
