@@ -22,10 +22,6 @@ def homepage(request):
 def aboutus(request):
     return render(request, "aboutus.html")
 
-# @login_required(login_url='login')
-# def about(request):
-#     return render(request, "about.html")
-
 @login_required(login_url='login')
 def blog(request):
     return render(request, "blog.html")
@@ -37,21 +33,6 @@ def cart(request):
 @login_required(login_url='login')
 def checkout(request):
     return render(request, "checkout.html")
-
-# @login_required(login_url='login')
-# def contact(request):
-#     if request.method == "POST":
-#         first_name = request.POST.get('first_name')
-#         last_name = request.POST.get('last_name')
-#         email = request.POST.get('email')
-#         message = request.POST.get('message')
-
-#         if first_name and last_name and email and message:
-#             send_email_to_client(first_name, last_name, email, message)
-#             return HttpResponse("Email sent successfully!")
-#         else:
-#             return HttpResponse("Please fill in all fields.")
-#     return render(request, "contact.html")
 
 @login_required(login_url='login')
 def contact(request):

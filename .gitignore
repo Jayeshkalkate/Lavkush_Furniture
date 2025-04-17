@@ -31,3 +31,6 @@ staticfiles/
 
 # Render specific (for deployments)
 render.yaml
+
+# keep the file locally not shows on git
+create_admin.py

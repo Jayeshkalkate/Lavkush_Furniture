@@ -136,9 +136,22 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-# Configure Cloudinary manually for template rendering
-# cloudinary.config(
-#     cloud_name=config('CLOUDINARY_CLOUD_NAME'),
-#     api_key=config('CLOUDINARY_API_KEY'),
-#     api_secret=config('CLOUDINARY_API_SECRET')
-# )
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

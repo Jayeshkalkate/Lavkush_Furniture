@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Items
+import logging
 
 def register(request):  
     if request.method == "POST":
@@ -33,6 +34,9 @@ def register(request):
 
     return render(request, "register.html")
 
+# Set up logging
+logger = logging.getLogger(__name__)
+
 def user_login(request):
     # If user is already logged in, redirect to the homepage
     if request.user.is_authenticated:
@@ -41,13 +45,27 @@ def user_login(request):
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
+        
+        # Log the attempt to authenticate
+        logger.info(f"Attempting to authenticate user: {username}")
+        print(f"Attempting to authenticate user: {username}")  # This is for debugging
+
         user = authenticate(request, username=username, password=password)
+        
         if user is not None:
+            # Successful login
+            logger.info(f"User {username} authenticated successfully.")
+            print(f"User {username} authenticated successfully.")  # For debugging
             login(request, user)
             return redirect("homepage")  # Redirect to homepage after successful login
         else:
+            # Failed login attempt
+            logger.warning(f"Failed login attempt for username: {username}")
+            print(f"Failed login attempt for username: {username}")  # For debugging
             messages.error(request, "Invalid Credentials")
+    
     return render(request, "login.html")
+
 
 def user_logout(request):
     logout(request)
