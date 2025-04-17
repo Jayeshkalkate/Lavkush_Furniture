@@ -3,17 +3,20 @@ services:
     name: lavkushfurniture
     env: python
     pythonVersion: 3.10
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
-    startCommand: "gunicorn lavkushfurniture.wsgi:application"
+    buildCommand: >
+      pip install --upgrade pip &&
+      pip install -r requirements.txt &&
+      python manage.py collectstatic --noinput
+    startCommand: gunicorn lavkushfurniture.wsgi:application
     envVars:
       - key: SECRET_KEY
-        value: &src3*3rk&y*bgpo*1i=ml_h%#+4ygbol3vc(y%-fb33ow2e^p
+        value: your-secret-key-here
       - key: DEBUG
         value: 'False'
       - key: ALLOWED_HOSTS
         value: lavkushfurniture.onrender.com
       - key: EMAIL_HOST_PASSWORD
-        value: dhty ygvj cgxm nrkw
+        value: your-email-password-here
       - key: CLOUDINARY_CLOUD_NAME
         value: dqsl4l7l2
       - key: CLOUDINARY_API_KEY
