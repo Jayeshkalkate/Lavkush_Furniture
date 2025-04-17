@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path('custom-admin/', admin.site.urls),
 
     # Login is handled in account.urls
     path('', views.homepage, name='homepage'),

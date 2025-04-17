@@ -136,7 +136,11 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
+# Email settings for Django Admin notifications (e.g., password reset)
+DEFAULT_FROM_EMAIL = 'kalkatejayesh@mail.com'
 
+
+ADMIN_URL = 'custom-admin'  # This will make the admin accessible at /custom-admin/
 
 LOGGING = {
     'version': 1,
