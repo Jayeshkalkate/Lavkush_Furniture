@@ -20,7 +20,7 @@ DATABASES = {
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = config('SECRET_KEY') # Use a secret key from your .env file
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default='False').lower() == 'true'
 
 ALLOWED_HOSTS = ['lavkushfurniture.onrender.com', 'localhost']
 
