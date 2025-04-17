@@ -8,10 +8,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Login is handled in account.urls
-    path('', views.homepage, name='homepage'),  # Redirect to homepage after login
+    path('', views.homepage, name='homepage'),
 
     # Include the account app URLs
-    path('account/', include('account.urls')),  # Routes for login, logout, register
+    path('account/', include('account.urls')),
 
     # Gallery app
     path('gallery/', include('gallery.urls')),
