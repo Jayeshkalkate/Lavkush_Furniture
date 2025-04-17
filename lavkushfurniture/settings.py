@@ -24,6 +24,8 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['lavkushfurniture.onrender.com', 'localhost']
 
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -56,7 +58,8 @@ ROOT_URLCONF = 'lavkushfurniture.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR, "templates"],
+        # 'DIRS': [BASE_DIR, "templates"],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -134,8 +137,8 @@ CLOUDINARY_STORAGE = {
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Configure Cloudinary manually for template rendering
-cloudinary.config(
-    cloud_name=config('CLOUDINARY_CLOUD_NAME'),
-    api_key=config('CLOUDINARY_API_KEY'),
-    api_secret=config('CLOUDINARY_API_SECRET')
-)
+# cloudinary.config(
+#     cloud_name=config('CLOUDINARY_CLOUD_NAME'),
+#     api_key=config('CLOUDINARY_API_KEY'),
+#     api_secret=config('CLOUDINARY_API_SECRET')
+# )
