@@ -4,4 +4,4 @@ from .models import ImageWithCaption
 class ImageForm(forms.ModelForm):
     class Meta:
         model = ImageWithCaption
-        fields = ['image', 'caption', 'price']
+        fields = ['image', 'caption']

@@ -21,7 +21,6 @@
                     <div class="product-item text-center shadow rounded p-3">
                         {% cloudinary image.image.public_id class="img-fluid product-thumbnail mb-2" alt=image.caption style="max-height: 300px; object-fit: cover;" %}
                         <h3 class="product-title">{{ image.caption }}</h3>
-                        <h3 class="product-title">{{ image.price }}</h3>
                         <small class="text-muted">Uploaded at: {{ image.uploaded_at }}</small>
                         
                         {% if user.is_superuser %}
