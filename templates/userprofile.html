@@ -5,94 +5,115 @@
   <title>User Profile</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #4083be, #2F4F4F);
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background: linear-gradient(-45deg, #83a4d4, #b6fbff, #ffffff, #dff9fb);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+  }
 
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .container {
+    width: 100%;
+    max-width: 600px;
+    margin: 80px auto 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .container:hover {
+    transform: scale(1.01);
+  }
+
+  h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 28px;
+  }
+
+  .profile-info {
+    font-size: 17px;
+    line-height: 1.8;
+  }
+
+  .profile-info p {
+    margin: 10px 0;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    border-left: 5px solid #3498db;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+  }
+
+  .profile-info p:hover {
+    background-color: #e0e0e0;
+  }
+
+  .profile-info strong {
+    display: inline-block;
+    width: 150px;
+    color: #555;
+  }
+
+  form {
+    text-align: center;
+  }
+
+  button {
+    margin-top: 25px;
+    padding: 12px 25px;
+    background-color: #2c3e50;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #1a242f;
+    transform: scale(1.05);
+  }
+
+  @media screen and (max-width: 500px) {
     .container {
-      width: fit-content;
-      min-width: 300px;
-      max-width: 90%;
-      margin: 60px auto;
-      background: #2F4F4F;
-      padding: 35px 40px;
-      border-radius: 15px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      transition: transform 0.3s ease;
-    }
-
-
-    .container:hover {
-      transform: scale(1.01);
-    }
-
-    h2 {
-      text-align: center;
-      color: #ffffff;
-      margin-bottom: 25px;
-      font-size: 28px;
-    }
-
-    .profile-info {
-      font-size: 18px;
-      line-height: 1.8;
-    }
-
-    .profile-info p {
-      margin: 12px 0;
-      padding: 8px 12px;
-      background-color: #d3d3d3;
-      border-left: 4px solid #007BFF;
-      border-radius: 6px;
-      transition: background-color 0.3s ease;
-    }
-
-    .profile-info p:hover {
-      background-color: #be9d9d;
+      margin: 40px 15px;
+      padding: 25px 20px;
     }
 
     .profile-info strong {
-      display: inline-block;
-      width: 140px;
-      color: #555;
+      width: 120px;
     }
+  }
+</style>
 
-    button {
-      display: block;
-      margin: 20px auto 0;
-      padding: 12px 25px;
-      background-color: #232426;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-      transform: scale(1.05);
-    }
-  </style>
 </head>
 <body>
 
   {% with request.user.profile as profile %}
   <div class="container">
-    <h2>💻 Welcome, {{ request.user.username }}</h2>
+    <h2>👋 Welcome, {{ request.user.username }}</h2>
     <div class="profile-info">
-      <p><strong>👤 Full Name :</strong> {{ request.user.first_name }} {{ request.user.last_name }}</p>
-      <p><strong>🙍 Username :</strong> {{ request.user.username }}</p>
-      <p><strong>📧 Email :</strong> {{ request.user.email }}</p>
-      <p><strong>📞 Phone :</strong> {{ profile.phone_number }}</p>
-      <p><strong>🏠 Address :</strong> {{ profile.address }}</p>
-      <p><strong>🏙️ City :</strong> {{ profile.city }}</p>
+      <p><strong>Full Name:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</p>
+      <p><strong>Username:</strong> {{ request.user.username }}</p>
+      <p><strong>Email:</strong> {{ request.user.email }}</p>
+      <p><strong>Phone:</strong> {{ profile.phone_number }}</p>
+      <p><strong>Address:</strong> {{ profile.address }}</p>
+      <p><strong>City:</strong> {{ profile.city }}</p>
     </div>
   </div>
   {% endwith %}
