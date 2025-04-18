@@ -210,12 +210,18 @@
       ➡️ Login
       <span class="spinner" id="spinner"></span>
     </button>
+
+    <div style="text-align: right; margin-top: -10px; margin-bottom: 15px;">
+        <a href="{% url 'password_reset' %}">Forgot Password?</a>
+    </div>
+      
   </form>
 
   <div class="register">
     Don't have an account ❓<br><br>
     <a href="{% url 'register' %}">📝 Register</a>
   </div>
+  
 </div>
 
 <script>
