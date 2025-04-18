@@ -28,17 +28,14 @@
       width: 100%;
       padding: 0 10px;
       position: relative;
+      background: url("{% static 'images/loginbackground.png' %}") no-repeat center center/cover;
+      animation: moveBg 20s linear infinite;
     }
 
-    body::before {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: url("{% static 'images/loginbackground.png' %}"), #000;
-      background-position: center;
-      background-size: cover;
-      z-index: -1;
+    @keyframes moveBg {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .container {
@@ -50,6 +47,7 @@
       border: 1px solid rgba(255, 255, 255, 0.5);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
+      background-color: rgba(255,255,255,0.1);
     }
 
     h2 {
@@ -84,6 +82,24 @@
     input::placeholder,
     textarea::placeholder {
       color: rgba(255, 255, 255, 0.8);
+    }
+
+    .show-password {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      font-size: 14px;
+      gap: 5px;
+      color: #000000;
+    }
+
+    .validation-error {
+      background-color: rgba(255, 0, 0, 0.1);
+      color: #b30000;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 14px;
     }
 
     button {
@@ -122,9 +138,7 @@
     }
 
     @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
 
     .login-link {
@@ -165,11 +179,9 @@
 
 <div class="container">
 
-    <hr style="border: 1px solid #ff6600;">
-  
-    <h2><i class="fas fa-user-plus"></i> Register to Lavkush Furniture</h2>
-  
-    <hr style="border: 1px solid #ff6600;">
+  <hr style="border: 1px solid #ff6600;">
+  <h2><i class="fas fa-user-plus"></i> Register to Lavkush Furniture</h2>
+  <hr style="border: 1px solid #ff6600;">
 
   {% if messages %}
     <div class="messages">
@@ -179,11 +191,13 @@
     </div>
   {% endif %}
 
+  <div id="frontend-error" class="validation-error" style="display: none;"></div>
+
   <form method="post" id="register-form">
     {% csrf_token %}
 
     <label for="full_name"><i class="fas fa-user"></i> Full Name:</label>
-    <input type="text" id="full_name" name="full_name" required>
+    <input type="text" id="full_name" name="full_name" required autofocus>
 
     <label for="email"><i class="fas fa-envelope"></i> Email:</label>
     <input type="email" id="email" name="email" required>
@@ -203,6 +217,11 @@
     <label for="password"><i class="fas fa-lock"></i> Password:</label>
     <input type="password" id="password" name="password" required>
 
+    <div class="show-password">
+      <input type="checkbox" id="toggle-password">
+      <label for="toggle-password">Show Password</label>
+    </div>
+
     <button type="submit" id="register-button">
       ✅ Register
       <span class="spinner" id="spinner"></span>
@@ -219,8 +238,35 @@
   const form = document.getElementById("register-form");
   const button = document.getElementById("register-button");
   const spinner = document.getElementById("spinner");
+  const password = document.getElementById("password");
+  const togglePassword = document.getElementById("toggle-password");
+  const errorDiv = document.getElementById("frontend-error");
 
-  form.addEventListener("submit", function () {
+  togglePassword.addEventListener("change", () => {
+    password.type = togglePassword.checked ? "text" : "password";
+  });
+
+  form.addEventListener("submit", function (e) {
+    const requiredFields = ["full_name", "email", "phone_number", "address", "city", "username", "password"];
+    let hasError = false;
+
+    errorDiv.style.display = "none";
+    errorDiv.innerText = "";
+
+    requiredFields.forEach(id => {
+      const field = document.getElementById(id);
+      if (!field.value.trim()) {
+        hasError = true;
+      }
+    });
+
+    if (hasError) {
+      e.preventDefault();
+      errorDiv.innerText = "Please fill in all the required fields.";
+      errorDiv.style.display = "block";
+      return;
+    }
+
     button.disabled = true;
     spinner.style.display = "inline-block";
   });
