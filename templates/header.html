@@ -1,8 +1,7 @@
 <!doctype html>
-<html lang="en">
+< lang="en">
 
 <head>
-
   {% load static %}
 
   <meta charset="utf-8">
@@ -10,7 +9,7 @@
   <meta name="author" content="Untree.co">
   <meta name="description" content="Lavkush Furniture - Elegant handcrafted furniture for your perfect space.">
   <meta name="keywords" content="Lavkush Furniture, furniture, home decor, handcrafted furniture">
-  
+
   <link rel="shortcut icon" href="{% static 'images/lavkushfurniturelogo.jpeg' %}">
 
   <!-- Stylesheets -->
@@ -21,9 +20,35 @@
 
   <title>Lavkush Furniture Website</title>
 
+  <!-- Custom CSS for Responsiveness -->
+  <style>
+    @media (max-width: 768px) {
+      .navbar-brand img {
+        height: 50px;
+        width: 50px;
+      }
+
+      .navbar-nav {
+        text-align: center;
+      }
+
+      .navbar-nav .nav-item {
+        margin-bottom: 10px;
+      }
+
+      .custom-navbar-cta {
+        justify-content: center;
+        margin-top: 10px;
+      }
+
+      .navbar-brand span {
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
 
-<body>
+<>
 
   <!-- Google Translate -->
   <div id="google_translate_element"></div>
@@ -33,9 +58,10 @@
     <div class="container">
       <a class="navbar-brand d-flex align-items-center" href="{% url 'homepage' %}">
         <img src="{% static 'images/lavkushfurniturelogo.jpeg' %}" alt="Lavkush Furniture Logo" style="height: 70px; width: 70px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
-        <span style="font-family: 'Courier New', Courier, monospace;">𝕃𝕒𝕧𝕜𝕦𝕤𝕙 𝔽𝕦𝕣𝕟𝕚𝕥𝕦𝕣𝕖</span>
+        <span style="font-family: 'Courier New', Courier, monospace;">Lavkush Furniture</span>
       </a>
 
+      <!-- Mobile Toggler Button -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -48,7 +74,6 @@
           <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'blog' %}">Blog</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'contactus' %}">Contact</a></li>
-          <!-- Button to toggle Dark/Light Mode -->
         </ul>
 
         <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-4">
@@ -58,3 +83,8 @@
     </div>
   </nav>
   <!-- End Header/Navigation -->
+
+  <!-- JavaScript (Bootstrap 5 Bundle for Navbar Toggle) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  
