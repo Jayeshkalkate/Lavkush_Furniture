@@ -47,7 +47,7 @@
       border-radius: 8px;
       padding: 30px;
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
@@ -60,7 +60,7 @@
     h2 {
       font-size: 2rem;
       margin-bottom: 20px;
-      color: #fff;
+      color: #000000;
     }
 
     .input-field {
@@ -93,7 +93,7 @@
       top: 50%;
       left: 30px;
       transform: translateY(-50%);
-      color: #fff;
+      color: #000000;
       font-size: 16px;
       pointer-events: none;
       transition: 0.15s ease;
@@ -107,7 +107,7 @@
     }
 
     .wrapper a {
-      color: #efefef;
+      color: #ff0000;
       text-decoration: none;
     }
 
@@ -180,7 +180,11 @@
 <body>
 
 <div class="wrapper">
+    <hr style="border: 1px solid #ff6600;">
+
   <h2>User Login</h2>
+
+  <hr style="border: 1px solid #ff6600;">
 
   {% if messages %}
     {% for message in messages %}
