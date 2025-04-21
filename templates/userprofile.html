@@ -115,6 +115,12 @@
       <p><strong>Address:</strong> {{ profile.address }}</p>
       <p><strong>City:</strong> {{ profile.city }}</p>
     </div>
+
+    {% if user.is_authenticated and user.is_superuser %}
+      <div class="admin-link">
+        <a href="{% url 'admin_user_list' %}" style="text-align:center; font-size: 18px; color: #3498db; font-weight: bold; display:block; margin-top: 20px;">View All Users</a>
+      </div>
+    {% endif %}
   </div>
   {% endwith %}
 
