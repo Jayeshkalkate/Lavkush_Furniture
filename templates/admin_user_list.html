@@ -18,8 +18,10 @@
             <tbody>
                 {% for user in users %}
                 <tr style="background-color: #f9f9f9;">
-                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.username }}</td>
-                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.email }}</td>
+                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.items.first_name }}</td>
+                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.items.last_name }}</td>
+                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.items.username }}</td>
+                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.items.email }}</td>
                     <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.items.phone_number }}</td>
                     <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.items.address }}</td>
                     <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.items.city }}</td>
