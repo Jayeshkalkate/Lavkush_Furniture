@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'team',
     'cloudinary',
     'cloudinary_storage',
-    'categories',
 ]
 
 MIDDLEWARE = [
