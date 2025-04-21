@@ -1,5 +1,7 @@
-{% extends 'base.html' %}
+{% include "header.html" %}
+
 {% block content %}
+
 <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
     <h2 class="page-title" style="font-size: 2rem; font-weight: bold; margin-bottom: 20px; text-align: center;">All Users & Profile Info</h2>    
     <div class="table-responsive" style="overflow-x: auto; margin-bottom: 20px;">
@@ -62,4 +64,7 @@
         }
     }
 </style>
+
 {% endblock %}
+
+{% include "footer.html" %}
