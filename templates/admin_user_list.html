@@ -1,70 +1,190 @@
+{% load static %}
+
 {% include "header.html" %}
 
-{% block content %}
-
-<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
-    <h2 class="page-title" style="font-size: 2rem; font-weight: bold; margin-bottom: 20px; text-align: center;">All Users & Profile Info</h2>    
-    <div class="table-responsive" style="overflow-x: auto; margin-bottom: 20px;">
-        <table class="user-table" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-            <thead>
-                <tr>
-                    <th style="padding: 12px 15px; text-align: left; border: 1px solid #ddd; background-color: #f4f4f4; font-size: 1.1rem;">Username</th>
-                    <th style="padding: 12px 15px; text-align: left; border: 1px solid #ddd; background-color: #f4f4f4; font-size: 1.1rem;">Email</th>
-                    <th style="padding: 12px 15px; text-align: left; border: 1px solid #ddd; background-color: #f4f4f4; font-size: 1.1rem;">Phone Number</th>
-                    <th style="padding: 12px 15px; text-align: left; border: 1px solid #ddd; background-color: #f4f4f4; font-size: 1.1rem;">Address</th>
-                    <th style="padding: 12px 15px; text-align: left; border: 1px solid #ddd; background-color: #f4f4f4; font-size: 1.1rem;">City</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr style="background-color: #f9f9f9;">
-                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.first_name }}</td>
-                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.last_name }}</td>
-                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.username }}</td>
-                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.email }}</td>
-                    <td style="padding: 12px 15px; border: 1px solid #ddd;">
-                        {% if user.items %}
-                            {{ user.items.phone_number }}
-                        {% else %}
-                            No phone number
-                        {% endif %}
-                    </td>
-                    <td style="padding: 12px 15px; border: 1px solid #ddd;">
-                        {% if user.items %}
-                            {{ user.items.address }}
-                        {% else %}
-                            No address
-                        {% endif %}
-                    </td>
-                    <td style="padding: 12px 15px; border: 1px solid #ddd;">
-                        {% if user.items %}
-                            {{ user.items.city }}
-                        {% else %}
-                            No city
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-<!-- Mobile-Responsive Styles -->
 <style>
-    @media (max-width: 768px) {
-        .user-table th, .user-table td {
-            padding: 8px;
-            font-size: 0.9rem;
-        }
-        .page-title {
-            font-size: 1.6rem;
-        }
-        .user-table {
-            font-size: 0.9rem;
-        }
+  body {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background: url("{% static 'images/tablebackground.png' %}") no-repeat center center/cover;
+    background-size: cover;
+    animation: moveBg 20s linear infinite;
+  }
+
+  @keyframes moveBg {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 80px auto 20px;
+    background: url("{% static 'images/newone.png' %}");
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    color: #000;
+    overflow-x: auto;
+  }
+
+  h2.page-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #f9ff00;
+    text-align: center;
+  }
+
+  .search-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .search-bar input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  .search-bar button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #ff6600;
+    color: white;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .search-bar button:hover {
+    background-color: #e65c00;
+  }
+
+  .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+  }
+
+  .user-table th,
+  .user-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  .user-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+
+  .user-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  @media screen and (max-width: 768px) {
+    .user-table th,
+    .user-table td {
+      padding: 8px;
+      font-size: 0.9rem;
     }
+
+    .container {
+      margin: 40px 15px;
+      padding: 25px 20px;
+    }
+
+    h2.page-title {
+      font-size: 1.6rem;
+    }
+
+    .search-bar {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
 </style>
 
-{% endblock %}
+<div class="container">
+  <h2 class="page-title">All Users & Profile Info</h2>
+
+  <!-- Advanced Search Bar -->
+  <div class="search-bar">
+    <input type="text" id="searchFirstName" placeholder="Search First Name">
+    <input type="text" id="searchLastName" placeholder="Search Last Name">
+    <input type="text" id="searchCity" placeholder="Search City">
+    <button onclick="filterTable()">Search</button>
+    <button onclick="resetFilter()">Reset</button>
+  </div>
+
+  <table class="user-table" id="userTable">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Address</th>
+        <th>City</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.profile.phone_number|default:"No phone number" }}</td>
+        <td>{{ user.profile.address|default:"No address" }}</td>
+        <td>{{ user.profile.city|default:"No city" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function filterTable() {
+    const fname = document.getElementById("searchFirstName").value.toLowerCase();
+    const lname = document.getElementById("searchLastName").value.toLowerCase();
+    const city = document.getElementById("searchCity").value.toLowerCase();
+    const rows = document.querySelectorAll("#userTable tbody tr");
+
+    rows.forEach(row => {
+      const firstName = row.cells[0].textContent.toLowerCase();
+      const lastName = row.cells[1].textContent.toLowerCase();
+      const userCity = row.cells[6].textContent.toLowerCase();
+
+      if (
+        firstName.includes(fname) &&
+        lastName.includes(lname) &&
+        userCity.includes(city)
+      ) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  }
+
+  function resetFilter() {
+    document.getElementById("searchFirstName").value = "";
+    document.getElementById("searchLastName").value = "";
+    document.getElementById("searchCity").value = "";
+    filterTable();  // Show all rows
+  }
+</script>
 
 {% include "footer.html" %}
