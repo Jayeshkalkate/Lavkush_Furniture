@@ -7,16 +7,16 @@
 
 <style>
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Open Sans', sans-serif;
     margin: 0;
     padding: 0;
     color: #333;
-    background: linear-gradient(-45deg, #83a4d4, #b6fbff, #ffffff, #dff9fb);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    background: url("{% static 'images/userprofilebackground.png' %}") no-repeat center center/cover;
+    background-size: cover;
+    animation: moveBg 20s linear infinite;
   }
 
-  @keyframes gradientBG {
+  @keyframes moveBg {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
@@ -26,22 +26,19 @@
     width: 100%;
     max-width: 600px;
     margin: 80px auto 20px;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.85);
     padding: 40px 30px;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-  }
-
-  .container:hover {
-    transform: scale(1.01);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    color: #000;
   }
 
   h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #222;
     text-align: center;
-    color: #2c3e50;
-    margin-bottom: 30px;
-    font-size: 28px;
   }
 
   .profile-info {
@@ -51,21 +48,37 @@
 
   .profile-info p {
     margin: 10px 0;
-    padding: 10px 15px;
-    background-color: #f0f0f0;
-    border-left: 5px solid #3498db;
-    border-radius: 6px;
+    padding: 12px 15px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-left: 5px solid #ff6600;
+    border-radius: 8px;
     transition: background-color 0.3s ease;
   }
 
   .profile-info p:hover {
-    background-color: #e0e0e0;
+    background-color: rgba(255, 255, 255, 0.9);
   }
 
   .profile-info strong {
     display: inline-block;
     width: 150px;
-    color: #555;
+    color: #444;
+  }
+
+  .admin-link {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  .admin-link a {
+    font-size: 16px;
+    color: #ff6600;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .admin-link a:hover {
+    text-decoration: underline;
   }
 
   form {
@@ -73,19 +86,20 @@
   }
 
   button {
-    margin-top: 25px;
+    margin-top: 30px;
     padding: 12px 25px;
-    background-color: #2c3e50;
+    background-color: #ff6600;
     border: none;
     border-radius: 8px;
     color: white;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
 
   button:hover {
-    background-color: #1a242f;
+    background-color: #e65c00;
     transform: scale(1.05);
   }
 
@@ -118,7 +132,7 @@
 
     {% if user.is_authenticated and user.is_superuser %}
       <div class="admin-link">
-        <a href="{% url 'admin_user_list' %}" style="text-align:center; font-size: 18px; color: #3498db; font-weight: bold; display:block; margin-top: 20px;">View All Users</a>
+        <a href="{% url 'admin_user_list' %}">View All Users</a>
       </div>
     {% endif %}
   </div>
