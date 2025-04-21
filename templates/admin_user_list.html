@@ -1,27 +1,50 @@
-{% extends 'base.html' %}  <!-- or your appropriate base template -->
+{% extends 'base.html' %}
 
 {% block content %}
-<h2>All Users & Profile Info</h2>
-<table border="1" cellpadding="10">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th>Address</th>
-            <th>City</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.items.phone_number }}</td>
-            <td>{{ user.items.address }}</td>
-            <td>{{ user.items.city }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <h2 class="page-title" style="font-size: 2rem; font-weight: bold; margin-bottom: 20px; text-align: center;">All Users & Profile Info</h2>
+    
+    <div class="table-responsive" style="overflow-x: auto; margin-bottom: 20px;">
+        <table class="user-table" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <thead>
+                <tr>
+                    <th style="padding: 12px 15px; text-align: left; border: 1px solid #ddd; background-color: #f4f4f4; font-size: 1.1rem;">Username</th>
+                    <th style="padding: 12px 15px; text-align: left; border: 1px solid #ddd; background-color: #f4f4f4; font-size: 1.1rem;">Email</th>
+                    <th style="padding: 12px 15px; text-align: left; border: 1px solid #ddd; background-color: #f4f4f4; font-size: 1.1rem;">Phone Number</th>
+                    <th style="padding: 12px 15px; text-align: left; border: 1px solid #ddd; background-color: #f4f4f4; font-size: 1.1rem;">Address</th>
+                    <th style="padding: 12px 15px; text-align: left; border: 1px solid #ddd; background-color: #f4f4f4; font-size: 1.1rem;">City</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr style="background-color: #f9f9f9;">
+                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.username }}</td>
+                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.email }}</td>
+                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.items.phone_number }}</td>
+                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.items.address }}</td>
+                    <td style="padding: 12px 15px; border: 1px solid #ddd;">{{ user.items.city }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Mobile-Responsive Styles -->
+<style>
+    @media (max-width: 768px) {
+        .user-table th, .user-table td {
+            padding: 8px;
+            font-size: 0.9rem;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+        }
+
+        .user-table {
+            font-size: 0.9rem;
+        }
+    }
+</style>
 {% endblock %}
