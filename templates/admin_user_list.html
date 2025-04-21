@@ -1,14 +1,12 @@
 {% load static %}
 
-{% include "header.html" %}
-
 <style>
   body {
     font-family: 'Open Sans', sans-serif;
     margin: 0;
     padding: 0;
     color: #333;
-    background: url("{% static 'images/tablebackground.png' %}") no-repeat center center/cover;
+    background: url("{% static 'images/background.jpg' %}") no-repeat center center/cover;
     background-size: cover;
     animation: moveBg 20s linear infinite;
   }
@@ -16,14 +14,15 @@
   @keyframes moveBg {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    100% { background-position: 0% 50%; } 
+    /* tablebackground.png */
   }
 
   .container {
     width: 100%;
     max-width: 1200px;
     margin: 80px auto 20px;
-    background: url("{% static 'images/newone.png' %}");
+    /* background: url("{% static 'images/newone.png' %}"); */
     padding: 40px 30px;
     border-radius: 16px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
@@ -32,12 +31,21 @@
   }
 
   h2.page-title {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    font-weight: 600;
-    color: #f9ff00;
-    text-align: center;
-  }
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #f9ff00;
+  text-align: center;
+  letter-spacing: 1.5px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+h2.page-title:hover {
+  color: #fff700;
+  transform: scale(1.05);
+}
+
 
   .search-bar {
     display: flex;
@@ -116,7 +124,7 @@
 </style>
 
 <div class="container">
-  <h2 class="page-title">All Users & Profile Info</h2>
+  <h2 class="page-title">˜”*°•.˜”*°• Lavkush Customers & Profiles •°*”˜.•°*”˜</h2>
 
   <!-- Advanced Search Bar -->
   <div class="search-bar">
@@ -187,4 +195,3 @@
   }
 </script>
 
-{% include "footer.html" %}

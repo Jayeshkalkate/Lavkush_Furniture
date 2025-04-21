@@ -21,7 +21,6 @@ urlpatterns = [
     # Other protected views
     path('aboutus/', views.aboutus, name='aboutus'),
     path('services/', views.services, name='services'),
-    path('blog/', views.blog, name='blog'),
     path('contactus/', views.contact, name='contactus'),
     path('profile/', views.userprofile, name='userprofile'),
     path('ourteam/', views.ourteam, name='ourteam'),

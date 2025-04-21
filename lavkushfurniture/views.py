@@ -23,10 +23,6 @@ def aboutus(request):
     return render(request, "aboutus.html")
 
 @login_required(login_url='login')
-def blog(request):
-    return render(request, "blog.html")
-
-@login_required(login_url='login')
 def cart(request):
     return render(request, "cart.html")
 
