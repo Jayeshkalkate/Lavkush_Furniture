@@ -1,15 +1,96 @@
-{% extends 'base.html' %}
-{% block content %}
-<h2>Your Wishlist</h2>
-{% if wishlist_items %}
-    <ul>
-        {% for w in wishlist_items %}
-            <li>
-                {{ w.item.name }} - <a href="{% url 'remove_from_wishlist' w.item.id %}">Remove ❌</a>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Your wishlist is empty.</p>
-{% endif %}
-{% endblock %}
+{% include "header.html" %}
+
+<style>
+    .wishlist-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .wishlist-container h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+        color: #333;
+    }
+
+    .wishlist-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f9f9f9;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        transition: transform 0.2s, background 0.2s;
+    }
+
+    .wishlist-item:hover {
+        background-color: #eef6ff;
+        transform: scale(1.02);
+    }
+
+    .wishlist-item-name {
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+
+    .remove-btn {
+        text-decoration: none;
+        background-color: #ff4d4d;
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+        font-size: 0.95rem;
+    }
+
+    .remove-btn:hover {
+        background-color: #e60000;
+    }
+
+    @media (max-width: 600px) {
+        .wishlist-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .wishlist-item-name {
+            font-size: 1rem;
+        }
+
+        .remove-btn {
+            font-size: 0.85rem;
+            padding: 0.3rem 0.7rem;
+        }
+    }
+</style>
+
+<div class="wishlist-container">
+    <h2><i class="fas fa-heart"></i> Your Wishlist</h2>
+    {% if wishlist_items %}
+        <ul style="list-style: none; padding: 0;">
+            {% for w in wishlist_items %}
+                <li class="wishlist-item">
+                    <span class="wishlist-item-name">
+                        <i class="fas fa-couch"></i> {{ w.item.name }}
+                    </span>
+                    <a class="remove-btn" href="{% url 'remove_from_wishlist' w.item.id %}">
+                        <i class="fas fa-trash-alt"></i> Remove
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p style="text-align: center;">Your wishlist is empty.</p>
+    {% endif %}
+</div>
+
+{% include "footer.html" %}
+
+<!-- Font Awesome CDN for icons (add once in base template or header) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
