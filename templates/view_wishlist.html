@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Your Wishlist</h2>
+{% if wishlist_items %}
+    <ul>
+        {% for w in wishlist_items %}
+            <li>
+                {{ w.item.name }} - <a href="{% url 'remove_from_wishlist' w.item.id %}">Remove ❌</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Your wishlist is empty.</p>
+{% endif %}
+{% endblock %}

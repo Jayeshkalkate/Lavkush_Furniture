@@ -18,6 +18,9 @@ urlpatterns = [
     # Gallery app
     path('gallery/', include('gallery.urls')),
 
+    # Wishlist    
+    path('wishlist/', include('wishlist.urls')),
+
     # Other protected views
     path('aboutus/', views.aboutus, name='aboutus'),
     path('services/', views.services, name='services'),
