@@ -6,6 +6,19 @@ from django.contrib.auth.decorators import login_required
 from .models import Items
 import logging
 from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import get_object_or_404
+
+@user_passes_test(lambda u: u.is_superuser)
+def delete_user(request, user_id):
+    user_to_delete = get_object_or_404(User, id=user_id)
+
+    if user_to_delete == request.user:
+        messages.error(request, "You cannot delete your own account.")
+    else:
+        user_to_delete.delete()
+        messages.success(request, f"User {user_to_delete.username} deleted successfully.")
+
+    return redirect('admin_user_list')
 
 def register(request):  
     if request.method == "POST":

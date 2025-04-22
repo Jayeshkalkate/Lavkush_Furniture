@@ -136,7 +136,7 @@ h2.page-title:hover {
   </div>
 
   <table class="user-table" id="userTable">
-    <thead>
+    <!-- <thead>
       <tr>
         <th>First Name</th>
         <th>Last Name</th>
@@ -159,7 +159,41 @@ h2.page-title:hover {
         <td>{{ user.profile.city|default:"No city" }}</td>
       </tr>
       {% endfor %}
-    </tbody>
+    </tbody> -->
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.items.phone_number|default:"No phone" }}</td>
+        <td>{{ user.items.address|default:"No address" }}</td>
+        <td>{{ user.items.city|default:"No city" }}</td>
+        <td>
+          {% if user != request.user %}
+          <a href="{% url 'delete_user' user.id %}" 
+             onclick="return confirm('Are you sure you want to delete {{ user.username }}?')" 
+             style="color: red; font-weight: bold;">Delete</a>
+          {% else %}
+          <span style="color: gray;">You</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>    
   </table>
 </div>
 
