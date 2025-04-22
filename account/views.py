@@ -8,6 +8,9 @@ import logging
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import get_object_or_404
 
+# Set up logging
+logger = logging.getLogger(__name__)
+
 @user_passes_test(lambda u: u.is_superuser)
 def delete_user(request, user_id):
     user_to_delete = get_object_or_404(User, id=user_id)
@@ -15,7 +18,13 @@ def delete_user(request, user_id):
     if user_to_delete == request.user:
         messages.error(request, "You cannot delete your own account.")
     else:
+        # Log the deletion
+        items = getattr(user_to_delete, 'items', None)
+        logger.info(f"Deleting user: {user_to_delete.username}, Items: {items}")
+
+        # Delete the user
         user_to_delete.delete()
+
         messages.success(request, f"User {user_to_delete.username} deleted successfully.")
 
     return redirect('admin_user_list')
@@ -36,7 +45,10 @@ def register(request):
             messages.error(request, "Email already registered")
         else:
             user = User.objects.create_user(username=username, email=email, password=password)
-            user.first_name = full_name
+            first_name, *last_name = full_name.split(" ", 1)
+            user.first_name = first_name
+            user.last_name = last_name[0] if last_name else ""
+
             user.save()
 
             # Save additional info to Items model
@@ -47,9 +59,6 @@ def register(request):
             return redirect("homepage")  # Redirect to homepage after login
 
     return render(request, "register.html")
-
-# Set up logging
-logger = logging.getLogger(__name__)
 
 def user_login(request):
     # If user is already logged in, redirect to the homepage
@@ -79,7 +88,6 @@ def user_login(request):
             messages.error(request, "Invalid Credentials")
     
     return render(request, "login.html")
-
 
 def user_logout(request):
     logout(request)
