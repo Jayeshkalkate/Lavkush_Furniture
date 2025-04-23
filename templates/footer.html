@@ -1,6 +1,21 @@
 <!-- Start Footer Section -->
 <footer class="footer-section">
 
+	<!-- AOS Script -->
+	 
+	<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+	<script>AOS.init({once: true,duration: 800,});</script>
+	
+	<!-- AOS JS for scroll animations -->
+	 
+	<script>AOS.init({duration: 1000,easing: 'ease-in-out',once: true});</script>
+
+	
+    <!-- // Smooth scrolling to "Back to Gallery" -->
+	 
+	<script>document.querySelector('.scroll-to-top').addEventListener('click', function(e) {e.preventDefault();window.scrollTo({top: 0,behavior: 'smooth'});});</script>
+
+
 	<div class="container position-relative">
   
 	  <div class="sofa-img">

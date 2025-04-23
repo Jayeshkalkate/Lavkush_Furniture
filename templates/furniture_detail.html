@@ -1,0 +1,156 @@
+{% load cloudinary %}
+{% include "header.html" %}
+
+{% block content %}
+ 
+<div class="container py-5" data-aos="fade-up">
+    <div class="row">
+        <!-- Image Section -->
+        <div class="col-md-6 col-12 mb-4 mb-md-0" data-aos="zoom-in">
+            <div class="product-image-container">
+                {% cloudinary item.image.public_id class="img-fluid rounded shadow product-image" %}
+            </div>
+        </div>
+
+        <!-- Details Section -->
+        <div class="col-md-6 col-12" data-aos="fade-left">
+            <h2 class="product-title">{{ item.caption }}</h2>
+
+            {% if item.price %}
+            <p class="product-price"><strong>Price:</strong> ₹{{ item.price }}</p>
+            {% endif %}
+
+            <p><strong>Uploaded:</strong> {{ item.uploaded_at }}</p>
+
+            {% if item.description %}
+            <p><strong>Description:</strong> {{ item.description }}</p>
+            {% endif %}
+
+            {% if item.dimensions %}
+            <p><strong>Dimensions:</strong> {{ item.dimensions }}</p>
+            {% endif %}
+
+            {% if item.materials %}
+            <p><strong>Materials:</strong> {{ item.materials }}</p>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'rate_item' item.id %}" class="rating-form" data-aos="fade-up">
+                {% csrf_token %}
+                <label for="rating">Rate this item:</label>
+                <div class="star-rating-input">
+                    {% for i in "12345" %}
+                    <input type="radio" name="rating" id="star{{ i }}" value="{{ i }}" {% if rating.rating == i|add:0 %}checked{% endif %}>
+                    <label for="star{{ i }}">★</label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Rating</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% include "footer.html" %}
+
+<!-- Custom CSS and JS for Interaction -->
+<style>
+    /* Star display */
+.rating-display .stars {
+    display: inline-block;
+    font-size: 1.4rem;
+    color: #ffcc00;
+}
+.rating-display .star {
+    color: #c8c8c8;
+    transition: color 0.3s ease;
+}
+.rating-display .star.filled {
+    color: #f5b301;
+}
+
+.rating-form .star-rating-input {
+    direction: rtl;
+    display: flex;
+    gap: 5px;
+    justify-content: flex-start;
+}
+
+.star-rating-input input[type="radio"] {
+    display: none;
+}
+
+.star-rating-input label {
+    font-size: 1.8rem;
+    color: #c9b5b5;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.star-rating-input input[type="radio"]:checked ~ label,
+.star-rating-input label:hover,
+.star-rating-input label:hover ~ label {
+    color: #f5b301;
+}
+
+    .product-image-container {
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .product-image {
+        transition: transform 0.3s ease;
+    }
+
+    .product-image:hover {
+        transform: scale(1.1);
+    }
+
+    .product-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .product-price {
+        font-size: 1.25rem;
+        color: #007bff;
+    }
+
+    .star {
+        color: #dcdcdc;
+        font-size: 1.5rem;
+    }
+
+    .star.filled {
+        color: #f39c12;
+    }
+
+    .scroll-to-top {
+        display: inline-block;
+        padding: 10px 20px;
+        text-transform: uppercase;
+        border-radius: 25px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .scroll-to-top:hover {
+        background-color: #007bff;
+        color: white;
+        transform: scale(1.05);
+    }
+
+    /* Responsiveness for smaller screens */
+    @media (max-width: 768px) {
+        .product-title {
+            font-size: 1.5rem;
+        }
+
+        .product-price {
+            font-size: 1rem;
+        }
+    }
+</style>

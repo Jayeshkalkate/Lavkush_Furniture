@@ -36,6 +36,22 @@
                         {{ form.caption.label_tag }}
                         {{ form.caption }}
                     </div>
+                    <div class="mb-3">
+                        {{ form.description.label_tag }}
+                        {{ form.description }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.dimensions.label_tag }}
+                        {{ form.dimensions }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.materials.label_tag }}
+                        {{ form.materials }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.rating.label_tag }}
+                        {{ form.rating }}
+                    </div>
                     <button type="submit" class="btn btn-primary">Upload</button>
                     <a href="{% url 'gallery' %}" class="btn btn-secondary">Back to Gallery</a>
                 </form>
