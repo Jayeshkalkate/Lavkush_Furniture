@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from gallery.models import ImageWithCaption
 from .models import Wishlist
 from django.shortcuts import render
+from datetime import timedelta, datetime
+from django.utils.timezone import now
 
 @login_required
 def add_to_wishlist(request, item_id):
@@ -21,3 +23,11 @@ def view_wishlist(request):
     wishlist_items = Wishlist.objects.filter(user=request.user)
     return render(request, 'view_wishlist.html', {'wishlist_items': wishlist_items})
 
+@login_required
+def view_wishlist(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user).select_related('item')
+
+    for w in wishlist_items:
+        w.item.is_new = w.item.uploaded_at >= (now() - timedelta(days=7))
+
+    return render(request, 'view_wishlist.html', {'wishlist_items': wishlist_items})

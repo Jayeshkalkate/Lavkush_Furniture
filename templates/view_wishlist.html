@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Wishlist</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
     <style>
-        /* General Styles */
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f1f1f1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
             color: #333;
             margin: 0;
             padding: 0;
@@ -16,106 +19,146 @@
 
         h2 {
             text-align: center;
-            font-size: 2rem;
-            margin-top: 20px;
-            color: #333;
+            font-size: 2.2rem;
+            margin: 30px 0;
+            color: #2c3e50;
         }
 
-        /* Wishlist Container */
         .wishlist-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            padding: 30px 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             margin-bottom: 50px;
         }
 
         .wishlist-items {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
         }
 
         .wishlist-item {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 250px;
-            padding: 15px;
-            transition: transform 0.3s ease;
+            position: relative;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .wishlist-item:hover {
             transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
         }
 
-        /* Item Image */
+        .item-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background-color: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .item-image img {
             width: 100%;
-            height: 180px;
+            height: 100%;
             object-fit: cover;
-            border-radius: 8px;
         }
 
-        /* Item Info */
+        .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #e67e22;
+            color: white;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 20px;
+            z-index: 2;
+        }
+
         .item-info {
+            padding: 15px;
             text-align: center;
-            padding: 10px 0;
         }
 
         .item-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .item-title i {
+            color: #e74c3c;
         }
 
         .item-price {
             font-size: 1.1rem;
-            color: #b12704;
+            color: #e74c3c;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
-        /* Remove Button */
+        .item-price i {
+            color: #e74c3c;
+        }
+
         .item-actions {
             text-align: center;
-            margin-top: 15px;
+            padding: 15px 0 20px;
         }
 
         .remove-btn {
-            background-color: #d92b2b;
+            background-color: #e74c3c;
             color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-size: 14px;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 5px;
             text-decoration: none;
-            transition: background-color 0.3s;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .remove-btn i {
+            margin-right: 6px;
         }
 
         .remove-btn:hover {
-            background-color: #a91f1f;
+            background-color: #c0392b;
         }
 
-        /* Empty Wishlist Message */
         p {
             text-align: center;
             font-size: 1rem;
-            color: #666;
+            color: #777;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .wishlist-items {
-                justify-content: center;
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 1.5rem;
             }
 
-            .wishlist-item {
-                max-width: 100%;
-                margin: 0 auto 20px;
+            .item-image {
+                height: 160px;
+            }
+
+            .remove-btn {
+                padding: 8px 16px;
             }
         }
     </style>
@@ -129,19 +172,28 @@
     {% if wishlist_items %}
         <div class="wishlist-items">
             {% for w in wishlist_items %}
-                <div class="wishlist-item">
-                    <div class="item-image">
-                        <img src="{{ w.item.image.url }}" alt="{{ w.item.name }}" class="img-fluid">
-                    </div>
-                    <div class="item-info">
-                        <h4 class="item-title">{{ w.item.name }}</h4>
-                        <p class="item-price">₹{{ w.item.price }}</p>
-                    </div>
-                    <div class="item-actions">
-                        <a href="{% url 'remove_from_wishlist' w.item.id %}" class="remove-btn">❌ Remove</a>
-                    </div>
+            <div class="wishlist-item">
+                {% if w.item.is_new %}
+                    <div class="badge">New</div>
+                {% endif %}
+                <div class="item-image">
+                    <img src="{{ w.item.image.url }}" alt="{{ w.item.caption }}" class="img-fluid">
                 </div>
-            {% endfor %}
+                <div class="item-info">
+                    <h4 class="item-title">
+                        <i class="fas fa-heart"></i> {{ w.item.caption }}
+                    </h4>
+                    <p class="item-price">
+                        <i class="fas fa-tag"></i> ₹{{ w.item.price }}
+                    </p>
+                </div>
+                <div class="item-actions">
+                    <a href="{% url 'remove_from_wishlist' w.item.id %}" class="remove-btn">
+                        <i class="fas fa-trash-alt"></i> Remove
+                    </a>
+                </div>
+            </div>
+        {% endfor %}        
         </div>
     {% else %}
         <p>Your wishlist is empty.</p>
