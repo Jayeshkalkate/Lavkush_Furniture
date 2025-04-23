@@ -68,3 +68,6 @@ def ourteam(request):
 def privacy_policy(request):
     return render(request, 'privacy_policy.html')
 
+@login_required(login_url='login')
+def termsandconditions(request):
+    return render(request, "termsandconditions.html")

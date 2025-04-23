@@ -29,6 +29,7 @@ urlpatterns = [
     path('ourteam/', views.ourteam, name='ourteam'),
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
     path('our-team/', include('team.urls')),
+    path('termsandconditions/', include('termsandconditions.urls')),
 
     
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
