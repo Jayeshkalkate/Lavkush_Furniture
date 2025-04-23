@@ -4,6 +4,7 @@ from lavkushfurniture import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -20,6 +21,8 @@ urlpatterns = [
 
     # Wishlist    
     path('wishlist/', include('wishlist.urls')),
+    
+    path('termsandconditions/', TemplateView.as_view(template_name='termsandconditions.html'), name='terms'),
 
     # Other protected views
     path('aboutus/', views.aboutus, name='aboutus'),
@@ -29,7 +32,6 @@ urlpatterns = [
     path('ourteam/', views.ourteam, name='ourteam'),
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
     path('our-team/', include('team.urls')),
-    path('termsandconditions/', include('termsandconditions.urls')),
 
     
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
