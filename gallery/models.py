@@ -2,6 +2,10 @@ from django.db import models
 from cloudinary.models import CloudinaryField  # Import CloudinaryField
 from django.contrib.auth.models import User
 
+def furniture_detail(request, pk):
+    item = get_object_or_404(ImageWithCaption, pk=pk)
+    return render(request, 'furniture_detail.html', {'item': item})
+
 class ImageWithCaption(models.Model):
     image = CloudinaryField('image')  # Cloudinary image
     caption = models.CharField(max_length=255)

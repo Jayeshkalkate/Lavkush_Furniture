@@ -5,12 +5,6 @@ from django.contrib import messages
 from django.db.models import Avg
 from .forms import ImageForm
 
-def gallery_view(request):
-    images = ImageWithCaption.objects.all().order_by('-uploaded_at')
-    for image in images:
-        image.avg_rating = int(round(Rating.objects.filter(item=image).aggregate(avg=Avg('rating'))['avg'] or 0))
-    return render(request, 'gallery.html', {'images': images})
-
 @login_required
 def rate_item(request, item_id):
     item = get_object_or_404(ImageWithCaption, id=item_id)
@@ -19,15 +13,28 @@ def rate_item(request, item_id):
 
     if request.method == 'POST':
         rating_value = request.POST.get('rating')
-        if rating_value and int(rating_value) in range(1, 6):
-            rating.rating = int(rating_value)
-            rating.save()
-            messages.success(request, "Your rating has been submitted.")
-            return redirect('furniture_detail', item_id=item.id)
+
+        if rating_value:
+            if int(rating_value) in range(1, 6):
+                rating.rating = int(rating_value)
+                rating.save()
+                messages.success(request, "Your rating has been submitted.")
+                return redirect('furniture_detail', item_id=item.id)
+            else:
+                messages.error(request, "Invalid rating. Please select a valid rating between 1 and 5.")
         else:
-            messages.error(request, "Invalid rating. Please select a valid rating between 1 and 5.")
+            rating.rating = 1
+            rating.save()
+            messages.warning(request, "You did not select a rating. A default rating of 1 has been applied.")
+            return redirect('furniture_detail', item_id=item.id)
 
     return render(request, 'rate_item.html', {'item': item, 'rating': rating})
+
+def gallery_view(request):
+    images = ImageWithCaption.objects.all().order_by('-uploaded_at')
+    for image in images:
+        image.avg_rating = int(round(Rating.objects.filter(item=image).aggregate(avg=Avg('rating'))['avg'] or 0))
+    return render(request, 'gallery.html', {'images': images})
 
 def furniture_detail(request, item_id):
     item = get_object_or_404(ImageWithCaption, id=item_id)

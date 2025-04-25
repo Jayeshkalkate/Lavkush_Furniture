@@ -19,9 +19,10 @@ urlpatterns = [
     # Gallery app
     path('gallery/', include('gallery.urls')),
 
-    # Wishlist    
+    # Wishlist and Cart
     path('wishlist/', include('wishlist.urls')),
-    
+    path('cart/', include('cart.urls')),
+
     path('termsandconditions/', TemplateView.as_view(template_name='termsandconditions.html'), name='terms'),
 
     # Other protected views

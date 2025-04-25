@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'account',
     'gallery',
     'team',
+    'cart',
     'wishlist',
     'cloudinary',
     'cloudinary_storage',
@@ -169,3 +170,4 @@ cloudinary.config(
     api_key=config('CLOUDINARY_API_KEY'),
     api_secret=config('CLOUDINARY_API_SECRET'),
 )
+

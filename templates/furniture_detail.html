@@ -1,8 +1,8 @@
+{% load static %}
 {% load cloudinary %}
 {% include "header.html" %}
-
 {% block content %}
- 
+
 <div class="container py-5" data-aos="fade-up">
     <div class="row">
         <!-- Image Section -->
@@ -16,36 +16,64 @@
         <div class="col-md-6 col-12" data-aos="fade-left">
             <h2 class="product-title">{{ item.caption }}</h2>
 
+            <!-- Price Section -->
             {% if item.price %}
-            <p class="product-price"><strong>Price:</strong> ₹{{ item.price }}</p>
+                <p class="product-price"><strong>Price:</strong> ₹{{ item.price }}</p>
             {% endif %}
 
+            <!-- Uploaded At Section -->
             <p><strong>Uploaded:</strong> {{ item.uploaded_at }}</p>
 
+            <!-- Description Section -->
             {% if item.description %}
-            <p><strong>Description:</strong> {{ item.description }}</p>
+                <p><strong>Description:</strong> {{ item.description }}</p>
             {% endif %}
 
+            <!-- Dimensions Section -->
             {% if item.dimensions %}
-            <p><strong>Dimensions:</strong> {{ item.dimensions }}</p>
+                <p><strong>Dimensions:</strong> {{ item.dimensions }}</p>
             {% endif %}
 
+            <!-- Materials Section -->
             {% if item.materials %}
-            <p><strong>Materials:</strong> {{ item.materials }}</p>
+                <p><strong>Materials:</strong> {{ item.materials }}</p>
             {% endif %}
 
+            <!-- Action Buttons -->
+            <div class="d-flex align-items-center justify-content gap-2 mt-2 flex-wrap">
+                <!-- Wishlist Button -->
+                <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-sm shadow-sm btn-no-bg">
+                    <img src="{% static 'images/wish-list.png' %}" alt="Login to wishlist" width="20" height="20">
+                </a>
+
+                <!-- Add to Cart Button -->
+                {% if item.id %}
+                    <a href="{% url 'cart:add_to_cart' item.id %}" class="btn btn-outline-success btn-sm shadow-sm btn-no-bg">
+                        <img src="{% static 'images/shopping-cart.png' %}" alt="Add to cart" class="cart-icon">
+                    </a>
+                {% else %}
+                    <p>Product ID not available.</p>
+                {% endif %}
+
+            </div>
+            <!-- Rating Section for Authenticated Users -->
             {% if user.is_authenticated %}
-            <form method="POST" action="{% url 'rate_item' item.id %}" class="rating-form" data-aos="fade-up">
-                {% csrf_token %}
-                <label for="rating">Rate this item:</label>
-                <div class="star-rating-input">
-                    {% for i in "12345" %}
-                    <input type="radio" name="rating" id="star{{ i }}" value="{{ i }}" {% if rating.rating == i|add:0 %}checked{% endif %}>
-                    <label for="star{{ i }}">★</label>
-                    {% endfor %}
-                </div>
-                <button type="submit" class="btn btn-primary">Submit Rating</button>
-            </form>
+                <form method="POST" action="{% url 'rate_item' item.id %}" class="rating-form" data-aos="fade-up">
+                    {% csrf_token %}
+                    
+                    <!-- Bold the "Rate this item:" text -->
+                    <label for="rating" class="font-weight-bold" style="display: block; margin-bottom: 10px; text-align: right; color: #f39c12; font-size: large; padding-right: 50;">💡 Rate this product. 👇</label>
+
+                    <!-- Stars Container -->
+                    <div class="star-rating-input" style="margin-bottom: 15px; display: flex; gap: 5px;">
+                        {% for i in "12345" %}
+                            <input type="radio" name="rating" id="star{{ i }}" value="{{ i }}" {% if rating.rating == i|add:0 %}checked{% endif %}>
+                            <label for="star{{ i }}">★</label>
+                        {% endfor %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Submit Rating</button>
+                </form>
             {% endif %}
         </div>
     </div>
@@ -57,6 +85,33 @@
 
 <!-- Custom CSS and JS for Interaction -->
 <style>
+
+.btn-no-bg {
+    background-color: rgb(229 241 0) !important;
+    border: 2px solid rgb(255, 200, 0) !important;
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-no-bg:hover {
+    background-color: rgb(224, 208, 199) !important;
+    border-color: transparent !important;
+}
+
+.btn-no-bg:hover svg, .btn-no-bg:hover i {
+    color: white;
+}
+
+.cart-icon {
+    height: 20px;
+}
+
     /* Star display */
 .rating-display .stars {
     display: inline-block;

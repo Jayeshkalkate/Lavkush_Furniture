@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   {% load static %}
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Untree.co">
@@ -21,37 +22,190 @@
   <!-- AOS CSS -->
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!-- AOS CSS for scroll animations -->
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- Google Fonts (Poppins) -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- AOS CSS for scroll animations -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <!-- Google Fonts (Poppins) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"> 
 
   <title>Lavkush Furniture Website</title>
 
   <!-- Custom CSS for Responsiveness -->
   <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+  
+    /* Navbar Styling */
+    .custom-navbar {
+      background-color: #343a40; /* Dark background */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+  
+    .custom-navbar:hover {
+      background-color: #212529; /* Darker shade on hover */
+    }
+  
+    .custom-navbar .navbar-brand {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: white;
+      transition: color 0.3s ease;
+    }
+  
+    .custom-navbar .navbar-brand:hover {
+      color: #f1c40f;
+    }
+  
+    .custom-navbar .navbar-nav .nav-link {
+      color: white;
+      font-size: 1.1rem;
+      margin-left: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+  
+    .custom-navbar .navbar-nav .nav-link:hover {
+      color: #f1c40f;
+      transform: translateY(-2px); /* Slight hover effect */
+    }
+  
+    .custom-navbar .navbar-nav .nav-link.active {
+      font-weight: bold;
+      color: #f1c40f;
+    }
+  
+    .navbar-toggler-icon {
+      background-color: white;
+    }
+  
+    /* Mobile & Tablet Responsiveness */
     @media (max-width: 768px) {
-      .navbar-brand img {
+      .custom-navbar .navbar-brand img {
         height: 50px;
         width: 50px;
       }
-      .navbar-nav {
+  
+      .custom-navbar .navbar-nav {
         text-align: center;
       }
-      .navbar-nav .nav-item {
-        margin-bottom: 10px;
+  
+      .custom-navbar .navbar-nav .nav-item {
+        margin-bottom: 15px;
       }
+  
+      .custom-navbar .navbar-nav .nav-link {
+        font-size: 1.2rem;
+        margin-left: 0;
+      }
+  
       .custom-navbar-cta {
         justify-content: center;
         margin-top: 10px;
       }
+  
       .navbar-brand span {
         font-size: 16px;
       }
     }
-  </style>
+  
+    /* Add a smooth scroll effect for anchor links */
+    html {
+      scroll-behavior: smooth;
+    }
+  
+    /* Button Hover Effect (For .btn-no-bg) */
+    .btn-no-bg {
+      background-color: transparent !important;
+      border: 2px solid black !important;
+      border-radius: 50% !important;
+      width: 40px;
+      height: 40px;
+      padding: 4px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+  
+    .btn-no-bg:hover {
+      background-color: black !important;
+      border-color: transparent !important;
+    }
+  
+    .btn-no-bg:hover svg,
+    .btn-no-bg:hover i {
+      color: white;
+    }
+  
+    /* Interactive Hover Effects */
+    .custom-navbar-nav .nav-item a {
+      position: relative;
+    }
+  
+    .custom-navbar-nav .nav-item a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #f1c40f;
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+  
+    .custom-navbar-nav .nav-item a:hover::after {
+      transform: scaleX(1);
+    }
+  
+    /* Smooth Transition Effects */
+    .custom-navbar {
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+  
+    .custom-navbar .navbar-nav .nav-item a {
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+  
+    /* Styling for Wishlist & Cart Icons */
+    .nav-item img {
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+  
+    .nav-item img:hover {
+      transform: scale(1.1);
+      filter: brightness(1.2);
+    }
+  
+    /* Custom Scrollbar for Mobile */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+  
+    ::-webkit-scrollbar-thumb {
+      background-color: #f1c40f;
+      border-radius: 4px;
+    }
+  
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #e67e22;
+    }
+  </style>  
+  
 </head>
 
 <body>
@@ -79,12 +233,25 @@
           <li class="nav-item"><a class="nav-link" href="{% url 'aboutus' %}">About</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'contactus' %}">Contact</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'view_wishlist' %}">❤️</a></li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'view_wishlist' %}">
+              <img src="{% static 'images/wish-list.png' %}" alt="User Profile" style="height: 24px;">
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'cart:view_cart' %}">
+              <img src="{% static 'images/shopping-cart.png' %}" alt="User Profile" style="height: 24px;">
+            </a>
+          </li>
+          
           <li class="nav-item ms-4">
             <a class="nav-link" href="{% url 'userprofile' %}">
               <img src="{% static 'images/user.svg' %}" alt="User Profile" style="height: 24px;">
             </a>
           </li>
+        
         </ul>
       </div>
     </div>
@@ -93,5 +260,6 @@
 
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

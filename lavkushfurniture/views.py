@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
-
 # Define the helper function here
 def send_email_to_client(first_name, last_name, email, message):
     subject = "New Message from Client"
