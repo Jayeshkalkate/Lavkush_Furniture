@@ -76,6 +76,7 @@
       transition: right 0.4s ease;
       padding: 60px 20px 20px;
       z-index: 1200;
+      overflow-y: auto;
     }
 
     .mobile-menu.show {
@@ -97,10 +98,41 @@
       display: block;
     }
 
-    /* Hide normal collapse on mobile */
+    /* Adjust Navbar on mobile */
+    .navbar-toggler {
+      border: none;
+      background-color: transparent;
+    }
+
+    /* Adjust padding and margin for mobile */
+    .navbar-nav .nav-item {
+      margin: 10px 0;
+    }
+
+    /* Adjust font size on small screens */
     @media (max-width: 768px) {
-      .collapse:not(.show) {
-        display: none;
+      .navbar-nav .nav-link {
+        font-size: 16px;
+        padding: 12px 20px;
+      }
+
+      .mobile-menu {
+        padding: 50px 20px;
+      }
+
+      .custom-navbar-nav .nav-item {
+        margin-right: 15px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .navbar-nav .nav-item {
+        margin: 0 15px;
+      }
+
+      .navbar-nav .nav-link {
+        font-size: 18px;
+        padding: 10px 15px;
       }
     }
   </style>
@@ -130,24 +162,29 @@
           <li class="nav-item"><a class="nav-link" href="{% url 'aboutus' %}">About</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'contactus' %}">Contact</a></li>
+        </ul>
+        
+        <ul class="custom-navbar-nav navbar-nav ms-auto d-flex flex-row flex-md-row mt-2 mt-md-0">
           <li class="nav-item ms-1"><a class="nav-link" href="{% url 'view_wishlist' %}"><img src="{% static 'images/wish-list.png' %}" alt="Wishlist"></a></li>
           <li class="nav-item ms-1"><a class="nav-link" href="{% url 'cart:view_cart' %}"><img src="{% static 'images/shopping-cart.png' %}" alt="Cart"></a></li>
           <li class="nav-item ms-1"><a class="nav-link" href="{% url 'userprofile' %}"><img src="{% static 'images/user.svg' %}" alt="User Profile"></a></li>
-        </ul>
+        </ul>        
       </div>
 
       <!-- Mobile Slide-in Menu -->
       <div class="mobile-menu" id="mobileMenu">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link text-white" href="{% url 'homepage' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="{% url 'gallery' %}">Gallery</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="{% url 'aboutus' %}">About</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="{% url 'services' %}">Services</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="{% url 'contactus' %}">Contact</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="{% url 'view_wishlist' %}">Wishlist</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="{% url 'cart:view_cart' %}">Cart</a></li>
-          <li class="nav-item"><a class="nav-link text-white" href="{% url 'userprofile' %}">Profile</a></li>
+        <ul class="custom-navbar-nav navbar-nav ms-auto mb-0">
+          <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'homepage' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'gallery' %}">Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'aboutus' %}">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'contactus' %}">Contact</a></li>
         </ul>
+        <ul class="custom-navbar-nav navbar-nav ms-auto mt-2">
+          <li class="nav-item ms-1"><a class="nav-link" href="{% url 'view_wishlist' %}"><img src="{% static 'images/wish-list.png' %}" alt="Wishlist"></a></li>
+          <li class="nav-item ms-1"><a class="nav-link" href="{% url 'cart:view_cart' %}"><img src="{% static 'images/shopping-cart.png' %}" alt="Cart"></a></li>
+          <li class="nav-item ms-1"><a class="nav-link" href="{% url 'userprofile' %}"><img src="{% static 'images/user.svg' %}" alt="User Profile"></a></li>
+        </ul>        
       </div>
 
       <div class="overlay" id="overlay"></div>
