@@ -1,238 +1,311 @@
 {% load cloudinary %}
-
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Wishlist</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Wishlist</title>
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-        h2 {
-            text-align: center;
-            font-size: 2.2rem;
-            margin: 30px 0;
-            color: #2c3e50;
-        }
+  <style>
+    :root {
+      --primary-color: #ff5e00;
+      --secondary-color: #ffc800;
+      --danger-color: #e74c3c;
+      --background-light: #f9f9f9;
+      --text-color: #333;
+      --text-muted: #777;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-        .wishlist-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 50px;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .wishlist-items {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 20px;
-        }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-light);
+      color: var(--text-color);
+      min-height: 100vh;
+    }
 
-        .wishlist-item {
-            position: relative;
-            background-color: #ffffff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+    h2 {
+      text-align: center;
+      font-size: 2.4rem;
+      margin: 40px 0 20px;
+      color: var(--primary-color);
+    }
 
-        .wishlist-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-        }
+    .wishlist-container {
+      max-width: 1200px;
+      margin: 0 auto 50px;
+      padding: 30px 20px;
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
 
-        .item-image {
-            width: 100%;
-            height: 220px;
-            overflow: hidden;
-            background-color: #fafafa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+    .wishlist-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
 
-        .item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
+    .wishlist-item {
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .item-image:hover img {
-            transform: scale(1.05); /* Slight zoom effect on hover */
-        }
+    .wishlist-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
 
-        .badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: #e67e22;
-            color: white;
-            padding: 4px 10px;
-            font-size: 12px;
-            font-weight: bold;
-            border-radius: 20px;
-            z-index: 2;
-        }
+    .item-image {
+      background: #fafafa;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
 
-        .item-info {
-            padding: 15px;
-            text-align: center;
-        }
+    .item-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
 
-        .item-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
+    .item-image:hover img {
+      transform: scale(1.08);
+    }
 
-        .item-title i {
-            color: #e74c3c;
-        }
+    .badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background-color: var(--secondary-color);
+      color: #000;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
 
-        .item-price {
-            font-size: 1.1rem;
-            color: #e74c3c;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
+    .item-info {
+      padding: 15px 10px;
+      flex: 1;
+      text-align: center;
+    }
 
-        .item-price i {
-            color: #e74c3c;
-        }
+    .item-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
 
-        .item-actions {
-            text-align: center;
-            padding: 15px 0 20px;
-        }
+    .item-title i {
+      color: var(--danger-color);
+    }
 
-        .remove-btn {
-            background-color: #e74c3c;
-            color: white;
-            padding: 10px 20px;
-            font-size: 0.95rem;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    .item-price {
+      font-size: 1.1rem;
+      color: var(--danger-color);
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
 
-        .remove-btn i {
-            margin-right: 6px;
-        }
+    .item-actions {
+      padding: 15px 10px 20px;
+      text-align: center;
+    }
 
-        .remove-btn:hover {
-            background-color: #c0392b;
-        }
+    .remove-btn {
+      background: var(--danger-color);
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
 
-        p {
-            text-align: center;
-            font-size: 1rem;
-            color: #777;
-        }
+    .remove-btn:hover {
+      background: #c0392b;
+    }
 
-        @media (max-width: 480px) {
-            h2 {
-                font-size: 1.5rem;
-            }
+    p {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1rem;
+      color: var(--text-muted);
+    }
 
-            .item-image {
-                height: 180px;
-            }
+    .btn-no-bg {
+      background-color: var(--primary-color) !important;
+      border: 2px solid var(--secondary-color) !important;
+      border-radius: 50% !important;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
 
-            .remove-btn {
-                padding: 8px 16px;
-            }
-        }
-	.btn-no-bg {
-    background-color: #ff5e00  !important;
-    border: 2px solid rgb(255, 200, 0) !important;
-    border-radius: 50% !important;
-    width: 40px;
-    height: 40px;
-    padding: 4px 8px;
+    .btn-no-bg:hover {
+      background-color: var(--secondary-color) !important;
+      border-color: transparent !important;
+    }
+
+    .btn-no-bg:hover svg,
+    .btn-no-bg:hover i {
+      color: white;
+    }
+
+    .cart-icon {
+      height: 20px;
+    }
+
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 1.8rem;
+      }
+
+      .item-image {
+        height: 180px;
+      }
+
+      .remove-btn {
+        padding: 8px 16px;
+      }
+    }
+    
+  .empty-wishlist {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-}
+    padding: 50px 20px;
+    text-align: center;
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-top: 40px;
+    animation: fadeIn 0.8s ease;
+  }
 
-.btn-no-bg:hover {
-    background-color: #e5f100!important;
-    border-color: transparent !important;
-}
+  .empty-icon {
+    width: 150px;
+    margin-bottom: 20px;
+  }
 
-.btn-no-bg:hover svg, .btn-no-bg:hover i {
+  .empty-wishlist h3 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+  }
+
+  .empty-wishlist p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  .btn-primary {
+    background-color: var(--primary-color);
     color: white;
-}
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
 
-.cart-icon {
-    height: 20px;
-}
-</style>
+  .btn-primary:hover {
+    background-color: var(--secondary-color);
+    color: black;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  </style>
+
 </head>
 <body>
 
 {% include "header.html" %}
 {% block content %}
 <div class="wishlist-container" data-aos="fade-up">
-    <h2>Your Wishlist</h2>
-    {% if wishlist_items %}
-        <div class="wishlist-items">
-            {% for w in wishlist_items %}
-            <div class="wishlist-item" data-aos="zoom-in" data-aos-delay="200">
-                {% if w.item.is_new %}
-                    <div class="badge">New</div>
-                {% endif %}
-                <div class="item-image">
-                    <img src="{{ w.item.image.url }}" alt="{{ w.item.caption }}" class="img-fluid">
-                </div>
-                <div class="item-info">
-                    <h4 class="item-title">
-                        <i class="fas fa-heart"></i> {{ w.item.caption }}
-                    </h4>
-                    <p class="item-price">
-                        <i class="fas fa-tag"></i> ₹{{ w.item.price }}
-                    </p>
-                </div>
-                <div class="item-actions">
-                    <a href="{% url 'remove_from_wishlist' w.item.id %}" class="remove-btn">
-                        <i class="fas fa-trash-alt"></i> Remove
-                    </a>
-                </div>
-            </div>
-        {% endfor %}
+  <h2>Your Wishlist</h2>
+
+  {% if wishlist_items %}
+    <div class="wishlist-items">
+      {% for w in wishlist_items %}
+        <div class="wishlist-item" data-aos="zoom-in" data-aos-delay="200">
+          {% if w.item.is_new %}
+            <div class="badge">New</div>
+          {% endif %}
+          <div class="item-image">
+            <img src="{{ w.item.image.url }}" alt="{{ w.item.caption }}" class="img-fluid">
+          </div>
+          <div class="item-info">
+            <h4 class="item-title">
+              <i class="fas fa-heart"></i> {{ w.item.caption }}
+            </h4>
+            <p class="item-price">
+              <i class="fas fa-tag"></i> ₹{{ w.item.price }}
+            </p>
+          </div>
+          <div class="item-actions">
+            <a href="{% url 'remove_from_wishlist' w.item.id %}" class="remove-btn">
+              <i class="fas fa-trash-alt"></i> Remove
+            </a>
+          </div>
         </div>
-    {% else %}
-        <p>Your wishlist is empty.</p>
-    {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+  <div class="empty-wishlist">
+    <img src="{% static 'images/empty-wishlist.svg' %}" alt="Empty Wishlist" class="empty-icon">
+    <h3>No items in your wishlist yet!</h3>
+    <p>Looks like you haven't added anything yet. Explore our collection and find your favorites!</p>
+    <a href="{% url 'shop' %}" class="btn-primary">Continue Shopping</a>
+  </div>  
+  {% endif %}
 </div>
 {% endblock %}
-{% include "footer.html" %}
 
 </body>
 </html>
