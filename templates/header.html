@@ -3,7 +3,7 @@
 <head>
   {% load static %}
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Untree.co">
   <meta name="description" content="Lavkush Furniture - Elegant handcrafted furniture for your perfect space.">
   <meta name="keywords" content="Lavkush Furniture, furniture, home decor, handcrafted furniture">
@@ -15,164 +15,159 @@
   <link href="{% static 'css/tiny-slider.css' %}" rel="stylesheet">
   <link rel="shortcut icon" href="{% static 'images/lavkushfurniturelogo.jpeg' %}">
 
-  <title>Lavkush Furniture Website</title>
+  <title>Lavkush Furniture</title>
 
   <style>
     body {
       overflow-x: hidden;
       font-family: 'Poppins', sans-serif;
     }
-  
+
     .custom-navbar {
       background-color: #2c3e50;
       position: relative;
       z-index: 1000;
     }
-  
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 24px;
+      color: white;
+      text-decoration: none;
+    }
+
+    .navbar-brand img {
+      height: 60px;
+      width: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
     .custom-navbar-nav {
       display: flex;
-      flex-wrap: wrap; /* Allow wrapping */
-      justify-content: flex-end;
       align-items: center;
+      gap: 12px;
     }
-  
+
     .custom-navbar-nav .nav-link {
       background-color: #e67e22;
       border: 2px solid #34495e;
-      border-radius: 50%;
-      width: 42px;
-      height: 42px;
-      padding: 5px 9px;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-weight: 500;
+      color: #2c3e50;
+      transition: all 0.3s ease;
+    }
+
+    .custom-navbar-nav .nav-link:hover,
+    .custom-navbar-nav .nav-link.active {
+      background-color: #d35400;
+      color: white;
+    }
+
+    .custom-navbar-nav img.cart-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: cover;
+    }
+
+    .btn-no-bg {
+      background: none;
+      border: none;
+      padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s ease;
-      color: #2c3e50;
-      font-weight: 500;
     }
-  
-    .custom-navbar-nav .nav-link:hover {
-      background-color: #e67e22;
-      color: white;
-    }
-  
-    .custom-navbar-nav .nav-item:not(:has(img)) .nav-link {
-      border-radius: 20px;
-      width: auto;
-      padding: 6px 14px;
-    }
-  
-    .custom-navbar-nav .nav-link img {
-      height: 22px;
-      width: 22px;
-      object-fit: cover;
-    }
-  
-    .custom-navbar-nav .nav-link.active {
-      background-color: #e67e22;
-      color: white;
-      border-color: transparent;
-    }
-  
-    .navbar-collapse.collapse {
-      transition: max-height 0.4s ease;
-      overflow: hidden;
-    }
-  
-    .navbar-collapse.collapsing {
-      max-height: 0;
-      transition: max-height 0.35s ease;
-    }
-  
-    .navbar-collapse.show {
-      max-height: 500px;
-    }
-  
-    /* Responsive Styles */
-    @media (max-width: 992px) {
-      .custom-navbar-nav .nav-item {
-        text-align: center;
+
+    /* Responsive */
+    @media (max-width: 991.98px) {
+      .custom-navbar-nav {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
       }
       .custom-navbar-nav .nav-link {
-        font-size: 16px;
-        padding: 8px 14px;
+        width: 100%;
+        text-align: center;
+        font-size: 18px;
+        padding: 10px;
       }
+      .navbar-brand img {
+        height: 50px;
+        width: 50px;
+      }
+    }
+
+    @media (max-width: 575.98px) {
       .navbar-brand {
         font-size: 20px;
       }
-      .navbar-toggler {
-        border-color: #e67e22;
+      .custom-navbar-nav .nav-link {
+        font-size: 16px;
+      }
+      .custom-navbar-nav img.cart-icon {
+        width: 20px;
+        height: 20px;
       }
     }
-  
-    @media (max-width: 576px) {
-      .navbar-nav .nav-link {
-        font-size: 14px;
-        padding: 6px 12px;
-      }
+
+    @media (max-width: 360px) {
       .navbar-brand {
         font-size: 18px;
       }
-      .custom-navbar-nav .nav-link img {
-        height: 18px;
-        width: 18px;
-      }
-    }
-  
-    /* Very small devices (e.g., 150px, 175px) */
-    @media (max-width: 300px) {
-      .navbar-brand span {
-        font-size: 12px;
-      }
       .custom-navbar-nav .nav-link {
-        width: 36px;
-        height: 36px;
-        padding: 4px 7px;
+        font-size: 14px;
+        padding: 8px;
       }
-      .custom-navbar-nav .nav-link img {
-        height: 16px;
-        width: 16px;
+      .custom-navbar-nav img.cart-icon {
+        width: 18px;
+        height: 18px;
       }
     }
   </style>
-  
 </head>
 
 <body>
   <div id="google_translate_element"></div>
 
-  <!-- Navigation Bar -->
-  <nav class="custom-navbar navbar navbar-expand-md navbar-dark">
+  <nav class="custom-navbar navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <a class="navbar-brand d-flex align-items-center" href="{% url 'homepage' %}">
-        <img src="{% static 'images/lavkushfurniturelogo.jpeg' %}" alt="Lavkush Furniture Logo" style="height: 70px; width: 70px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
-        <span style="font-family: 'Courier New', Courier, monospace;">Lavkush Furniture</span>
+      <a class="navbar-brand" href="{% url 'homepage' %}">
+        <img src="{% static 'images/lavkushfurniturelogo.jpeg' %}" alt="Lavkush Furniture">
+        Lavkush Furniture
       </a>
-
-      <!-- Hamburger Button for Mobile View -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- Navbar Links -->
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-          <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'homepage' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'aboutus' %}">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
-          <li class="nav-item ms-2">
+        <ul class="custom-navbar-nav navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'homepage' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/aboutus/' %}active{% endif %}" href="{% url 'aboutus' %}">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/services/' %}active{% endif %}" href="{% url 'services' %}">Services</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'view_wishlist' %}" class="btn-no-bg">
               <img src="{% static 'images/wish-list.png' %}" alt="Wishlist" class="cart-icon">
             </a>
           </li>
-          <li class="nav-item ms-2">
+          <li class="nav-item">
             <a href="{% url 'cart:view_cart' %}" class="btn-no-bg">
               <img src="{% static 'images/shopping-cart.png' %}" alt="Cart" class="cart-icon">
             </a>
           </li>
-          <li class="nav-item ms-2">
-            <a class="nav-link" href="{% url 'userprofile' %}">
-              <img src="{% static 'images/user.svg' %}" alt="User Profile">
+          <li class="nav-item">
+            <a href="{% url 'userprofile' %}" class="btn-no-bg">
+              <img src="{% static 'images/user.svg' %}" alt="User Profile" class="cart-icon">
             </a>
           </li>
         </ul>

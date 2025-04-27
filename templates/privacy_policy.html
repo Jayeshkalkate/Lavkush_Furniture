@@ -1,5 +1,33 @@
 {% include "header.html" %}
-    
+{% load static %}
+<style>
+	.btn-no-bg {
+    background-color: #ff5e00  !important;
+    border: 2px solid rgb(255, 200, 0) !important;
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-no-bg:hover {
+    background-color: #e5f100!important;
+    border-color: transparent !important;
+}
+
+.btn-no-bg:hover svg, .btn-no-bg:hover i {
+    color: white;
+}
+
+.cart-icon {
+    height: 20px;
+}
+</style>
+
     <section>
         <h2>Introduction</h2>
         <p>Lavkush Furniture we are committed to protecting your privacy. This Privacy Policy outlines the types of personal information that we collect and how we use, share, and protect your information when you visit our website, https://lavkushfurniture.onrender.com , and use our services. By accessing or using our website, you agree to the terms of this Privacy Policy.</p>

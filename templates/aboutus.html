@@ -1,6 +1,32 @@
 {% include "header.html" %}
 {% load static %}
+<style>
+	.btn-no-bg {
+    background-color: #ff5e00  !important;
+    border: 2px solid rgb(255, 200, 0) !important;
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
 
+.btn-no-bg:hover {
+    background-color: #e5f100!important;
+    border-color: transparent !important;
+}
+
+.btn-no-bg:hover svg, .btn-no-bg:hover i {
+    color: white;
+}
+
+.cart-icon {
+    height: 20px;
+}
+</style>
 		<!-- Start Hero Section -->
 			<div class="hero">
 				<div class="container">
