@@ -1,65 +1,76 @@
 {% load cloudinary %}
-{% include "header.html" %}
 {% load static %}
+{% include "header.html" %}
+
 <style>
-	.btn-no-bg {
-    background-color: #ff5e00  !important;
-    border: 2px solid rgb(255, 200, 0) !important;
-    border-radius: 50% !important;
-    width: 40px;
-    height: 40px;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
+    .btn-no-bg {
+        background-color: #ff5e00 !important;
+        border: 2px solid rgb(255, 200, 0) !important;
+        border-radius: 50% !important;
+        width: 40px;
+        height: 40px;
+        padding: 4px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
 
-.btn-no-bg:hover {
-    background-color: #e5f100!important;
-    border-color: transparent !important;
-}
+    .btn-no-bg:hover {
+        background-color: #e5f100 !important;
+        border-color: transparent !important;
+    }
 
-.btn-no-bg:hover svg, .btn-no-bg:hover i {
-    color: white;
-}
+    .btn-no-bg:hover svg,
+    .btn-no-bg:hover i {
+        color: white;
+    }
 
-.cart-icon {
-    height: 20px;
-}
+    .cart-icon {
+        height: 20px;
+    }
 </style>
+
 <div class="container my-5">
     <h2>Edit Image and Caption</h2>
     <form method="POST" enctype="multipart/form-data" class="bg-light p-4 rounded shadow">
         {% csrf_token %}
+        
         <div class="mb-3">
             {{ form.image.label_tag }}
             {{ form.image }}
         </div>
+        
         <div class="mb-3">
             {{ form.price.label_tag }}
             {{ form.price }}
-        </div>        
+        </div>
+        
         <div class="mb-3">
             {{ form.caption.label_tag }}
             {{ form.caption }}
         </div>
+        
         <div class="mb-3">
             {{ form.description.label_tag }}
             {{ form.description }}
         </div>
+        
         <div class="mb-3">
             {{ form.dimensions.label_tag }}
             {{ form.dimensions }}
         </div>
+        
         <div class="mb-3">
             {{ form.materials.label_tag }}
             {{ form.materials }}
         </div>
+        
         <div class="mb-3">
             {{ form.rating.label_tag }}
             {{ form.rating }}
         </div>
+        
         <button type="submit" class="btn btn-success">Save Changes</button>
         <a href="{% url 'gallery' %}" class="btn btn-secondary">Back</a>
     </form>

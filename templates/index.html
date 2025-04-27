@@ -1,212 +1,204 @@
-
 {% include "header.html" %}
 {% load static %}
+
 <style>
-	.btn-no-bg {
-    background-color: #ff5e00  !important;
-    border: 2px solid rgb(255, 200, 0) !important;
-    border-radius: 50% !important;
-    width: 40px;
-    height: 40px;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
+    .btn-no-bg {
+        background-color: #ff5e00  !important;
+        border: 2px solid rgb(255, 200, 0) !important;
+        border-radius: 50% !important;
+        width: 40px;
+        height: 40px;
+        padding: 4px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
 
-.btn-no-bg:hover {
-    background-color: #e5f100!important;
-    border-color: transparent !important;
-}
+    .btn-no-bg:hover {
+        background-color: #e5f100!important;
+        border-color: transparent !important;
+    }
 
-.btn-no-bg:hover svg, .btn-no-bg:hover i {
-    color: white;
-}
+    .btn-no-bg:hover svg, .btn-no-bg:hover i {
+        color: white;
+    }
 
-.cart-icon {
-    height: 20px;
-}
+    .cart-icon {
+        height: 20px;
+    }
 </style>
+
 <body>
+
 <!-- Start Hero Section -->
 <div class="hero">
-	<div class="container">
-	  <div class="row justify-content-between">
-		<div class="col-lg-5">
-			<hr style="border: 1px solid #feffff;">	
-			<h3 style="font-weight: 600; font-size: 24px; color: #007bff ;">
-				Welcome 
-				<span class="d-block" style="color: #f57c00;">{{ request.user.username }}</span>
-			  </h3>
-			  <hr style="border: 1px solid #feffff;">
-			  <br>
-		  <div class="intro-excerpt">
-			<h1>Modern Interior <span class="d-block">Design Studio</span></h1>
-			<div class="d-flex align-items-center gap-3 mt-4">
-				<a href="{% url 'gallery' %}" class="btn btn-secondary">View Gallery</a>
-			  
-				<a href="{% url 'view_wishlist' %}" class="btn-no-bg">
-				  <img src="{% static 'images/wish-list.png' %}" alt="Wishlist" class="cart-icon">
-				</a>
-			  
-				<a href="{% url 'cart:view_cart' %}" class="btn-no-bg">
-				  <img src="{% static 'images/shopping-cart.png' %}" alt="Cart" class="cart-icon">
-				</a>
-			</div>						
-		</div>
-		</div>
-		<div class="col-lg-7">
-		  <div class="hero-img-wrap">
-			<img src="/static/images/couch.png" alt="Modern Sofa">
-		  </div>
-		</div>
-	  </div>
-	</div>
-  </div>
-  
-  <!-- End Hero Section -->
-  
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-5">
+                <hr style="border: 1px solid #feffff;">  
+                <h3 style="font-weight: 600; font-size: 24px; color: #007bff ;">
+                    Welcome 
+                    <span class="d-block" style="color: #f57c00;">{{ request.user.username }}</span>
+                </h3>
+                <hr style="border: 1px solid #feffff;">
+                <br>
+                <div class="intro-excerpt">
+                    <h1>Modern Interior <span class="d-block">Design Studio</span></h1>
+                    <div class="d-flex align-items-center gap-3 mt-4">
+                        <a href="{% url 'gallery' %}" class="btn btn-secondary">View Gallery</a>
+                        <a href="{% url 'view_wishlist' %}" class="btn-no-bg">
+                            <img src="{% static 'images/wish-list.png' %}" alt="Wishlist" class="cart-icon">
+                        </a>
+                        <a href="{% url 'cart:view_cart' %}" class="btn-no-bg">
+                            <img src="{% static 'images/shopping-cart.png' %}" alt="Cart" class="cart-icon">
+                        </a>
+                    </div>                        
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="hero-img-wrap">
+                    <img src="/static/images/couch.png" alt="Modern Sofa">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
 
-		<!-- Start Product Section -->
-		<div class="product-section">
-			<div class="container">
-				<div class="row">
+<!-- Start Product Section -->
+<div class="product-section">
+    <div class="container">
+        <div class="row">
 
-					<!-- Start Column 1 -->
-					<div class="col-md-12 col-lg-3 mb-5 mb-lg-0">
-						<h2 class="mb-4 section-title">  Crafted with excellent material. </h2>
-						<p class="mb-4">  Where quality meets elegance. Our handcrafted furniture is made with the finest materials to ensure lasting comfort, beauty, and strength. Designed with care, perfect for every room in your home. </p>
-					</div> 
-					<!-- End Column 1 -->
+            <!-- Start Column 1 -->
+            <div class="col-md-12 col-lg-3 mb-5 mb-lg-0">
+                <h2 class="mb-4 section-title">Crafted with excellent material.</h2>
+                <p class="mb-4">Where quality meets elegance. Our handcrafted furniture is made with the finest materials to ensure lasting comfort, beauty, and strength. Designed with care, perfect for every room in your home.</p>
+            </div> 
+            <!-- End Column 1 -->
 
-					<!-- Start Column 2 -->
-					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-						<a class="product-item" href="">
-							<img src="/static/images/n3.jpg" class="img-fluid product-thumbnail">
-						</a>
-					</div> 
-					<!-- End Column 2 -->
+            <!-- Start Column 2 -->
+            <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+                <a class="product-item" href="">
+                    <img src="/static/images/n3.jpg" class="img-fluid product-thumbnail">
+                </a>
+            </div> 
+            <!-- End Column 2 -->
 
-					<!-- Start Column 3 -->
-					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-						<a class="product-item" href="">
-							<img src="/static/images/n4.jpg" class="img-fluid product-thumbnail">
-						</a>
-					</div>
-					<!-- End Column 3 -->
+            <!-- Start Column 3 -->
+            <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+                <a class="product-item" href="">
+                    <img src="/static/images/n4.jpg" class="img-fluid product-thumbnail">
+                </a>
+            </div>
+            <!-- End Column 3 -->
 
-					<!-- Start Column 4 -->
-					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-						<a class="product-item" href="">
-							<img src="/static/images/n5.jpg" class="img-fluid product-thumbnail">
-						</a>
-					</div>
-					<!-- End Column 4 -->
+            <!-- Start Column 4 -->
+            <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+                <a class="product-item" href="">
+                    <img src="/static/images/n5.jpg" class="img-fluid product-thumbnail">
+                </a>
+            </div>
+            <!-- End Column 4 -->
 
-				</div>
-			</div>
-		</div>
-		<!-- End Product Section -->
+        </div>
+    </div>
+</div>
+<!-- End Product Section -->
 
-		<!-- Start Why Choose Us Section -->
-		<div class="why-choose-section">
-			<div class="container">
-				<div class="row justify-content-between">
-					<div class="col-lg-6">
-						<h2 class="section-title"> Why Choose Us </h2>
-						<p>At Lavkush Furniture, we combine premium quality materials, a wide variety of stylish designs, and customizable options to bring you furniture that suits your taste and budget. Our affordable pricing, seamless shopping experience, and exceptional customer service ensure that your home is furnished with care and convenience. Plus, we are committed to sustainability, so your choices are both stylish and eco-friendly.</p>
+<!-- Start Why Choose Us Section -->
+<div class="why-choose-section">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-6">
+                <h2 class="section-title">Why Choose Us</h2>
+                <p>At Lavkush Furniture, we combine premium quality materials, a wide variety of stylish designs, and customizable options to bring you furniture that suits your taste and budget. Our affordable pricing, seamless shopping experience, and exceptional customer service ensure that your home is furnished with care and convenience. Plus, we are committed to sustainability, so your choices are both stylish and eco-friendly.</p>
 
-						<div class="row my-5">
-							<div class="col-6 col-md-6">
-								<div class="feature">
-									<div class="icon">
-										<img src="/static/images/truck.svg" alt="Image" class="imf-fluid">
-									</div>
-									<h3> Fast &amp; Free Shipping </h3>
-									<p> Enjoy quick and hassle-free delivery right to your doorstep. We make sure your furniture arrives safely, on time, and at no extra cost. </p>
-								</div>
-							</div>
+                <div class="row my-5">
+                    <div class="col-6 col-md-6">
+                        <div class="feature">
+                            <div class="icon">
+                                <img src="/static/images/truck.svg" alt="Image" class="imf-fluid">
+                            </div>
+                            <h3>Fast &amp; Free Shipping</h3>
+                            <p>Enjoy quick and hassle-free delivery right to your doorstep. We make sure your furniture arrives safely, on time, and at no extra cost.</p>
+                        </div>
+                    </div>
 
-							<div class="col-6 col-md-6">
-								<div class="feature">
-									<div class="icon">
-										<img src="/static/images/bag.svg" alt="Image" class="imf-fluid">
-									</div>
-									<h3> Easy to gallery</h3>
-									<p> Explore our furniture collection with ease. Our clean, user-friendly gallery lets you view every detail, so you can find the perfect piece for your space effortlessly. </p>
-								</div>
-							</div>
+                    <div class="col-6 col-md-6">
+                        <div class="feature">
+                            <div class="icon">
+                                <img src="/static/images/bag.svg" alt="Image" class="imf-fluid">
+                            </div>
+                            <h3>Easy to Gallery</h3>
+                            <p>Explore our furniture collection with ease. Our clean, user-friendly gallery lets you view every detail, so you can find the perfect piece for your space effortlessly.</p>
+                        </div>
+                    </div>
 
-							<div class="col-6 col-md-6">
-								<div class="feature">
-									<div class="icon">
-										<img src="/static/images/support.svg" alt="Image" class="imf-fluid">
-									</div>
-									<h3> 24/7 Support </h3>
-									<p> We're here for you anytime, anywhere. Whether you have questions, need help with your order, or want expert advice — our support team is always ready to assist you, day or night.
-										</p>
-								</div>
-							</div>
+                    <div class="col-6 col-md-6">
+                        <div class="feature">
+                            <div class="icon">
+                                <img src="/static/images/support.svg" alt="Image" class="imf-fluid">
+                            </div>
+                            <h3>24/7 Support</h3>
+                            <p>We're here for you anytime, anywhere. Whether you have questions, need help with your order, or want expert advice — our support team is always ready to assist you, day or night.</p>
+                        </div>
+                    </div>
 
-							<div class="col-6 col-md-6">
-								<div class="feature">
-									<div class="icon">
-										<img src="/static/images/return.svg" alt="Image" class="imf-fluid">
-									</div>
-									<h3> Hassle Free Returns </h3>
-									<p> Shop with confidence! If something’s not quite right, our easy return process ensures a smooth and stress-free experience — no questions asked. </p>
-								</div>
-							</div>
+                    <div class="col-6 col-md-6">
+                        <div class="feature">
+                            <div class="icon">
+                                <img src="/static/images/return.svg" alt="Image" class="imf-fluid">
+                            </div>
+                            <h3>Hassle-Free Returns</h3>
+                            <p>Shop with confidence! If something’s not quite right, our easy return process ensures a smooth and stress-free experience — no questions asked.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-						</div>
-					</div>
+            <div class="col-lg-5">
+                <div class="img-wrap">
+                    <img src="/static/images/why-choose-us-img.jpg" alt="Image" class="img-fluid">
+                </div>
+            </div>
 
-					<div class="col-lg-5">
-						<div class="img-wrap">
-							<img src="/static/images/why-choose-us-img.jpg" alt="Image" class="img-fluid">
-						</div>
-					</div>
+        </div>
+    </div>
+</div>
+<!-- End Why Choose Us Section -->
 
-				</div>
-			</div>
-		</div>
-		<!-- End Why Choose Us Section -->
-
-		<!-- Start We Help Section -->
-		<div class="we-help-section">
-			<div class="container">
-				<div class="row justify-content-between">
-					<div class="col-lg-7 mb-5 mb-lg-0">
-						<div class="imgs-grid">
-							<div class="grid grid-1"><img src="/static/images/b6.jpg" alt="Untree.co"></div>
-							<div class="grid grid-2"><img src="/static/images/n8.jpg" alt="Untree.co"></div>
-							<div class="grid grid-3"><img src="/static/images/d1.jpg" alt="Untree.co"></div>
-						</div>
-					</div>
-					<div class="col-lg-5 ps-lg-5">
-						<h2 class="section-title mb-4"> Transform Your Space with Modern Interior Design</h2>
-						<p>Experience the perfect blend of comfort, elegance, and durability. At Lavkush Furniture, each handcrafted piece reflects timeless design and modern craftsmanship—made to enrich your lifestyle and turn your house into a home.
-
-							We believe furniture is more than just utility — it’s about creating cozy, stylish, and functional living spaces that truly reflect you </p>
-
-							<ul class="list-unstyled custom-list my-4">
-								<li>Expertly handcrafted with meticulous attention to detail</li><br>
-								<li>Elegant, timeless designs that seamlessly blend with modern aesthetics</li><br>
-								<li>Constructed using premium, long-lasting materials</li><br>
-								<li>Ergonomically designed for comfort and everyday functionality</li><br>
-								<li>Fully customizable to match your unique style and space</li><br>
-								<li>Exceptional customer service and a smooth, hassle-free shopping experience</li><br>
-								<li>Locally made with love, supporting skilled artisans and the community</li><br>
-								<li>Eco-friendly practices and sustainable sourcing of materials</li><br>
-								<li>Wide variety of styles, finishes, and sizes to fit any home</li><br>
-								<li>Designed to stand the test of time in both style and durability</li><br>
-							</ul>							
-
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- End We Help Section -->
+<!-- Start We Help Section -->
+<div class="we-help-section">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-7 mb-5 mb-lg-0">
+                <div class="imgs-grid">
+                    <div class="grid grid-1"><img src="/static/images/b6.jpg" alt="Untree.co"></div>
+                    <div class="grid grid-2"><img src="/static/images/n8.jpg" alt="Untree.co"></div>
+                    <div class="grid grid-3"><img src="/static/images/d1.jpg" alt="Untree.co"></div>
+                </div>
+            </div>
+            <div class="col-lg-5 ps-lg-5">
+                <h2 class="section-title mb-4">Transform Your Space with Modern Interior Design</h2>
+                <p>Experience the perfect blend of comfort, elegance, and durability. At Lavkush Furniture, each handcrafted piece reflects timeless design and modern craftsmanship—made to enrich your lifestyle and turn your house into a home.</p>
+                <ul class="list-unstyled custom-list my-4">
+                    <li>Expertly handcrafted with meticulous attention to detail</li>
+                    <li>Elegant, timeless designs that seamlessly blend with modern aesthetics</li>
+                    <li>Constructed using premium, long-lasting materials</li>
+                    <li>Ergonomically designed for comfort and everyday functionality</li>
+                    <li>Fully customizable to match your unique style and space</li>
+                    <li>Exceptional customer service and a smooth, hassle-free shopping experience</li>
+                    <li>Locally made with love, supporting skilled artisans and the community</li>
+                    <li>Eco-friendly practices and sustainable sourcing of materials</li>
+                    <li>Wide variety of styles, finishes, and sizes to fit any home</li>
+                    <li>Designed to stand the test of time in both style and durability</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End We Help Section -->
 
 {% include "footer.html" %}

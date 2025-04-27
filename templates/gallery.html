@@ -22,24 +22,18 @@
 
                         {% cloudinary image.image.public_id class="img-fluid product-thumbnail rounded mb-3" alt=image.caption style="max-height: 300px; object-fit: cover;" %}
 
-                        <!-- <a href="{% url 'furniture_detail' image.id %}" class="text-decoration-none text-dark">
-                            <h3 class="product-title mb-2">{{ image.caption }}</h3>
-                        </a> -->
-
+                        <!-- Image Caption and Details Link -->
                         <div class="d-flex flex-column align-items-center">
-                            <!-- Image Caption -->
                             <h3 class="text-decoration-none text-dark">{{ image.caption }}</h3>
-                        
-                            <!-- Button for the Product Details -->
-                            <a href="{% url 'furniture_detail' image.id %}" class="text-decoration-none text-dark">
-                                View Details
-                            </a>
+                            <a href="{% url 'furniture_detail' image.id %}" class="text-decoration-none text-dark">View Details</a>
                         </div>
 
+                        <!-- Price Display -->
                         {% if image.price %}
                             <p class="text-primary fw-bold">Price: ₹{{ image.price }}</p>
                         {% endif %}
 
+                        <!-- Rating Display -->
                         <p class="rating-display mb-2">
                             <strong>Rating:</strong>
                             <span class="stars">
@@ -102,89 +96,84 @@
 <!-- Custom CSS Enhancements -->
 <style>
     body {
-    font-family: 'Poppins', sans-serif;
-}
+        font-family: 'Poppins', sans-serif;
+    }
 
-.product-item {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+    .product-item {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-.transition-hover:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgb(210, 35, 35);
-}
+    .transition-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgb(210, 35, 35);
+    }
 
-.btn-no-bg {
-    background-color: rgb(229 241 0) !important;
-    border: 2px solid rgb(255, 200, 0) !important;
-    border-radius: 50% !important;
-    width: 40px;
-    height: 40px;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
+    .btn-no-bg {
+        background-color: rgb(229 241 0) !important;
+        border: 2px solid rgb(255, 200, 0) !important;
+        border-radius: 50% !important;
+        width: 40px;
+        height: 40px;
+        padding: 4px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
 
-.btn-no-bg:hover {
-    background-color: rgb(224, 208, 199) !important;
-    border-color: transparent !important;
-}
+    .btn-no-bg:hover {
+        background-color: rgb(224, 208, 199) !important;
+        border-color: transparent !important;
+    }
 
-.btn-no-bg:hover svg, .btn-no-bg:hover i {
-    color: white;
-}
+    .btn-no-bg:hover svg, .btn-no-bg:hover i {
+        color: white;
+    }
 
-.cart-icon {
-    height: 20px;
-}
+    .cart-icon {
+        height: 20px;
+    }
 
-.rating-display .stars {
-    display: inline-block;
-    font-size: 1.4rem;
-    color: #ffcc00;
-}
+    .rating-display .stars {
+        display: inline-block;
+        font-size: 1.4rem;
+        color: #ffcc00;
+    }
 
-.rating-display .star {
-    color: #ccc;
-    transition: color 0.3s ease;
-}
+    .rating-display .star {
+        color: #ccc;
+        transition: color 0.3s ease;
+    }
 
-.rating-display .star.filled {
-    color: #f5b301;
-}
+    .rating-display .star.filled {
+        color: #f5b301;
+    }
 
-.btn {
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
+    .btn {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
 
-.btn:hover {
-    opacity: 0.9;
-}
+    .btn:hover {
+        opacity: 0.9;
+    }
 
-.product-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-}
+    .product-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
 
-.bg-custom {
-    background-color: #2d5e51 !important;
-}
+    .bg-custom {
+        background-color: #2d5e51 !important;
+    }
 
-.shadow-sm {
-    color: #f5b301;
-    background-color: aquamarine;
-    box-shadow: 0 2px 6px rgba(80, 72, 72, 0.05);
-}
+    .shadow-sm {
+        color: #f5b301;
+        background-color: aquamarine;
+        box-shadow: 0 2px 6px rgba(80, 72, 72, 0.05);
+    }
 
-.cart-icon {
-    height: 24px;
-}
-
-.gap-2 {
-    gap: 0.5rem;
-}
-
+    .gap-2 {
+        gap: 0.5rem;
+    }
 </style>

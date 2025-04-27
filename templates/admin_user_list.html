@@ -14,15 +14,13 @@
   @keyframes moveBg {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; } 
-    /* tablebackground.png */
+    100% { background-position: 0% 50%; }
   }
 
   .container {
     width: 100%;
     max-width: 1200px;
     margin: 80px auto 20px;
-    /* background: url("{% static 'images/newone.png' %}"); */
     padding: 40px 30px;
     border-radius: 16px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
@@ -31,21 +29,20 @@
   }
 
   h2.page-title {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  font-weight: 600;
-  color: #f9ff00;
-  text-align: center;
-  letter-spacing: 1.5px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
-  transition: color 0.3s ease, transform 0.3s ease;
-}
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #f9ff00;
+    text-align: center;
+    letter-spacing: 1.5px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
 
-h2.page-title:hover {
-  color: #fff700;
-  transform: scale(1.05);
-}
-
+  h2.page-title:hover {
+    color: #fff700;
+    transform: scale(1.05);
+  }
 
   .search-bar {
     display: flex;
@@ -121,8 +118,9 @@ h2.page-title:hover {
       align-items: center;
     }
   }
-	.btn-no-bg {
-    background-color: #ff5e00  !important;
+
+  .btn-no-bg {
+    background-color: #ff5e00 !important;
     border: 2px solid rgb(255, 200, 0) !important;
     border-radius: 50% !important;
     width: 40px;
@@ -132,26 +130,26 @@ h2.page-title:hover {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-}
+  }
 
-.btn-no-bg:hover {
-    background-color: #e5f100!important;
+  .btn-no-bg:hover {
+    background-color: #e5f100 !important;
     border-color: transparent !important;
-}
+  }
 
-.btn-no-bg:hover svg, .btn-no-bg:hover i {
+  .btn-no-bg:hover svg,
+  .btn-no-bg:hover i {
     color: white;
-}
+  }
 
-.cart-icon {
+  .cart-icon {
     height: 20px;
-}
+  }
 </style>
 
 <div class="container">
   <h2 class="page-title">˜”*°•.˜”*°• Lavkush Customers & Profiles •°*”˜.•°*”˜</h2>
 
-  <!-- Advanced Search Bar -->
   <div class="search-bar">
     <input type="text" id="searchFirstName" placeholder="Search First Name">
     <input type="text" id="searchLastName" placeholder="Search Last Name">
@@ -185,8 +183,8 @@ h2.page-title:hover {
         <td>{{ user.items.city|default:"No city" }}</td>
         <td>
           {% if user != request.user %}
-          <a href="{% url 'delete_user' user.id %}" 
-             onclick="return confirm('Are you sure you want to delete {{ user.username }}?')" 
+          <a href="{% url 'delete_user' user.id %}"
+             onclick="return confirm('Are you sure you want to delete {{ user.username }}?')"
              style="color: red; font-weight: bold;">Delete</a>
           {% else %}
           <span style="color: gray;">You</span>
@@ -194,7 +192,7 @@ h2.page-title:hover {
         </td>
       </tr>
       {% endfor %}
-    </tbody>    
+    </tbody>
   </table>
 </div>
 
@@ -210,11 +208,7 @@ h2.page-title:hover {
       const lastName = row.cells[1].textContent.toLowerCase();
       const userCity = row.cells[6].textContent.toLowerCase();
 
-      if (
-        firstName.includes(fname) &&
-        lastName.includes(lname) &&
-        userCity.includes(city)
-      ) {
+      if (firstName.includes(fname) && lastName.includes(lname) && userCity.includes(city)) {
         row.style.display = "";
       } else {
         row.style.display = "none";
@@ -226,7 +220,6 @@ h2.page-title:hover {
     document.getElementById("searchFirstName").value = "";
     document.getElementById("searchLastName").value = "";
     document.getElementById("searchCity").value = "";
-    filterTable();  // Show all rows
+    filterTable();
   }
 </script>
-

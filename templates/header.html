@@ -64,7 +64,7 @@
 
     .custom-navbar-nav .nav-link:hover,
     .custom-navbar-nav .nav-link.active {
-      background-color: #d35400;
+      background-color: rgb(255, 200, 0) !important;
       color: white;
     }
 
@@ -147,7 +147,7 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="custom-navbar-nav navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'homepage' %}">Home</a>
+            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'homepage' %}">🏠</a>
           </li>
           <li class="nav-item">
             <a class="nav-link {% if request.path == '/aboutus/' %}active{% endif %}" href="{% url 'aboutus' %}">About</a>
@@ -155,6 +155,11 @@
           <li class="nav-item">
             <a class="nav-link {% if request.path == '/services/' %}active{% endif %}" href="{% url 'services' %}">Services</a>
           </li>
+
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/contactus/' %}active{% endif %}" href="{% url 'contactus' %}">Contact</a>
+          </li>
+
           <li class="nav-item">
             <a href="{% url 'view_wishlist' %}" class="btn-no-bg">
               <img src="{% static 'images/wish-list.png' %}" alt="Wishlist" class="cart-icon">

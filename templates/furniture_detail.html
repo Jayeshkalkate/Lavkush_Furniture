@@ -1,34 +1,37 @@
 {% load static %}
 {% load cloudinary %}
 {% include "header.html" %}
+
 {% block content %}
+<!-- Custom CSS for Button and Cart Icon -->
 <style>
-	.btn-no-bg {
-    background-color: #ff5e00  !important;
-    border: 2px solid rgb(255, 200, 0) !important;
-    border-radius: 50% !important;
-    width: 40px;
-    height: 40px;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
+    .btn-no-bg {
+        background-color: #ff5e00 !important;
+        border: 2px solid rgb(255, 200, 0) !important;
+        border-radius: 50% !important;
+        width: 40px;
+        height: 40px;
+        padding: 4px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
 
-.btn-no-bg:hover {
-    background-color: #e5f100!important;
-    border-color: transparent !important;
-}
+    .btn-no-bg:hover {
+        background-color: #e5f100 !important;
+        border-color: transparent !important;
+    }
 
-.btn-no-bg:hover svg, .btn-no-bg:hover i {
-    color: white;
-}
+    .btn-no-bg:hover svg, .btn-no-bg:hover i {
+        color: white;
+    }
 
-.cart-icon {
-    height: 20px;
-}
+    .cart-icon {
+        height: 20px;
+    }
 </style>
+
 <div class="container py-5" data-aos="fade-up">
     <div class="row">
         <!-- Image Section -->
@@ -80,8 +83,8 @@
                 {% else %}
                     <p>Product ID not available.</p>
                 {% endif %}
-
             </div>
+
             <!-- Rating Section for Authenticated Users -->
             {% if user.is_authenticated %}
                 <form method="POST" action="{% url 'rate_item' item.id %}" class="rating-form" data-aos="fade-up">
@@ -109,72 +112,73 @@
 
 {% include "footer.html" %}
 
-<!-- Custom CSS and JS for Interaction -->
+<!-- Custom CSS for Interaction and Responsiveness -->
 <style>
+    .btn-no-bg {
+        background-color: rgb(229 241 0) !important;
+        border: 2px solid rgb(255, 200, 0) !important;
+        border-radius: 50% !important;
+        width: 40px;
+        height: 40px;
+        padding: 4px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
 
-.btn-no-bg {
-    background-color: rgb(229 241 0) !important;
-    border: 2px solid rgb(255, 200, 0) !important;
-    border-radius: 50% !important;
-    width: 40px;
-    height: 40px;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
+    .btn-no-bg:hover {
+        background-color: rgb(224, 208, 199) !important;
+        border-color: transparent !important;
+    }
 
-.btn-no-bg:hover {
-    background-color: rgb(224, 208, 199) !important;
-    border-color: transparent !important;
-}
+    .btn-no-bg:hover svg, .btn-no-bg:hover i {
+        color: white;
+    }
 
-.btn-no-bg:hover svg, .btn-no-bg:hover i {
-    color: white;
-}
-
-.cart-icon {
-    height: 20px;
-}
+    .cart-icon {
+        height: 20px;
+    }
 
     /* Star display */
-.rating-display .stars {
-    display: inline-block;
-    font-size: 1.4rem;
-    color: #ffcc00;
-}
-.rating-display .star {
-    color: #c8c8c8;
-    transition: color 0.3s ease;
-}
-.rating-display .star.filled {
-    color: #f5b301;
-}
+    .rating-display .stars {
+        display: inline-block;
+        font-size: 1.4rem;
+        color: #ffcc00;
+    }
 
-.rating-form .star-rating-input {
-    direction: rtl;
-    display: flex;
-    gap: 5px;
-    justify-content: flex-start;
-}
+    .rating-display .star {
+        color: #c8c8c8;
+        transition: color 0.3s ease;
+    }
 
-.star-rating-input input[type="radio"] {
-    display: none;
-}
+    .rating-display .star.filled {
+        color: #f5b301;
+    }
 
-.star-rating-input label {
-    font-size: 1.8rem;
-    color: #c9b5b5;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
+    .rating-form .star-rating-input {
+        direction: rtl;
+        display: flex;
+        gap: 5px;
+        justify-content: flex-start;
+    }
 
-.star-rating-input input[type="radio"]:checked ~ label,
-.star-rating-input label:hover,
-.star-rating-input label:hover ~ label {
-    color: #f5b301;
-}
+    .star-rating-input input[type="radio"] {
+        display: none;
+    }
+
+    .star-rating-input label {
+        font-size: 1.8rem;
+        color: #c9b5b5;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .star-rating-input input[type="radio"]:checked ~ label,
+    .star-rating-input label:hover,
+    .star-rating-input label:hover ~ label {
+        color: #f5b301;
+    }
 
     .product-image-container {
         position: relative;
