@@ -1,6 +1,33 @@
 
 {% include "header.html" %}
+{% load static %}
+<style>
+	.btn-no-bg {
+    background-color: #ff5e00  !important;
+    border: 2px solid rgb(255, 200, 0) !important;
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
 
+.btn-no-bg:hover {
+    background-color: #e5f100!important;
+    border-color: transparent !important;
+}
+
+.btn-no-bg:hover svg, .btn-no-bg:hover i {
+    color: white;
+}
+
+.cart-icon {
+    height: 20px;
+}
+</style>
 <body>
 <!-- Start Hero Section -->
 <div class="hero">
@@ -16,14 +43,18 @@
 			  <br>
 		  <div class="intro-excerpt">
 			<h1>Modern Interior <span class="d-block">Design Studio</span></h1>
-			<p class="mb-4">
-			  Where quality meets elegance. Discover handcrafted furniture designed for comfort and style.
-			  Perfect pieces for every room, made with care and durability in mind.
-			</p>
-			<p>
-			  <a href="{% url 'gallery' %}" class="btn btn-secondary me-2">View Gallery</a>
-			</p>
-		  </div>
+			<div class="d-flex align-items-center gap-3 mt-4">
+				<a href="{% url 'gallery' %}" class="btn btn-secondary">View Gallery</a>
+			  
+				<a href="{% url 'view_wishlist' %}" class="btn-no-bg">
+				  <img src="{% static 'images/wish-list.png' %}" alt="Wishlist" class="cart-icon">
+				</a>
+			  
+				<a href="{% url 'cart:view_cart' %}" class="btn-no-bg">
+				  <img src="{% static 'images/shopping-cart.png' %}" alt="Cart" class="cart-icon">
+				</a>
+			</div>						
+		</div>
 		</div>
 		<div class="col-lg-7">
 		  <div class="hero-img-wrap">
@@ -33,6 +64,7 @@
 	  </div>
 	</div>
   </div>
+  
   <!-- End Hero Section -->
   
 
@@ -45,7 +77,6 @@
 					<div class="col-md-12 col-lg-3 mb-5 mb-lg-0">
 						<h2 class="mb-4 section-title">  Crafted with excellent material. </h2>
 						<p class="mb-4">  Where quality meets elegance. Our handcrafted furniture is made with the finest materials to ensure lasting comfort, beauty, and strength. Designed with care, perfect for every room in your home. </p>
-						<!-- <p><a href="gallery.html" class="btn">Explore</a></p> -->
 					</div> 
 					<!-- End Column 1 -->
 
@@ -53,8 +84,6 @@
 					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
 						<a class="product-item" href="">
 							<img src="/static/images/n3.jpg" class="img-fluid product-thumbnail">
-							<!-- <h3 class="product-title">Nordic Chair</h3> -->
-							<!-- <strong class="product-price">Rs 10000</strong> -->
 						</a>
 					</div> 
 					<!-- End Column 2 -->
@@ -63,8 +92,6 @@
 					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
 						<a class="product-item" href="">
 							<img src="/static/images/n4.jpg" class="img-fluid product-thumbnail">
-							<!-- <h3 class="product-title">Kruzo Aero Chair</h3> -->
-							<!-- <strong class="product-price">Rs 18000</strong> -->
 						</a>
 					</div>
 					<!-- End Column 3 -->
@@ -73,8 +100,6 @@
 					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
 						<a class="product-item" href="">
 							<img src="/static/images/n5.jpg" class="img-fluid product-thumbnail">
-							<!-- <h3 class="product-title">Ergonomic Chair</h3> -->
-							<!-- <strong class="product-price">Rs 13000</strong> -->
 						</a>
 					</div>
 					<!-- End Column 4 -->
@@ -176,8 +201,6 @@
 								<li>Eco-friendly practices and sustainable sourcing of materials</li><br>
 								<li>Wide variety of styles, finishes, and sizes to fit any home</li><br>
 								<li>Designed to stand the test of time in both style and durability</li><br>
-								<!-- <li>Easy maintenance and care instructions provided with every product</li><br>
-								<li>Trusted by hundreds of satisfied customers for quality and reliability</li><br> -->
 							</ul>							
 
 					</div>
