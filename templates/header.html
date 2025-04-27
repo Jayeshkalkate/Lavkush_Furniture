@@ -7,14 +7,14 @@
   <meta name="author" content="Untree.co">
   <meta name="description" content="Lavkush Furniture - Elegant handcrafted furniture for your perfect space.">
   <meta name="keywords" content="Lavkush Furniture, furniture, home decor, handcrafted furniture">
-  
+
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link href="{% static 'css/tiny-slider.css' %}" rel="stylesheet">
   <link rel="shortcut icon" href="{% static 'images/lavkushfurniturelogo.jpeg' %}">
-  
+
   <title>Lavkush Furniture Website</title>
 
   <style>
@@ -57,6 +57,8 @@
 
     .custom-navbar-nav .nav-link img {
       height: 22px;
+      width: 22px;
+      object-fit: cover;
     }
 
     .custom-navbar-nav .nav-link.active {
@@ -65,63 +67,33 @@
       border-color: transparent;
     }
 
-    /* Offcanvas Menu Styles */
-    .mobile-menu {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: 250px;
-      height: 100%;
-      background: #2c3e50;
-      transition: right 0.4s ease;
-      padding: 60px 20px 20px;
-      z-index: 1200;
-      overflow-y: auto;
+    /* Navbar animation */
+    .navbar-collapse.collapse {
+      transition: max-height 0.4s ease;
+      overflow: hidden;
     }
 
-    .mobile-menu.show {
-      right: 0;
+    .navbar-collapse.collapsing {
+      max-height: 0;
+      transition: max-height 0.35s ease;
     }
 
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      z-index: 1100;
+    .navbar-collapse.show {
+      max-height: 500px; /* Adjust if menu is very large */
     }
 
-    .overlay.show {
-      display: block;
-    }
-
-    /* Adjust Navbar on mobile */
-    .navbar-toggler {
-      border: none;
-      background-color: transparent;
-    }
-
-    /* Adjust padding and margin for mobile */
-    .navbar-nav .nav-item {
-      margin: 10px 0;
-    }
-
-    /* Adjust font size on small screens */
+    /* Responsive font size tweaks */
     @media (max-width: 768px) {
       .navbar-nav .nav-link {
         font-size: 16px;
-        padding: 12px 20px;
+        padding: 10px 16px;
       }
+    }
 
-      .mobile-menu {
-        padding: 50px 20px;
-      }
-
-      .custom-navbar-nav .nav-item {
-        margin-right: 15px;
+    @media (max-width: 576px) {
+      .navbar-nav .nav-link {
+        font-size: 15px;
+        padding: 8px 12px;
       }
     }
 
@@ -149,12 +121,12 @@
         <span style="font-family: 'Courier New', Courier, monospace;">Lavkush Furniture</span>
       </a>
 
-      <!-- Mobile Hamburger Button -->
-      <button class="navbar-toggler" type="button" id="mobile-menu-toggle">
+      <!-- Hamburger Button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- Normal Desktop Menu -->
+      <!-- Navbar Links -->
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
           <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'homepage' %}">Home</a></li>
@@ -162,50 +134,16 @@
           <li class="nav-item"><a class="nav-link" href="{% url 'aboutus' %}">About</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'contactus' %}">Contact</a></li>
+          <li class="nav-item ms-2">
+            <a class="nav-link" href="{% url 'userprofile' %}">
+              <img src="{% static 'images/user.svg' %}" alt="User Profile">
+            </a>
+          </li>
         </ul>
-        
-        <ul class="custom-navbar-nav navbar-nav ms-auto d-flex flex-row flex-md-row mt-2 mt-md-0">
-          <!-- <li class="nav-item ms-1"><a class="nav-link" href="{% url 'view_wishlist' %}"><img src="{% static 'images/wish-list.png' %}" alt="Wishlist"></a></li>
-          <li class="nav-item ms-1"><a class="nav-link" href="{% url 'cart:view_cart' %}"><img src="{% static 'images/shopping-cart.png' %}" alt="Cart"></a></li> -->
-          <li class="nav-item ms-1"><a class="nav-link" href="{% url 'userprofile' %}"><img src="{% static 'images/user.svg' %}" alt="User Profile"></a></li>
-        </ul>        
       </div>
-
-      <!-- Mobile Slide-in Menu -->
-      <div class="mobile-menu" id="mobileMenu">
-        <ul class="custom-navbar-nav navbar-nav ms-auto mb-0">
-          <li class="nav-item"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'homepage' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'gallery' %}">Gallery</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'aboutus' %}">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'contactus' %}">Contact</a></li>
-        </ul>
-        <ul class="custom-navbar-nav navbar-nav ms-auto mt-2">
-          <!-- <li class="nav-item ms-1"><a class="nav-link" href="{% url 'view_wishlist' %}"><img src="{% static 'images/wish-list.png' %}" alt="Wishlist"></a></li>
-          <li class="nav-item ms-1"><a class="nav-link" href="{% url 'cart:view_cart' %}"><img src="{% static 'images/shopping-cart.png' %}" alt="Cart"></a></li> -->
-          <li class="nav-item ms-1"><a class="nav-link" href="{% url 'userprofile' %}"><img src="{% static 'images/user.svg' %}" alt="User Profile"></a></li>
-        </ul>        
-      </div>
-
-      <div class="overlay" id="overlay"></div>
     </div>
   </nav>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const toggleBtn = document.getElementById('mobile-menu-toggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const overlay = document.getElementById('overlay');
-
-    toggleBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('show');
-      overlay.classList.toggle('show');
-    });
-
-    overlay.addEventListener('click', () => {
-      mobileMenu.classList.remove('show');
-      overlay.classList.remove('show');
-    });
-  </script>
 </body>
 </html>
