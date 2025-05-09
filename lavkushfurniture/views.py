@@ -47,7 +47,7 @@ def contact(request):
 
     return render(request, "contact.html")
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def services(request):
     return render(request, "services.html")
 
@@ -59,7 +59,7 @@ def gallery(request):
 def userprofile(request):
     return render(request, 'userprofile.html')
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def ourteam(request):
     return render(request, "ourteam.html")
 
