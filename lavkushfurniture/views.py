@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
-# Define the helper function here
 def send_email_to_client(first_name, last_name, email, message):
     subject = "New Message from Client"
     full_message = f"Name: {first_name} {last_name}\nEmail: {email}\n\nMessage:\n{message}"
@@ -13,11 +12,11 @@ def send_email_to_client(first_name, last_name, email, message):
     recipient_list = ["jayeshkalkate432@gmail.com"]
     send_mail(subject, full_message, from_email, recipient_list)
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def homepage(request):
     return render(request, "index.html")
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def aboutus(request):
     return render(request, "aboutus.html")
 
@@ -40,14 +39,14 @@ def contact(request):
         if first_name and last_name and email and message:
             send_email_to_client(first_name, last_name, email, message)
             messages.success(request, "Email sent successfully!")
-            return redirect('contactus')  # Replace 'contactus' with your actual URL name
+            return redirect('contactus')
         else:
             messages.error(request, "Please fill in all fields.")
             return redirect('contactus')
 
     return render(request, "contact.html")
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def services(request):
     return render(request, "services.html")
 
@@ -59,14 +58,14 @@ def gallery(request):
 def userprofile(request):
     return render(request, 'userprofile.html')
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def ourteam(request):
     return render(request, "ourteam.html")
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def privacy_policy(request):
     return render(request, 'privacy_policy.html')
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def termsandconditions(request):
     return render(request, "termsandconditions.html")
