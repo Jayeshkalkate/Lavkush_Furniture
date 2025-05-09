@@ -250,8 +250,6 @@
     const togglePassword = document.getElementById("toggle-password");
     const errorDiv = document.getElementById("frontend-error");
 
-    // Autofocus is handled by `autofocus` attribute
-
     togglePassword.addEventListener("change", () => {
       password.type = togglePassword.checked ? "text" : "password";
     });
