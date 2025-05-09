@@ -1,11 +1,3 @@
-/*
-* Template Name: UntreeStore
-* Template Author: Untree.co
-* Author URI: https://untree.co/
-* License: https://creativecommons.org/licenses/by/3.0/
-*/
-
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
 body {
@@ -153,7 +145,7 @@ a {
           z-index: 2;
           max-width: 780px;
         }
-        
+
         @media (min-width: 768px) {
           .hero .hero-img-wrap img {
             left: -100px;
@@ -163,7 +155,7 @@ a {
         @media (min-width: 992px) {
           .hero .hero-img-wrap img {
             position: absolute;
-            top: -80px;
+            top: -10px;
             left: 0;
             right: -50px;
           }
