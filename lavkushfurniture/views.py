@@ -13,11 +13,11 @@ def send_email_to_client(first_name, last_name, email, message):
     recipient_list = ["jayeshkalkate432@gmail.com"]
     send_mail(subject, full_message, from_email, recipient_list)
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def homepage(request):
     return render(request, "index.html")
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def aboutus(request):
     return render(request, "aboutus.html")
 
@@ -63,10 +63,10 @@ def userprofile(request):
 def ourteam(request):
     return render(request, "ourteam.html")
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def privacy_policy(request):
     return render(request, 'privacy_policy.html')
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def termsandconditions(request):
     return render(request, "termsandconditions.html")

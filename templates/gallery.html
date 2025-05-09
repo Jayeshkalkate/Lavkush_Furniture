@@ -5,7 +5,7 @@
 <!-- Gallery Section -->
 <div class="untree_co-section product-section before-footer-section bg-custom py-5">
     <div class="container">
-        
+
         <!-- Enhanced Filter and Sort UI with Emojis -->
         <form method="get" class="row mb-5 p-4 bg-white rounded shadow-sm border border-light"><div class="col-md-3 mb-3">
             <div class="input-group">
@@ -56,6 +56,13 @@
             {% endfor %}
         {% endif %}
 
+        <!-- Upload Button for Superuser -->
+        {% if user.is_superuser %}
+            <div class="text-center" data-aos="fade-up">
+                <a href="{% url 'upload_image' %}" class="btn btn-dark mt-4 shadow">Upload New Image</a>
+            </div>
+        {% endif %}
+        
         <!-- Image Gallery -->
         <div class="row">
             {% for image in images %}
@@ -123,13 +130,6 @@
                 </div>
             {% endfor %}
         </div>
-
-        <!-- Upload Button for Superuser -->
-        {% if user.is_superuser %}
-            <div class="text-center" data-aos="fade-up">
-                <a href="{% url 'upload_image' %}" class="btn btn-dark mt-4 shadow">Upload New Image</a>
-            </div>
-        {% endif %}
 
     </div>
 </div>
