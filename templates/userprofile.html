@@ -144,17 +144,22 @@
 
 </head>
 <body>
-
-  {% with request.user.items as profile %}
   <div class="container">
     <h2>👋 Welcome, {{ request.user.username }}</h2>
     <div class="profile-info">
-      <p><strong>Full Name:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</p>
+      <!-- <p><strong>Full Name:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</p> -->
+       <p><strong>Full Name:</strong> {{ request.user.get_full_name }}</p>
       <p><strong>Username:</strong> {{ request.user.username }}</p>
       <p><strong>Email:</strong> {{ request.user.email }}</p>
-      <p><strong>Phone:</strong> {{ profile.phone_number }}</p>
-      <p><strong>Address:</strong> {{ profile.address }}</p>
-      <p><strong>City:</strong> {{ profile.city }}</p>
+      {% if request.user.items %}
+        <p><strong>Phone:</strong> {{ request.user.items.phone_number|default:"No phone number" }}</p>
+        <p><strong>Address:</strong> {{ request.user.items.address|default:"No address" }}</p>
+        <p><strong>City:</strong> {{ request.user.items.city|default:"No city" }}</p>
+      {% else %}
+        <p><strong>Phone:</strong> No phone number</p>
+        <p><strong>Address:</strong> No address</p>
+        <p><strong>City:</strong> No city</p>
+      {% endif %}
     </div>
 
     {% if user.is_authenticated and user.is_superuser %}
@@ -163,12 +168,11 @@
       </div>
     {% endif %}
   </div>
-  {% endwith %}
 
   <form action="{% url 'logout' %}" method="post">
     {% csrf_token %}
     <button type="submit">🚪 Logout</button>
   </form>
-
 </body>
+
 </html>

@@ -8,7 +8,17 @@ import logging
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import get_object_or_404
 
-# Set up logging
+@user_passes_test(lambda u: u.is_superuser)
+def admin_user_list(request):
+    users = User.objects.select_related('items').all()
+    return render(request, 'admin_user_list.html', {'users': users})
+
+# @user_passes_test(lambda u: u.is_superuser)
+# def admin_user_list(request):
+#     users = User.objects.all().select_related('items')
+#     return render(request, 'admin_user_list.html', {'users': users})
+
+
 logger = logging.getLogger(__name__)
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -97,8 +107,3 @@ def user_logout(request):
 def home(request):
     items = Items.objects.filter(user=request.user)  # Show only the logged-in user's items
     return render(request, "index.html", {"items": items})
-
-@user_passes_test(lambda u: u.is_superuser)  # Only allow superuser to access
-def admin_user_list(request):
-    users = User.objects.all().select_related('items')
-    return render(request, 'admin_user_list.html', {'users': users})
