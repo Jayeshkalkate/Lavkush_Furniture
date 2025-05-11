@@ -19,17 +19,13 @@ def gallery_view(request):
 
         if keyword:
             images = images.filter(caption__icontains=keyword)
-
         if min_price is not None:
             images = images.filter(price__gte=min_price)
-
         if max_price is not None:
             images = images.filter(price__lte=max_price)
-
         if materials:
             images = images.filter(materials__icontains=materials)
 
-        # Sorting
         if sort_by == 'price_asc':
             images = images.order_by('price')
         elif sort_by == 'price_desc':
@@ -39,7 +35,11 @@ def gallery_view(request):
         elif sort_by == 'oldest':
             images = images.order_by('uploaded_at')
         elif sort_by == 'rating':
-            images = sorted(images, key=lambda i: Rating.objects.filter(item=i).aggregate(avg=Avg('rating'))['avg'] or 0, reverse=True)
+            images = sorted(
+                images,
+                key=lambda i: Rating.objects.filter(item=i).aggregate(avg=Avg('rating'))['avg'] or 0,
+                reverse=True
+            )
 
     for image in images:
         image.avg_rating = int(round(Rating.objects.filter(item=image).aggregate(avg=Avg('rating'))['avg'] or 0))
@@ -70,12 +70,6 @@ def rate_item(request, item_id):
             return redirect('furniture_detail', item_id=item.id)
 
     return render(request, 'rate_item.html', {'item': item, 'rating': rating})
-
-def gallery_view(request):
-    images = ImageWithCaption.objects.all().order_by('-uploaded_at')
-    for image in images:
-        image.avg_rating = int(round(Rating.objects.filter(item=image).aggregate(avg=Avg('rating'))['avg'] or 0))
-    return render(request, 'gallery.html', {'images': images})
 
 def furniture_detail(request, item_id):
     item = get_object_or_404(ImageWithCaption, id=item_id)
