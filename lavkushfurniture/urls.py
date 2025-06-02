@@ -30,13 +30,13 @@ urlpatterns = [
     path('services/', views.services, name='services'),
     path('contactus/', views.contact, name='contactus'),
     path('profile/', views.userprofile, name='userprofile'),
-    path('ourteam/', views.ourteam, name='ourteam'),
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
-    path('our-team/', include('team.urls')),    
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    # path('ourteam/', views.ourteam, name='our_team'),
+    path('our-team/', include('team.urls')),
 ]
 
 if settings.DEBUG:

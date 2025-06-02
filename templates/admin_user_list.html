@@ -161,8 +161,7 @@
   <table class="user-table" id="userTable">
     <thead>
       <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
+        <th>Full Name</th>
         <th>Username</th>
         <th>Email</th>
         <th>Phone Number</th>
@@ -174,8 +173,6 @@
 <tbody>
   {% for user in users %}
   <tr>
-    <!-- <td>{{ user.first_name }}</td>
-    <td>{{ user.last_name }}</td> -->
     <td>{{ user.get_full_name }}</td>
     <td>{{ user.username }}</td>
     <td>{{ user.email }}</td>
