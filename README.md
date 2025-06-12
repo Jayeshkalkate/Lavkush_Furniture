@@ -1,50 +1,110 @@
-# LavkushFurniture
-E-Commerce Website Lavkush Furniture
+````markdown
+# 🪑 Lavkush Furniture
 
-It looks like you're looking for a reference to describe your Lavkush Furniture project in a concise, social media-friendly format. Here's a refined version of your message for a post or launch announcement:
+A full-stack **Furniture Gallery E-Commerce Website** built with **Django**, featuring customer authentication, wishlist/cart, product filtering, admin product control, and a responsive design.
 
-🚀 Project Launch: Lavkush Furniture — A Full-Stack E-Commerce Web App 🪑🛒
+🔗 **Live Demo:** [lavkushfurniture.onrender.com](https://lavkushfurniture.onrender.com)
 
-I’m excited to introduce Lavkush Furniture, a fully responsive and feature-rich online furniture shopping platform built with Django and a modern full-stack tech stack! 💻
+---
 
-🧰 Tech Stack:
+## 🔥 Key Features
 
-* HTML, CSS, JavaScript, Python, Django, Bootstrap
-* Cloudinary, GitHub, Render, VS Code
+### 👤 For Users:
+- Secure registration and login
+- Browse products by category, rating, or price
+- Detailed product pages (with images, prices, specs)
+- Wishlist ❤️ and shopping cart 🛒
+- Ratings & Reviews system
+- Static content (Home, About, Contact)
+- Mobile responsive UI
 
-🧩 Key Features:
+### 🔐 For Admins (Superusers):
+- Add, edit, delete furniture items
+- Manage team section dynamically
+- Control user data & session management
 
-👥 For Customers:
+### 🧪 Coming Soon:
+- Online payment gateway integration
+- Order tracking functionality
+- UI/UX improvements
 
-* User registration & login
-* Smart search, filtering, and sorting
-* Product detail pages with images, prices, materials, and dimensions
-* Wishlist ❤️ and shopping cart 🛒
-* Product reviews & ratings ⭐
-* Static pages (Home, About, Contact, etc.)
-* Social media integration
+---
 
-🛠️ For Admins (Superusers):
+## 🛠️ Tech Stack
 
-* Manage user profiles and data
-* Full CRUD control over the product gallery
-* Dynamically update the “Our Team” section
-* Secure role-based admin actions
+| Layer      | Technologies Used                          |
+|------------|---------------------------------------------|
+| Frontend   | HTML5, CSS3, JavaScript, Bootstrap 5        |
+| Backend    | Python, Django                              |
+| Database   | SQLite (local) + Cloudinary (media hosting) |
+| Deployment | Render, GitHub, VS Code                     |
 
+---
 
-🚧 Coming Soon:
+## 🚀 Getting Started (Local Setup)
 
-* 💳 Online payment integration
-* 🚚 Real-time delivery tracking
-* 🎨 UI/UX enhancements
+```bash
+# Clone the repo
+git clone https://github.com/Jayeshkalkate/Lavkush_Furniture.git
+cd Lavkush_Furniture
 
-🎯 Vision:
-To create a student-level version of platforms like IKEA, Amazon, or Flipkart — fully functional, scalable, and visually appealing. 🌍
+# Create virtual environment
+python -m venv env
+source env/bin/activate  # On Windows use: env\Scripts\activate
 
-🔗 Live Demo: (https://lavkushfurniture.onrender.com)
+# Install packages
+pip install -r requirements.txt
 
-💻 GitHub Repo: (https://github.com/Jayeshkalkate/LavkushFurniture.git)
+# Migrate database
+python manage.py migrate
 
-💬 I’d love to hear your feedback, suggestions, or even just a quick visit to the demo! I’m open to collaboration and new ideas. Let's innovate together! 🙌
+# Run server
+python manage.py runserver
+````
 
-#Django #Python #FullStackDevelopment #WebDevelopment #EcommerceWebsite #PortfolioProject #StudentDeveloper #ResponsiveDesign #UIUXDesign #Cloudinary #Render #CloudDeployment #RenderHosting #GitHubProjects #OpenSourceProjects #MadeWithDjango #TechPortfolio #3rdYearProject #Innovation #CodeNewbie #LearningByDoing #BuildInPublic
+Then open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
+
+---
+
+## 📁 Project Structure
+
+```
+Lavkush_Furniture/
+├── account/           # Handles authentication
+├── gallery/           # Core app for products
+├── templates/         # All HTML templates
+├── static/            # CSS, JS, media
+├── media/             # Uploaded product images
+├── manage.py
+└── requirements.txt
+```
+
+---
+
+## 👨‍💻 Author
+
+**Jayesh Kalkate**
+📧 [kalkatejayesh@gmail.com](mailto:kalkatejayesh@gmail.com)
+🌐 [Portfolio](https://devjayesh-portfolio.netlify.app)
+🔗 [LinkedIn](https://www.linkedin.com/in/jayesh-kalkate-31a250242)
+💻 [GitHub](https://github.com/Jayeshkalkate)
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+> *Built with passion to demonstrate Django full-stack capabilities and real-world app design.*
+
+```
+
+---
+
+Let me know if you'd like:
+- A downloadable version of the README
+- Help committing it to your GitHub repo
+- Screenshots, badges, or banner design for your repo
+
+I'm ready when you are! 💪
+```
