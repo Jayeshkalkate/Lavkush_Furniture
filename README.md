@@ -98,13 +98,3 @@ This project is licensed under the [MIT License](LICENSE).
 > *Built with passion to demonstrate Django full-stack capabilities and real-world app design.*
 
 ```
-
----
-
-Let me know if you'd like:
-- A downloadable version of the README
-- Help committing it to your GitHub repo
-- Screenshots, badges, or banner design for your repo
-
-I'm ready when you are! 💪
-```
