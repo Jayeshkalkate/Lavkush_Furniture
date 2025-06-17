@@ -2,19 +2,26 @@
 
 <style>
   body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     margin: 0;
     padding: 0;
     color: #333;
-    background: url("{% static 'images/background.jpg' %}") no-repeat center center/cover;
+    background: url("{% static 'images/background.jpg' %}") no-repeat center
+      center/cover;
     background-size: cover;
     animation: moveBg 20s linear infinite;
   }
 
   @keyframes moveBg {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 
   .container {
@@ -148,12 +155,14 @@
 </style>
 
 <div class="container">
-  <h2 class="page-title">˜”*°•.˜”*°• Lavkush Customers & Profiles •°*”˜.•°*”˜</h2>
+  <h2 class="page-title">
+    ˜”*°•.˜”*°• Lavkush Customers & Profiles •°*”˜.•°*”˜
+  </h2>
 
   <div class="search-bar">
-    <input type="text" id="searchFirstName" placeholder="Search First Name">
-    <input type="text" id="searchLastName" placeholder="Search Last Name">
-    <input type="text" id="searchCity" placeholder="Search City">
+    <input type="text" id="searchFirstName" placeholder="Search First Name" />
+    <input type="text" id="searchLastName" placeholder="Search Last Name" />
+    <input type="text" id="searchCity" placeholder="Search City" />
     <button onclick="filterTable()">Search</button>
     <button onclick="resetFilter()">Reset</button>
   </div>
@@ -170,54 +179,60 @@
         <th>Action</th>
       </tr>
     </thead>
-<tbody>
-  {% for user in users %}
-  <tr>
-    <td>{{ user.get_full_name }}</td>
-    <td>{{ user.username }}</td>
-    <td>{{ user.email }}</td>
-    
-    {% with user.items as items %}
-    {% if items %}
-    <td>{{ items.phone_number|default:"No phone number" }}</td>
-    <td>{{ items.address|default:"No address" }}</td>
-    <td>{{ items.city|default:"No city" }}</td>
-    {% else %}
-    <td>No phone number</td>
-    <td>No address</td>
-    <td>No city</td>
-    {% endif %}
-    {% endwith %}
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.get_full_name }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
 
-    <td>
-      {% if user != request.user %}
-        <a href="{% url 'delete_user' user.id %}"
-           onclick="return confirm('Are you sure you want to delete {{ user.username }}?')"
-           style="color: red; font-weight: bold;">Delete</a>
-      {% else %}
-        <span style="color: gray;">You</span>
-      {% endif %}
-    </td>
-  </tr>
-  {% endfor %}
-</tbody>
+        {% with user.items as items %} {% if items %}
+        <td>{{ items.phone_number|default:"No phone number" }}</td>
+        <td>{{ items.address|default:"No address" }}</td>
+        <td>{{ items.city|default:"No city" }}</td>
+        {% else %}
+        <td>No phone number</td>
+        <td>No address</td>
+        <td>No city</td>
+        {% endif %} {% endwith %}
 
+        <td>
+          {% if user != request.user %}
+          <a
+            href="{% url 'delete_user' user.id %}"
+            onclick="return confirm('Are you sure you want to delete {{ user.username }}?')"
+            style="color: red; font-weight: bold"
+            >Delete</a
+          >
+          {% else %}
+          <span style="color: gray">You</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
   </table>
 </div>
 
 <script>
   function filterTable() {
-    const fname = document.getElementById("searchFirstName").value.toLowerCase();
+    const fname = document
+      .getElementById("searchFirstName")
+      .value.toLowerCase();
     const lname = document.getElementById("searchLastName").value.toLowerCase();
     const city = document.getElementById("searchCity").value.toLowerCase();
     const rows = document.querySelectorAll("#userTable tbody tr");
 
-    rows.forEach(row => {
+    rows.forEach((row) => {
       const firstName = row.cells[0].textContent.toLowerCase();
       const lastName = row.cells[1].textContent.toLowerCase();
       const userCity = row.cells[6].textContent.toLowerCase();
 
-      if (firstName.includes(fname) && lastName.includes(lname) && userCity.includes(city)) {
+      if (
+        firstName.includes(fname) &&
+        lastName.includes(lname) &&
+        userCity.includes(city)
+      ) {
         row.style.display = "";
       } else {
         row.style.display = "none";

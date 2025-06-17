@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'wishlist',
     'cloudinary',
     'cloudinary_storage',
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [

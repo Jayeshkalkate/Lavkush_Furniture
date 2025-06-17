@@ -1,8 +1,7 @@
-{% include "header.html" %}
-{% load static %}
+{% include "header.html" %} {% load static %}
 <style>
-	.btn-no-bg {
-    background-color: #ff5e00  !important;
+  .btn-no-bg {
+    background-color: #ff5e00 !important;
     border: 2px solid rgb(255, 200, 0) !important;
     border-radius: 50% !important;
     width: 40px;
@@ -12,168 +11,260 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-}
+  }
 
-.btn-no-bg:hover {
-    background-color: #e5f100!important;
+  .btn-no-bg:hover {
+    background-color: #e5f100 !important;
     border-color: transparent !important;
-}
+  }
 
-.btn-no-bg:hover svg, .btn-no-bg:hover i {
+  .btn-no-bg:hover svg,
+  .btn-no-bg:hover i {
     color: white;
-}
+  }
 
-.cart-icon {
+  .cart-icon {
     height: 20px;
-}
+  }
 </style>
-		<!-- Start Hero Section -->
-			<div class="hero">
-				<div class="container">
-					<div class="row justify-content-between">
-						<div class="col-lg-5">
-							<div class="intro-excerpt">
-								<h1>Services</h1>
-								<p class="mb-4">With a passion for fine craftsmanship and customer satisfaction, our mission is to offer furniture that combines traditional values with modern aesthetics. Every piece we create is built with care, using premium materials and expert skills to ensure long-lasting comfort and elegance.</p>
-								<p>
-									<a href="{% url 'gallery' %}" class="btn btn-secondary me-2">View Gallery</a>
-								</p>
-							</div>
-						</div>
-						<div class="col-lg-7">
-							<div class="hero-img-wrap">
-								<img src="/static/images/couch2.png" class="img-fluid" style="top: auto;">
-							</div>
-						</div>  
-					</div>
-				</div>
-			</div>
-		<!-- End Hero Section -->		
+<!-- Start Hero Section -->
+<div class="hero">
+  <div class="container">
+    <div class="row justify-content-between">
+      <div class="col-lg-5">
+        <div class="intro-excerpt">
+          <h1>Services</h1>
+          <p class="mb-4">
+            With a passion for fine craftsmanship and customer satisfaction, our
+            mission is to offer furniture that combines traditional values with
+            modern aesthetics. Every piece we create is built with care, using
+            premium materials and expert skills to ensure long-lasting comfort
+            and elegance.
+          </p>
+          <p>
+            <a href="{% url 'gallery' %}" class="btn btn-secondary me-2"
+              >View Gallery</a
+            >
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="hero-img-wrap">
+          <img
+            src="/static/images/couch2.png"
+            class="img-fluid"
+            style="top: auto"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Hero Section -->
 
-		<!-- Start Why Choose Us Section -->
-		<div class="why-choose-section">
-			<div class="container">
-				
-				<div class="row my-5">
-					<div class="col-6 col-md-6 col-lg-3 mb-4">
-						<div class="feature">
-							<div class="icon">
-								<img src="/static/images/truck.svg" alt="Fast & Free Shipping" class="imf-fluid">
-							</div>
-							<h3>Fast & Free Shipping</h3>
-							<p>We offer fast and reliable delivery across India, ensuring your furniture arrives at your doorstep quickly and at no extra cost. We prioritize on-time deliveries so you can enjoy your new furniture without delay.</p>
-						</div>
-					</div>
-				
-					<div class="col-6 col-md-6 col-lg-3 mb-4">
-						<div class="feature">
-							<div class="icon">
-								<img src="/static/images/bag.svg" alt="Easy Gallery" class="imf-fluid">
-							</div>
-							<h3>Easy Gallery Experience</h3>
-							<p>Browse through our user-friendly online gallery and find the perfect pieces for your home. Our platform is designed to make shopping seamless and enjoyable, with detailed product descriptions and images.</p>
-						</div>
-					</div>
-				
-					<div class="col-6 col-md-6 col-lg-3 mb-4">
-						<div class="feature">
-							<div class="icon">
-								<img src="/static/images/support.svg" alt="24/7 Support" class="imf-fluid">
-							</div>
-							<h3>24/7 Customer Support</h3>
-							<p>Our dedicated support team is available around the clock to assist with any queries or concerns. Whether you need help with orders, deliveries, or product information, we’re just a call away.</p>
-						</div>
-					</div>
-				
-					<div class="col-6 col-md-6 col-lg-3 mb-4">
-						<div class="feature">
-							<div class="icon">
-								<img src="/static/images/return.svg" alt="Hassle-Free Returns" class="imf-fluid">
-							</div>
-							<h3>Hassle-Free Returns</h3>
-							<p>If you’re not satisfied with your purchase, our easy return policy makes it simple to send it back. We ensure a smooth process so you can shop with confidence, knowing that your satisfaction is guaranteed.</p>
-						</div>
-					</div>
-				
-					<div class="col-6 col-md-6 col-lg-3 mb-4">
-						<div class="feature">
-							<div class="icon">
-								<img src="/static/images/truck.svg" alt="Fast & Free Shipping" class="imf-fluid">
-							</div>
-							<h3>Fast & Free Shipping</h3>
-							<p>We offer fast and reliable delivery across India, ensuring your furniture arrives at your doorstep quickly and at no extra cost. We prioritize on-time deliveries so you can enjoy your new furniture without delay.</p>
-						</div>
-					</div>
-				
-					<div class="col-6 col-md-6 col-lg-3 mb-4">
-						<div class="feature">
-							<div class="icon">
-								<img src="/static/images/bag.svg" alt="Easy Gallery" class="imf-fluid">
-							</div>
-							<h3>Easy Gallery Experience</h3>
-							<p>Browse through our user-friendly online gallery and find the perfect pieces for your home. Our platform is designed to make shopping seamless and enjoyable, with detailed product descriptions and images.</p>
-						</div>
-					</div>
-				
-					<div class="col-6 col-md-6 col-lg-3 mb-4">
-						<div class="feature">
-							<div class="icon">
-								<img src="/static/images/support.svg" alt="24/7 Support" class="imf-fluid">
-							</div>
-							<h3>24/7 Customer Support</h3>
-							<p>Our dedicated support team is available around the clock to assist with any queries or concerns. Whether you need help with orders, deliveries, or product information, we’re just a call away.</p>
-						</div>
-					</div>
-				
-					<div class="col-6 col-md-6 col-lg-3 mb-4">
-						<div class="feature">
-							<div class="icon">
-								<img src="/static/images/return.svg" alt="Hassle-Free Returns" class="imf-fluid">
-							</div>
-							<h3>Hassle-Free Returns</h3>
-							<p>If you’re not satisfied with your purchase, our easy return policy makes it simple to send it back. We ensure a smooth process so you can shop with confidence, knowing that your satisfaction is guaranteed.</p>
-						</div>
-					</div>
-				</div>				
-			
-			</div>
-		</div>
-		<!-- End Why Choose Us Section -->
+<!-- Start Why Choose Us Section -->
+<div class="why-choose-section">
+  <div class="container">
+    <div class="row my-5">
+      <div class="col-6 col-md-6 col-lg-3 mb-4">
+        <div class="feature">
+          <div class="icon">
+            <img
+              src="/static/images/truck.svg"
+              alt="Fast & Free Shipping"
+              class="imf-fluid"
+            />
+          </div>
+          <h3>Fast & Free Shipping</h3>
+          <p>
+            We offer fast and reliable delivery across India, ensuring your
+            furniture arrives at your doorstep quickly and at no extra cost. We
+            prioritize on-time deliveries so you can enjoy your new furniture
+            without delay.
+          </p>
+        </div>
+      </div>
 
-		<!-- Start Product Section -->
-		<div class="product-section pt-0">
-			<div class="container">
-				<div class="row">
+      <div class="col-6 col-md-6 col-lg-3 mb-4">
+        <div class="feature">
+          <div class="icon">
+            <img
+              src="/static/images/bag.svg"
+              alt="Easy Gallery"
+              class="imf-fluid"
+            />
+          </div>
+          <h3>Easy Gallery Experience</h3>
+          <p>
+            Browse through our user-friendly online gallery and find the perfect
+            pieces for your home. Our platform is designed to make shopping
+            seamless and enjoyable, with detailed product descriptions and
+            images.
+          </p>
+        </div>
+      </div>
 
-					
-					<div class="col-md-12 col-lg-3 mb-5 mb-lg-0">
-						<h2 class="mb-4 section-title">Crafted for Quality, Designed for Elegance</h2>
-						<p class="mb-4">Explore our collection of expertly crafted furniture, where premium materials meet timeless design. Each piece is made with care, offering the perfect balance of comfort, style, and durability to elevate every room in your home.</p>
-					</div> 
-										
-					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-						<a class="product-item" href="#">
-							<img src="/static/images/d1.jpg" class="img-fluid product-thumbnail">
-						</a>
-					</div>
-					
-					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-						<a class="product-item" href="#">
-							<img src="/static/images/b6.jpg" class="img-fluid product-thumbnail">
-						</a>
-					</div> 
-					
-					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-						<a class="product-item" href="#">
-							<img src="/static/images/n1.jpg" class="img-fluid product-thumbnail">
-						</a>
-					</div>
-					
+      <div class="col-6 col-md-6 col-lg-3 mb-4">
+        <div class="feature">
+          <div class="icon">
+            <img
+              src="/static/images/support.svg"
+              alt="24/7 Support"
+              class="imf-fluid"
+            />
+          </div>
+          <h3>24/7 Customer Support</h3>
+          <p>
+            Our dedicated support team is available around the clock to assist
+            with any queries or concerns. Whether you need help with orders,
+            deliveries, or product information, we’re just a call away.
+          </p>
+        </div>
+      </div>
 
-				</div>
-			</div>
-		</div>
-		<!-- End Product Section -->
+      <div class="col-6 col-md-6 col-lg-3 mb-4">
+        <div class="feature">
+          <div class="icon">
+            <img
+              src="/static/images/return.svg"
+              alt="Hassle-Free Returns"
+              class="imf-fluid"
+            />
+          </div>
+          <h3>Hassle-Free Returns</h3>
+          <p>
+            If you’re not satisfied with your purchase, our easy return policy
+            makes it simple to send it back. We ensure a smooth process so you
+            can shop with confidence, knowing that your satisfaction is
+            guaranteed.
+          </p>
+        </div>
+      </div>
 
+      <div class="col-6 col-md-6 col-lg-3 mb-4">
+        <div class="feature">
+          <div class="icon">
+            <img
+              src="/static/images/truck.svg"
+              alt="Fast & Free Shipping"
+              class="imf-fluid"
+            />
+          </div>
+          <h3>Fast & Free Shipping</h3>
+          <p>
+            We offer fast and reliable delivery across India, ensuring your
+            furniture arrives at your doorstep quickly and at no extra cost. We
+            prioritize on-time deliveries so you can enjoy your new furniture
+            without delay.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-6 col-lg-3 mb-4">
+        <div class="feature">
+          <div class="icon">
+            <img
+              src="/static/images/bag.svg"
+              alt="Easy Gallery"
+              class="imf-fluid"
+            />
+          </div>
+          <h3>Easy Gallery Experience</h3>
+          <p>
+            Browse through our user-friendly online gallery and find the perfect
+            pieces for your home. Our platform is designed to make shopping
+            seamless and enjoyable, with detailed product descriptions and
+            images.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-6 col-lg-3 mb-4">
+        <div class="feature">
+          <div class="icon">
+            <img
+              src="/static/images/support.svg"
+              alt="24/7 Support"
+              class="imf-fluid"
+            />
+          </div>
+          <h3>24/7 Customer Support</h3>
+          <p>
+            Our dedicated support team is available around the clock to assist
+            with any queries or concerns. Whether you need help with orders,
+            deliveries, or product information, we’re just a call away.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-6 col-lg-3 mb-4">
+        <div class="feature">
+          <div class="icon">
+            <img
+              src="/static/images/return.svg"
+              alt="Hassle-Free Returns"
+              class="imf-fluid"
+            />
+          </div>
+          <h3>Hassle-Free Returns</h3>
+          <p>
+            If you’re not satisfied with your purchase, our easy return policy
+            makes it simple to send it back. We ensure a smooth process so you
+            can shop with confidence, knowing that your satisfaction is
+            guaranteed.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Why Choose Us Section -->
+
+<!-- Start Product Section -->
+<div class="product-section pt-0">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 col-lg-3 mb-5 mb-lg-0">
+        <h2 class="mb-4 section-title">
+          Crafted for Quality, Designed for Elegance
+        </h2>
+        <p class="mb-4">
+          Explore our collection of expertly crafted furniture, where premium
+          materials meet timeless design. Each piece is made with care, offering
+          the perfect balance of comfort, style, and durability to elevate every
+          room in your home.
+        </p>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+        <a class="product-item" href="#">
+          <img
+            src="/static/images/d1.jpg"
+            class="img-fluid product-thumbnail"
+          />
+        </a>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+        <a class="product-item" href="#">
+          <img
+            src="/static/images/b6.jpg"
+            class="img-fluid product-thumbnail"
+          />
+        </a>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+        <a class="product-item" href="#">
+          <img
+            src="/static/images/n1.jpg"
+            class="img-fluid product-thumbnail"
+          />
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Product Section -->
 
 {% include "footer.html" %}

@@ -1,8 +1,7 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
 
 <style>
-.btn-no-bg {
+  .btn-no-bg {
     background-color: #ff5e00 !important;
     border: 2px solid rgb(255, 200, 0) !important;
     border-radius: 50% !important;
@@ -13,110 +12,156 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-}
-.btn-no-bg:hover {
+  }
+  .btn-no-bg:hover {
     background-color: #e5f100 !important;
     border-color: transparent !important;
-}
-.btn-no-bg:hover svg, .btn-no-bg:hover i {
+  }
+  .btn-no-bg:hover svg,
+  .btn-no-bg:hover i {
     color: white;
-}
-.cart-icon {
+  }
+  .cart-icon {
     height: 20px;
-}
+  }
 </style>
 
 <!-- Start Hero Section -->
 <div class="hero">
-    <div class="container">
-        <div class="row justify-content-between">
-            <div class="col-lg-5">
-                <div class="intro-excerpt">
-                    <h1>About</h1>
-                    <p class="mb-4">
-                        At Lavkush Furniture, we believe that furniture is more than just wood and nails — it's about comfort, style, and the feeling of home.
-                        Based in Ranale, Maharashtra, we specialize in crafting high-quality, durable, and beautifully designed furniture that fits every space and lifestyle.
-                    </p>
-                    <p>
-                        <a href="{% url 'gallery' %}" class="btn btn-secondary me-2">View Gallery</a>
-                        <a href="{% url 'our_team' %}" class="btn btn-secondary me-2">Our Team</a>
-                    </p>
-                </div>
-            </div>
-            <div class="col-lg-7">
-                <div class="hero-img-wrap">
-                    <img src="/static/images/couch2.png" class="img-fluid" style="top: auto;">
-                </div>
-            </div>            
+  <div class="container">
+    <div class="row justify-content-between">
+      <div class="col-lg-5">
+        <div class="intro-excerpt">
+          <h1>About</h1>
+          <p class="mb-4">
+            At Lavkush Furniture, we believe that furniture is more than just
+            wood and nails — it's about comfort, style, and the feeling of home.
+            Based in Ranale, Maharashtra, we specialize in crafting
+            high-quality, durable, and beautifully designed furniture that fits
+            every space and lifestyle.
+          </p>
+          <p>
+            <a href="{% url 'gallery' %}" class="btn btn-secondary me-2"
+              >View Gallery</a
+            >
+            <a href="{% url 'our_team' %}" class="btn btn-secondary me-2"
+              >Our Team</a
+            >
+          </p>
         </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="hero-img-wrap">
+          <img
+            src="/static/images/couch2.png"
+            class="img-fluid"
+            style="top: auto"
+          />
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <!-- End Hero Section -->
 
 <!-- Start Why Choose Us Section -->
 <div class="why-choose-section">
-    <div class="container">
-        <div class="row justify-content-between align-items-center">
-            <div class="col-lg-6">
-                <h2 class="section-title">Why Choose Us</h2>
-                <p>
-                    At Lavkush Furniture, we combine premium quality materials, a wide variety of stylish designs, and customizable options
-                    to bring you furniture that suits your taste and budget.
-                    Our affordable pricing, seamless shopping experience, and exceptional customer service ensure that your home is furnished with care and convenience.
-                    Plus, we are committed to sustainability, so your choices are both stylish and eco-friendly.
-                </p>
+  <div class="container">
+    <div class="row justify-content-between align-items-center">
+      <div class="col-lg-6">
+        <h2 class="section-title">Why Choose Us</h2>
+        <p>
+          At Lavkush Furniture, we combine premium quality materials, a wide
+          variety of stylish designs, and customizable options to bring you
+          furniture that suits your taste and budget. Our affordable pricing,
+          seamless shopping experience, and exceptional customer service ensure
+          that your home is furnished with care and convenience. Plus, we are
+          committed to sustainability, so your choices are both stylish and
+          eco-friendly.
+        </p>
 
-                <div class="row my-5">
-                    <div class="col-6 col-md-6">
-                        <div class="feature">
-                            <div class="icon">
-                                <img src="/static/images/truck.svg" alt="Image" class="imf-fluid">
-                            </div>
-                            <h3>Fast &amp; Free Shipping</h3>
-                            <p>Enjoy quick and hassle-free delivery right to your doorstep. We make sure your furniture arrives safely, on time, and at no extra cost.</p>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-md-6">
-                        <div class="feature">
-                            <div class="icon">
-                                <img src="/static/images/bag.svg" alt="Image" class="imf-fluid">
-                            </div>
-                            <h3>Easy to Gallery</h3>
-                            <p>Explore our furniture collection with ease. Our clean, user-friendly gallery lets you view every detail, so you can find the perfect piece for your space effortlessly.</p>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-md-6">
-                        <div class="feature">
-                            <div class="icon">
-                                <img src="/static/images/support.svg" alt="Image" class="imf-fluid">
-                            </div>
-                            <h3>24/7 Support</h3>
-                            <p>We're here for you anytime, anywhere. Whether you have questions, need help with your order, or want expert advice — our support team is always ready to assist you, day or night.</p>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-md-6">
-                        <div class="feature">
-                            <div class="icon">
-                                <img src="/static/images/return.svg" alt="Image" class="imf-fluid">
-                            </div>
-                            <h3>Hassle Free Returns</h3>
-                            <p>Shop with confidence! If something’s not quite right, our easy return process ensures a smooth and stress-free experience — no questions asked.</p>
-                        </div>
-                    </div>
-                </div>
+        <div class="row my-5">
+          <div class="col-6 col-md-6">
+            <div class="feature">
+              <div class="icon">
+                <img
+                  src="/static/images/truck.svg"
+                  alt="Image"
+                  class="imf-fluid"
+                />
+              </div>
+              <h3>Fast &amp; Free Shipping</h3>
+              <p>
+                Enjoy quick and hassle-free delivery right to your doorstep. We
+                make sure your furniture arrives safely, on time, and at no
+                extra cost.
+              </p>
             </div>
+          </div>
 
-            <div class="col-lg-5">
-                <div class="img-wrap">
-                    <img src="/static/images/d2.jpg" alt="Image" class="img-fluid">
-                </div>
+          <div class="col-6 col-md-6">
+            <div class="feature">
+              <div class="icon">
+                <img
+                  src="/static/images/bag.svg"
+                  alt="Image"
+                  class="imf-fluid"
+                />
+              </div>
+              <h3>Easy to Gallery</h3>
+              <p>
+                Explore our furniture collection with ease. Our clean,
+                user-friendly gallery lets you view every detail, so you can
+                find the perfect piece for your space effortlessly.
+              </p>
             </div>
+          </div>
 
+          <div class="col-6 col-md-6">
+            <div class="feature">
+              <div class="icon">
+                <img
+                  src="/static/images/support.svg"
+                  alt="Image"
+                  class="imf-fluid"
+                />
+              </div>
+              <h3>24/7 Support</h3>
+              <p>
+                We're here for you anytime, anywhere. Whether you have
+                questions, need help with your order, or want expert advice —
+                our support team is always ready to assist you, day or night.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-6">
+            <div class="feature">
+              <div class="icon">
+                <img
+                  src="/static/images/return.svg"
+                  alt="Image"
+                  class="imf-fluid"
+                />
+              </div>
+              <h3>Hassle Free Returns</h3>
+              <p>
+                Shop with confidence! If something’s not quite right, our easy
+                return process ensures a smooth and stress-free experience — no
+                questions asked.
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="img-wrap">
+          <img src="/static/images/d2.jpg" alt="Image" class="img-fluid" />
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <!-- End Why Choose Us Section -->
 

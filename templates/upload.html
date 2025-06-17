@@ -1,10 +1,8 @@
-{% load static %}
-{% load cloudinary %}
-{% include "header.html" %}
+{% load static %} {% load cloudinary %} {% include "header.html" %}
 
 <style>
-	.btn-no-bg {
-    background-color: #ff5e00  !important;
+  .btn-no-bg {
+    background-color: #ff5e00 !important;
     border: 2px solid rgb(255, 200, 0) !important;
     border-radius: 50% !important;
     width: 40px;
@@ -14,77 +12,71 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-}
+  }
 
-.btn-no-bg:hover {
-    background-color: #e5f100!important;
+  .btn-no-bg:hover {
+    background-color: #e5f100 !important;
     border-color: transparent !important;
-}
+  }
 
-.btn-no-bg:hover svg, .btn-no-bg:hover i {
+  .btn-no-bg:hover svg,
+  .btn-no-bg:hover i {
     color: white;
-}
+  }
 
-.cart-icon {
+  .cart-icon {
     height: 20px;
-}
+  }
 </style>
 <!-- Start Hero Section -->
 <div class="hero">
-    <div class="container">
-        <div class="row justify-content-between">
-            <div class="col-lg-5">
-                <div class="intro-excerpt">
-                    <h1>Upload Image</h1>
-                    <p class="lead">Share your favorite image with a caption.</p>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row justify-content-between">
+      <div class="col-lg-5">
+        <div class="intro-excerpt">
+          <h1>Upload Image</h1>
+          <p class="lead">Share your favorite image with a caption.</p>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 <!-- End Hero Section -->
 
 <!-- Upload Form Section -->
 <div class="untree_co-section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <form method="POST" enctype="multipart/form-data" class="p-4 bg-light shadow rounded">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        {{ form.image.label_tag }}
-                        {{ form.image }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.price.label_tag }}
-                        {{ form.price }}
-                    </div>                    
-                    <div class="mb-3">
-                        {{ form.caption.label_tag }}
-                        {{ form.caption }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.description.label_tag }}
-                        {{ form.description }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.dimensions.label_tag }}
-                        {{ form.dimensions }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.materials.label_tag }}
-                        {{ form.materials }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.rating.label_tag }}
-                        {{ form.rating }}
-                    </div>
-                    <button type="submit" class="btn btn-primary">Upload</button>
-                    <a href="{% url 'gallery' %}" class="btn btn-secondary">Back to Gallery</a>
-                </form>
-            </div>
-        </div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <form
+          method="POST"
+          enctype="multipart/form-data"
+          class="p-4 bg-light shadow rounded"
+        >
+          {% csrf_token %}
+          <div class="mb-3">{{ form.image.label_tag }} {{ form.image }}</div>
+          <div class="mb-3">{{ form.price.label_tag }} {{ form.price }}</div>
+          <div class="mb-3">
+            {{ form.caption.label_tag }} {{ form.caption }}
+          </div>
+          <div class="mb-3">
+            {{ form.description.label_tag }} {{ form.description }}
+          </div>
+          <div class="mb-3">
+            {{ form.dimensions.label_tag }} {{ form.dimensions }}
+          </div>
+          <div class="mb-3">
+            {{ form.materials.label_tag }} {{ form.materials }}
+          </div>
+          <div class="mb-3">{{ form.rating.label_tag }} {{ form.rating }}</div>
+          <button type="submit" class="btn btn-primary">Upload</button>
+          <a href="{% url 'gallery' %}" class="btn btn-secondary"
+            >Back to Gallery</a
+          >
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 
 {% include "footer.html" %}

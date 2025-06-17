@@ -1,12 +1,7 @@
-
-{% load custom_filters %}
-
-{% include "header.html" %}
-
-{% load static %}
+{% load custom_filters %} {% include "header.html" %} {% load static %}
 <style>
-	.btn-no-bg {
-    background-color: #ff5e00  !important;
+  .btn-no-bg {
+    background-color: #ff5e00 !important;
     border: 2px solid rgb(255, 200, 0) !important;
     border-radius: 50% !important;
     width: 40px;
@@ -16,493 +11,540 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-}
+  }
 
-.btn-no-bg:hover {
-    background-color: #e5f100!important;
+  .btn-no-bg:hover {
+    background-color: #e5f100 !important;
     border-color: transparent !important;
-}
+  }
 
-.btn-no-bg:hover svg, .btn-no-bg:hover i {
+  .btn-no-bg:hover svg,
+  .btn-no-bg:hover i {
     color: white;
-}
+  }
 
-.cart-icon {
+  .cart-icon {
     height: 20px;
-}
+  }
 </style>
 <!-- Toast Notification -->
-<div x-data="{ show: false, toastMessage: '' }"
-     x-show="show"
-     x-transition:enter="transition ease-out duration-300"
-     x-transition:enter-start="opacity-0 translate-y-4"
-     x-transition:enter-end="opacity-100 translate-y-0"
-     x-transition:leave="transition ease-in duration-300"
-     x-transition:leave-start="opacity-100 translate-y-0"
-     x-transition:leave-end="opacity-0 translate-y-4"
-     x-init="$watch('toastMessage', value => { if(value) { show = true; setTimeout(() => show = false, 3000) } })"
-     class="fixed bottom-5 right-5 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg z-50">
+<div
+  x-data="{ show: false, toastMessage: '' }"
+  x-show="show"
+  x-transition:enter="transition ease-out duration-300"
+  x-transition:enter-start="opacity-0 translate-y-4"
+  x-transition:enter-end="opacity-100 translate-y-0"
+  x-transition:leave="transition ease-in duration-300"
+  x-transition:leave-start="opacity-100 translate-y-0"
+  x-transition:leave-end="opacity-0 translate-y-4"
+  x-init="$watch('toastMessage', value => { if(value) { show = true; setTimeout(() => show = false, 3000) } })"
+  class="fixed bottom-5 right-5 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg z-50"
+>
   <span x-text="toastMessage"></span>
 </div>
 
 <!-- Main Cart -->
 <div x-data="{ cartMessage: '' }">
+  <div
+    x-data="{ message: '' }"
+    class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-2xl animate-fadeInUp"
+  >
+    <h2 class="text-3xl font-bold mb-6 text-gray-800">Your Shopping Cart 🛒</h2>
 
-<div x-data="{ message: '' }" class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-2xl animate-fadeInUp">
-  <h2 class="text-3xl font-bold mb-6 text-gray-800">Your Shopping Cart 🛒</h2>
-
-  {% if items %}
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-    <div class="lg:col-span-2 space-y-6">
-      {% for item in items %}
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-6 p-4 bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 animate-pop">
-        <div class="flex items-center gap-5 w-full">
-          <img src="{{ item.product.image.url }}" alt="{{ item.product.caption }}" class="w-24 h-24 object-cover rounded-lg border">
-          <div class="flex-grow">
-            <h3 class="text-lg font-semibold text-gray-800">{{ item.product.caption }}</h3>
-            <p class="text-sm text-gray-500 mt-1">₹{{ item.product.price }} per unit</p>
-            <form action="{% url 'cart:update_quantity' item.id %}" method="post" class="mt-4 flex flex-wrap items-center gap-2" x-data="{ quantity: {{ item.quantity }} }" @submit="$root.message = 'Quantity updated!'">
-              {% csrf_token %}
-              <button type="button" @click="quantity = Math.max(1, quantity - 1)" class="px-3 py-1 bg-white border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">−</button>
-              <input type="number" name="quantity" x-model="quantity" min="1" class="w-16 text-center border border-gray-300 rounded-lg px-2 py-1 focus:ring-2 focus:ring-blue-500 transition-all duration-300">
-              <button type="button" @click="quantity++" class="px-3 py-1 bg-white border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">+</button>
-              <button type="submit" class="ml-2 px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500">Update</button>
-              <a href="{% url 'cart:remove_from_cart' item.id %}" class="text-red-500 hover:text-red-700 text-sm ml-auto transition-all duration-300">Remove</a>
-            </form>
+    {% if items %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-6">
+        {% for item in items %}
+        <div
+          class="flex flex-col sm:flex-row items-center justify-between gap-6 p-4 bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 animate-pop"
+        >
+          <div class="flex items-center gap-5 w-full">
+            <img
+              src="{{ item.product.image.url }}"
+              alt="{{ item.product.caption }}"
+              class="w-24 h-24 object-cover rounded-lg border"
+            />
+            <div class="flex-grow">
+              <h3 class="text-lg font-semibold text-gray-800">
+                {{ item.product.caption }}
+              </h3>
+              <p class="text-sm text-gray-500 mt-1">
+                ₹{{ item.product.price }} per unit
+              </p>
+              <form
+                action="{% url 'cart:update_quantity' item.id %}"
+                method="post"
+                class="mt-4 flex flex-wrap items-center gap-2"
+                x-data="{ quantity: {{ item.quantity }} }"
+                @submit="$root.message = 'Quantity updated!'"
+              >
+                {% csrf_token %}
+                <button
+                  type="button"
+                  @click="quantity = Math.max(1, quantity - 1)"
+                  class="px-3 py-1 bg-white border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                >
+                  −
+                </button>
+                <input
+                  type="number"
+                  name="quantity"
+                  x-model="quantity"
+                  min="1"
+                  class="w-16 text-center border border-gray-300 rounded-lg px-2 py-1 focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                />
+                <button
+                  type="button"
+                  @click="quantity++"
+                  class="px-3 py-1 bg-white border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                >
+                  +
+                </button>
+                <button
+                  type="submit"
+                  class="ml-2 px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  Update
+                </button>
+                <a
+                  href="{% url 'cart:remove_from_cart' item.id %}"
+                  class="text-red-500 hover:text-red-700 text-sm ml-auto transition-all duration-300"
+                  >Remove</a
+                >
+              </form>
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-    </div>    
 
-    <div class="lg:sticky top-24 h-fit bg-gray-100 border p-6 rounded-xl shadow-md space-y-4">
-      <h3 class="text-xl font-semibold text-gray-800">Order Summary</h3>
-      <p class="text-lg text-gray-700 flex items-center gap-2">
-        <span>Subtotal:</span>
-        <span class="font-medium">₹{{ total_price|floatformat:2 }}</span>
-      </p>
+      <div
+        class="lg:sticky top-24 h-fit bg-gray-100 border p-6 rounded-xl shadow-md space-y-4"
+      >
+        <h3 class="text-xl font-semibold text-gray-800">Order Summary</h3>
+        <p class="text-lg text-gray-700 flex items-center gap-2">
+          <span>Subtotal:</span>
+          <span class="font-medium">₹{{ total_price|floatformat:2 }}</span>
+        </p>
+      </div>
     </div>
-    
+
+    {% else %}
+    <div class="text-center py-20 text-gray-500 text-lg">
+      <p>Your cart is empty. Add something you love!</p>
+      <a class="nav-link" href="{% url 'gallery' %}">Gallery</a>
+    </div>
+    {% endif %}
   </div>
 
-  {% else %}
-  <div class="text-center py-20 text-gray-500 text-lg">
-    <p>Your cart is empty. Add something you love!</p>
-    <a class="nav-link" href="{% url 'gallery' %}">Gallery</a>
-  </div>
-  {% endif %}
+  <style>
+    /* Toast Notification */
+    .fixed {
+      position: fixed;
+      z-index: 50;
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .bg-green-600 {
+      background-color: #2ecc71;
+    }
+
+    .bg-blue-600 {
+      background-color: #3498db;
+    }
+
+    .bg-purple-600 {
+      background-color: #9b59b6;
+    }
+
+    .text-white {
+      color: #fff;
+    }
+
+    .px-4 {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .py-3 {
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    .rounded-lg {
+      border-radius: 12px;
+    }
+
+    .shadow-lg {
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Cart Container */
+    .max-w-7xl {
+      max-width: 90rem;
+    }
+
+    .mx-auto {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .p-6 {
+      padding: 24px;
+    }
+
+    .bg-white {
+      background-color: #ffffff;
+    }
+
+    .bg-yellow-100 {
+      background-color: #fffbeb;
+    }
+
+    .shadow-lg {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .rounded-2xl {
+      border-radius: 18px;
+    }
+
+    .animate-fadeInUp {
+      animation: fadeInUp 0.5s ease-in-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Cart Title */
+    .text-3xl {
+      font-size: 2rem;
+    }
+
+    .font-bold {
+      font-weight: 700;
+    }
+
+    .mb-6 {
+      margin-bottom: 24px;
+    }
+
+    .text-gray-800 {
+      color: #2d3748;
+    }
+
+    .text-blue-600 {
+      color: #3498db;
+    }
+
+    /* Cart Item */
+    .grid-cols-1 {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .lg\\:grid-cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .gap-8 {
+      gap: 2rem;
+    }
+
+    .space-y-6 {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .items-center {
+      align-items: center;
+    }
+
+    .justify-between {
+      justify-content: space-between;
+    }
+
+    .gap-6 {
+      gap: 1.5rem;
+    }
+
+    .p-4 {
+      padding: 16px;
+    }
+
+    .bg-gray-50 {
+      background-color: #f9fafb;
+    }
+
+    .bg-teal-100 {
+      background-color: #e0f9f2;
+    }
+
+    .rounded-xl {
+      border-radius: 12px;
+    }
+
+    .shadow-sm {
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .hover\\:shadow-md:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .transition-all {
+      transition: all 0.3s ease;
+    }
+
+    .duration-300 {
+      transition-duration: 300ms;
+    }
+
+    .animate-pop {
+      animation: popIn 0.3s ease-in-out;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Cart Item Image */
+    .w-24 {
+      width: 6rem;
+    }
+
+    .h-24 {
+      height: 6rem;
+    }
+
+    .object-cover {
+      object-fit: cover;
+    }
+
+    .rounded-lg {
+      border-radius: 8px;
+    }
+
+    .border {
+      border-width: 1px;
+    }
+
+    .flex-grow {
+      flex-grow: 1;
+    }
+
+    /* Cart Item Details */
+    .text-lg {
+      font-size: 1.125rem;
+    }
+
+    .font-semibold {
+      font-weight: 600;
+    }
+
+    .text-sm {
+      font-size: 0.875rem;
+    }
+
+    .text-gray-500 {
+      color: #6b7280;
+    }
+
+    .text-pink-500 {
+      color: #e91e63;
+    }
+
+    .mt-1 {
+      margin-top: 4px;
+    }
+
+    .ml-2 {
+      margin-left: 8px;
+    }
+
+    /* Buttons */
+    .px-3 {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    .py-1 {
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+
+    .bg-white {
+      background-color: #fff;
+    }
+
+    .border-gray-300 {
+      border-color: #e2e8f0;
+    }
+
+    .rounded-lg {
+      border-radius: 8px;
+    }
+
+    .hover\\:bg-gray-200:hover {
+      background-color: #edf2f7;
+    }
+
+    .focus\\:outline-none:focus {
+      outline: none;
+    }
+
+    .focus\\:ring-2:focus {
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+    }
+
+    .focus\\:ring-blue-500:focus {
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 1);
+    }
+
+    .transform {
+      transform: scale(1);
+    }
+
+    .hover\\:scale-105:hover {
+      transform: scale(1.05);
+    }
+
+    .text-red-500 {
+      color: #f87171;
+    }
+
+    .hover\\:text-red-700:hover {
+      color: #b91c1c;
+    }
+
+    /* Order Summary */
+    .bg-gray-100 {
+      background-color: #f7fafc;
+    }
+
+    .bg-orange-100 {
+      background-color: #fff3e0;
+    }
+
+    .border {
+      border-width: 1px;
+    }
+
+    .p-6 {
+      padding: 24px;
+    }
+
+    .rounded-xl {
+      border-radius: 12px;
+    }
+
+    .shadow-md {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .space-y-4 {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Checkout Button */
+    .bg-green-600 {
+      background-color: #2ecc71;
+    }
+
+    .bg-red-600 {
+      background-color: #e74c3c;
+    }
+
+    .bg-purple-600 {
+      background-color: #9b59b6;
+    }
+
+    .hover\\:bg-green-700:hover {
+      background-color: #27ae60;
+    }
+
+    .hover\\:bg-red-700:hover {
+      background-color: #c0392b;
+    }
+
+    .hover\\:bg-purple-700:hover {
+      background-color: #8e44ad;
+    }
+
+    .focus\\:ring-2:focus {
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.5);
+    }
+
+    .transform:hover {
+      transform: scale(1.05);
+    }
+
+    .w-full {
+      width: 100%;
+    }
+
+    .mt-4 {
+      margin-top: 16px;
+    }
+
+    .py-3 {
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    .text-lg {
+      font-size: 1.125rem;
+    }
+
+    .rounded-lg {
+      border-radius: 8px;
+    }
+
+    /* Empty Cart */
+    .text-center {
+      text-align: center;
+    }
+
+    .py-20 {
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+
+    .text-gray-500 {
+      color: #6b7280;
+    }
+
+    .text-lg {
+      font-size: 1.125rem;
+    }
+
+    .nav-link {
+      color: #3182ce;
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      color: #2b6cb0;
+    }
+  </style>
 </div>
-
-<style>
-
-/* Toast Notification */
-.fixed {
-  position: fixed;
-  z-index: 50;
-  bottom: 20px;
-  right: 20px;
-}
-
-.bg-green-600 {
-  background-color: #2ecc71;
-}
-
-.bg-blue-600 {
-  background-color: #3498db;
-}
-
-.bg-purple-600 {
-  background-color: #9b59b6;
-}
-
-.text-white {
-  color: #fff;
-}
-
-.px-4 {
-  padding-left: 16px;
-  padding-right: 16px;
-}
-
-.py-3 {
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
-
-.rounded-lg {
-  border-radius: 12px;
-}
-
-.shadow-lg {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Cart Container */
-.max-w-7xl {
-  max-width: 90rem;
-}
-
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.p-6 {
-  padding: 24px;
-}
-
-.bg-white {
-  background-color: #ffffff;
-}
-
-.bg-yellow-100 {
-  background-color: #fffbeb;
-}
-
-.shadow-lg {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.rounded-2xl {
-  border-radius: 18px;
-}
-
-.animate-fadeInUp {
-  animation: fadeInUp 0.5s ease-in-out;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Cart Title */
-.text-3xl {
-  font-size: 2rem;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.mb-6 {
-  margin-bottom: 24px;
-}
-
-.text-gray-800 {
-  color: #2d3748;
-}
-
-.text-blue-600 {
-  color: #3498db;
-}
-
-/* Cart Item */
-.grid-cols-1 {
-  grid-template-columns: repeat(1, 1fr);
-}
-
-.lg\\:grid-cols-3 {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.gap-8 {
-  gap: 2rem;
-}
-
-.space-y-6 {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.flex {
-  display: flex;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.gap-6 {
-  gap: 1.5rem;
-}
-
-.p-4 {
-  padding: 16px;
-}
-
-.bg-gray-50 {
-  background-color: #f9fafb;
-}
-
-.bg-teal-100 {
-  background-color: #e0f9f2;
-}
-
-.rounded-xl {
-  border-radius: 12px;
-}
-
-.shadow-sm {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.hover\\:shadow-md:hover {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.transition-all {
-  transition: all 0.3s ease;
-}
-
-.duration-300 {
-  transition-duration: 300ms;
-}
-
-.animate-pop {
-  animation: popIn 0.3s ease-in-out;
-}
-
-@keyframes popIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Cart Item Image */
-.w-24 {
-  width: 6rem;
-}
-
-.h-24 {
-  height: 6rem;
-}
-
-.object-cover {
-  object-fit: cover;
-}
-
-.rounded-lg {
-  border-radius: 8px;
-}
-
-.border {
-  border-width: 1px;
-}
-
-.flex-grow {
-  flex-grow: 1;
-}
-
-/* Cart Item Details */
-.text-lg {
-  font-size: 1.125rem;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.text-sm {
-  font-size: 0.875rem;
-}
-
-.text-gray-500 {
-  color: #6b7280;
-}
-
-.text-pink-500 {
-  color: #e91e63;
-}
-
-.mt-1 {
-  margin-top: 4px;
-}
-
-.ml-2 {
-  margin-left: 8px;
-}
-
-/* Buttons */
-.px-3 {
-  padding-left: 12px;
-  padding-right: 12px;
-}
-
-.py-1 {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-.bg-white {
-  background-color: #fff;
-}
-
-.border-gray-300 {
-  border-color: #e2e8f0;
-}
-
-.rounded-lg {
-  border-radius: 8px;
-}
-
-.hover\\:bg-gray-200:hover {
-  background-color: #edf2f7;
-}
-
-.focus\\:outline-none:focus {
-  outline: none;
-}
-
-.focus\\:ring-2:focus {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-}
-
-.focus\\:ring-blue-500:focus {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 1);
-}
-
-.transform {
-  transform: scale(1);
-}
-
-.hover\\:scale-105:hover {
-  transform: scale(1.05);
-}
-
-.text-red-500 {
-  color: #f87171;
-}
-
-.hover\\:text-red-700:hover {
-  color: #b91c1c;
-}
-
-/* Order Summary */
-.bg-gray-100 {
-  background-color: #f7fafc;
-}
-
-.bg-orange-100 {
-  background-color: #fff3e0;
-}
-
-.border {
-  border-width: 1px;
-}
-
-.p-6 {
-  padding: 24px;
-}
-
-.rounded-xl {
-  border-radius: 12px;
-}
-
-.shadow-md {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.space-y-4 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-/* Checkout Button */
-.bg-green-600 {
-  background-color: #2ecc71;
-}
-
-.bg-red-600 {
-  background-color: #e74c3c;
-}
-
-.bg-purple-600 {
-  background-color: #9b59b6;
-}
-
-.hover\\:bg-green-700:hover {
-  background-color: #27ae60;
-}
-
-.hover\\:bg-red-700:hover {
-  background-color: #c0392b;
-}
-
-.hover\\:bg-purple-700:hover {
-  background-color: #8e44ad;
-}
-
-.focus\\:ring-2:focus {
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.5);
-}
-
-.transform:hover {
-  transform: scale(1.05);
-}
-
-.w-full {
-  width: 100%;
-}
-
-.mt-4 {
-  margin-top: 16px;
-}
-
-.py-3 {
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
-
-.text-lg {
-  font-size: 1.125rem;
-}
-
-.rounded-lg {
-  border-radius: 8px;
-}
-
-/* Empty Cart */
-.text-center {
-  text-align: center;
-}
-
-.py-20 {
-  padding-top: 80px;
-  padding-bottom: 80px;
-}
-
-.text-gray-500 {
-  color: #6b7280;
-}
-
-.text-lg {
-  font-size: 1.125rem;
-}
-
-.nav-link {
-  color: #3182ce;
-  text-decoration: none;
-}
-
-.nav-link:hover {
-  color: #2b6cb0;
-}
-
-
-</style>
