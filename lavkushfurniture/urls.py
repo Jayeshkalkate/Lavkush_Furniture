@@ -1,10 +1,11 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from lavkushfurniture import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
+from django.views.static import serve
 
 # Sitemap imports
 from django.contrib.sitemaps.views import sitemap
@@ -41,10 +42,20 @@ urlpatterns = [
     # Sitemap URL
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
 
-    # Robot.txt
+    # Robots.txt
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
 
+    # Google Search Console Verification File
+    re_path(
+        r'^googleb98d5f288b41cce2\.html$',
+        serve,
+        {
+            'document_root': settings.STATIC_ROOT,
+            'path': 'googleb98d5f288b41cce2.html',
+        }
+    ),
 ]
 
+# Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
