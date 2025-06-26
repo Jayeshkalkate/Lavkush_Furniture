@@ -71,15 +71,22 @@ def rate_item(request, item_id):
 
     return render(request, 'rate_item.html', {'item': item, 'rating': rating})
 
+
 def furniture_detail(request, item_id):
     item = get_object_or_404(ImageWithCaption, id=item_id)
     avg_rating = Rating.objects.filter(item=item).aggregate(Avg('rating'))['rating__avg'] or 0
     rating_range = range(1, 6)
+    rating = None
+    if request.user.is_authenticated:
+        rating = Rating.objects.filter(user=request.user, item=item).first()
+
     return render(request, 'furniture_detail.html', {
         'item': item,
         'rating_range': rating_range,
         'avg_rating': avg_rating,
+        'rating': rating,
     })
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def upload_image(request):
