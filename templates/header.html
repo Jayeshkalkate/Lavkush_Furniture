@@ -20,7 +20,7 @@
 
     <!-- SEO Meta Tags -->
     <title>
-      Lavkush Furniture | Affordable Custom Wooden Furniture in Nandurbar
+      {% block title %}Lavkush Furniture | Affordable Custom Wooden Furniture in Nandurbar{% endblock %}
     </title>
     <meta
       name="description"
@@ -39,37 +39,19 @@
     />
 
     <!-- Open Graph / Facebook -->
-    <meta
-      property="og:title"
-      content="Lavkush Furniture | Home of Custom Furniture"
-    />
-    <meta
-      property="og:description"
-      content="Premium custom wooden furniture built to order in Nandurbar. Beds, sofas, tables & more with expert craftsmanship."
-    />
+    <meta property="og:title" content="Lavkush Furniture | Home of Custom Furniture" />
+    <meta property="og:description" content="Premium custom wooden furniture built to order in Nandurbar. Beds, sofas, tables & more with expert craftsmanship." />
     <meta property="og:url" content="https://lavkushfurniture.onrender.com/" />
     <meta property="og:type" content="website" />
-    <meta
-      property="og:image"
-      content="https://lavkushfurniture.onrender.com/static/images/logo.png"
-    />
+    <meta property="og:image" content="https://lavkushfurniture.onrender.com/static/images/logo.png" />
     <meta property="og:site_name" content="Lavkush Furniture" />
     <meta property="og:locale" content="en_IN" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Lavkush Furniture | Handcrafted Furniture from Nandurbar"
-    />
-    <meta
-      name="twitter:description"
-      content="Discover beautiful custom wooden furniture for every room. Quality and tradition, delivered."
-    />
-    <meta
-      name="twitter:image"
-      content="https://lavkushfurniture.onrender.com/static/images/logo.png"
-    />
+    <meta name="twitter:title" content="Lavkush Furniture | Handcrafted Furniture from Nandurbar" />
+    <meta name="twitter:description" content="Discover beautiful custom wooden furniture for every room. Quality and tradition, delivered." />
+    <meta name="twitter:image" content="https://lavkushfurniture.onrender.com/static/images/logo.png" />
     <meta name="twitter:site" content="@LavkushFurniture" />
 
     <!-- Schema.org JSON-LD Structured Data -->
@@ -82,52 +64,53 @@
         "logo": "https://lavkushfurniture.onrender.com/static/images/logo.png",
         "image": "https://lavkushfurniture.onrender.com/static/images/logo.png",
         "description": "Lavkush Furniture offers custom-built wooden furniture in Nandurbar. Explore a range of sofas, beds, tables and more.",
+        "telephone": "+91 84829 98343",
         "address": {
           "@type": "PostalAddress",
+          "streetAddress": "Shivaji Nagar, Behind Bus Stand",
           "addressLocality": "Nandurbar",
           "addressRegion": "Maharashtra",
+          "postalCode": "425412",
           "addressCountry": "IN"
         },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 21.3664975,
+          "longitude": 74.2381061
+        },
+        "hasMap": "https://maps.app.goo.gl/AjgS82cSJFztYmKF9",
         "sameAs": [
           "https://www.facebook.com/lavkushfurniture",
-          "https://www.instagram.com/lavkushfurniture"
+          "https://www.instagram.com/lavkush_furniture_ndb?igsh=M3ZoeTd6Y29neDE1"
         ]
       }
     </script>
 
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VQ9RRDSMFL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-VQ9RRDSMFL");
+    </script>
+
     <!-- Icons -->
-    <link
-      rel="icon"
-      href="{% static 'images/favicon.ico' %}"
-      type="image/x-icon"
-    />
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon" />
     <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}" />
-    <link
-      rel="shortcut icon"
-      href="{% static 'images/lavkushfurniturelogo.jpeg' %}"
-    />
+    <link rel="shortcut icon" href="{% static 'images/lavkushfurniturelogo.jpeg' %}" />
 
     <!-- Stylesheets -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'css/style.css' %}" rel="stylesheet" />
     <link href="{% static 'css/tiny-slider.css' %}" rel="stylesheet" />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-    />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
 
-    <!-- Optional Performance Optimization -->
-    <!-- <link rel="preload" href="{% static 'fonts/your-font.woff2' %}" as="font" type="font/woff2" crossorigin> -->
-
-    <!-- <style>
+    <style>
       body {
         overflow-x: hidden;
         font-family: "Poppins", sans-serif;
@@ -174,10 +157,16 @@
         transition: all 0.3s ease;
       }
 
-      .custom-navbar-nav .nav-link:hover,
-      .custom-navbar-nav .nav-link.active {
-        background-color: rgb(255, 200, 0) !important;
+      .custom-navbar-nav .nav-link:hover {
+        background-color: #f39c12 !important;
         color: white;
+        text-decoration: underline;
+      }
+
+      .custom-navbar-nav .nav-link.active {
+        background-color: #e67e22 !important;
+        color: white;
+        text-decoration: underline;
       }
 
       .custom-navbar-nav .nav-link:focus {
@@ -201,19 +190,20 @@
         justify-content: center;
       }
 
-      /* Responsive */
       @media (max-width: 991.98px) {
         .custom-navbar-nav {
           flex-direction: column;
           gap: 10px;
           margin-top: 15px;
         }
+
         .custom-navbar-nav .nav-link {
           width: 100%;
           text-align: center;
           font-size: 18px;
           padding: 10px;
         }
+
         .navbar-brand img {
           height: 50px;
           width: 50px;
@@ -224,9 +214,11 @@
         .navbar-brand {
           font-size: 20px;
         }
+
         .custom-navbar-nav .nav-link {
           font-size: 16px;
         }
+
         .custom-navbar-nav img.cart-icon {
           width: 20px;
           height: 20px;
@@ -237,142 +229,18 @@
         .navbar-brand {
           font-size: 18px;
         }
+
         .custom-navbar-nav .nav-link {
           font-size: 14px;
           padding: 8px;
         }
+
         .custom-navbar-nav img.cart-icon {
           width: 18px;
           height: 18px;
         }
       }
-    </style> -->
-
-    <style>
-    body {
-      overflow-x: hidden;
-      font-family: "Poppins", sans-serif;
-    }
-
-    .custom-navbar {
-      background-color: #2c3e50;
-      position: relative;
-      z-index: 1000;
-    }
-
-    .navbar-brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: "Courier New", Courier, monospace;
-      font-size: clamp(18px, 2.5vw, 24px);
-      color: white;
-      text-decoration: none;
-    }
-
-    .navbar-brand img {
-      height: 60px;
-      width: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      max-width: 100%;
-    }
-
-    .custom-navbar-nav {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .custom-navbar-nav .nav-link {
-      background-color: #e67e22;
-      border: 2px solid #34495e;
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-weight: 500;
-      color: #2c3e50;
-      transition: all 0.3s ease;
-    }
-
-    .custom-navbar-nav .nav-link:hover,
-    .custom-navbar-nav .nav-link.active {
-      background-color: rgb(255, 200, 0) !important;
-      color: white;
-    }
-
-    .custom-navbar-nav .nav-link:focus {
-      outline: 2px solid #f39c12;
-      outline-offset: 2px;
-    }
-
-    .custom-navbar-nav img.cart-icon {
-      width: 24px;
-      height: 24px;
-      object-fit: cover;
-      max-width: 100%;
-    }
-
-    .btn-no-bg {
-      background: none;
-      border: none;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    @media (max-width: 991.98px) {
-      .custom-navbar-nav {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 15px;
-      }
-
-      .custom-navbar-nav .nav-link {
-        width: 100%;
-        text-align: center;
-        font-size: 18px;
-        padding: 10px;
-      }
-
-      .navbar-brand img {
-        height: 50px;
-        width: 50px;
-      }
-    }
-
-    @media (max-width: 575.98px) {
-      .navbar-brand {
-        font-size: 20px;
-      }
-
-      .custom-navbar-nav .nav-link {
-        font-size: 16px;
-      }
-
-      .custom-navbar-nav img.cart-icon {
-        width: 20px;
-        height: 20px;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .navbar-brand {
-        font-size: 18px;
-      }
-
-      .custom-navbar-nav .nav-link {
-        font-size: 14px;
-        padding: 8px;
-      }
-
-      .custom-navbar-nav img.cart-icon {
-        width: 18px;
-        height: 18px;
-      }
-    }
-  </style>
+    </style>
   </head>
 
   <body>
@@ -381,10 +249,7 @@
     <nav class="custom-navbar navbar navbar-expand-lg navbar-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'homepage' %}">
-          <img
-            src="{% static 'images/lavkushfurniturelogo.jpeg' %}"
-            alt="Lavkush Furniture Logo"
-          />
+          <img src="{% static 'images/lavkushfurniturelogo.jpeg' %}" alt="Lavkush Furniture Logo" />
           Lavkush Furniture
         </a>
         <button
@@ -402,58 +267,30 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="custom-navbar-nav navbar-nav ms-auto">
             <li class="nav-item">
-              <a
-                class="nav-link {% if request.path == '/' %}active{% endif %}"
-                href="{% url 'homepage' %}"
-                >🏠</a
-              >
+              <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'homepage' %}">🏠</a>
             </li>
             <li class="nav-item">
-              <a
-                class="nav-link {% if request.path == '/aboutus/' %}active{% endif %}"
-                href="{% url 'aboutus' %}"
-                >About</a
-              >
+              <a class="nav-link {% if request.path == '/aboutus/' %}active{% endif %}" href="{% url 'aboutus' %}">About</a>
             </li>
             <li class="nav-item">
-              <a
-                class="nav-link {% if request.path == '/services/' %}active{% endif %}"
-                href="{% url 'services' %}"
-                >Services</a
-              >
+              <a class="nav-link {% if request.path == '/services/' %}active{% endif %}" href="{% url 'services' %}">Services</a>
             </li>
             <li class="nav-item">
-              <a
-                class="nav-link {% if request.path == '/contactus/' %}active{% endif %}"
-                href="{% url 'contactus' %}"
-                >Contact</a
-              >
+              <a class="nav-link {% if request.path == '/contactus/' %}active{% endif %}" href="{% url 'contactus' %}">Contact</a>
             </li>
             <li class="nav-item">
               <a href="{% url 'view_wishlist' %}" class="btn-no-bg">
-                <img
-                  src="{% static 'images/wish-list.png' %}"
-                  alt="View Wishlist"
-                  class="cart-icon"
-                />
+                <img src="{% static 'images/wish-list.png' %}" alt="View Wishlist" class="cart-icon" />
               </a>
             </li>
             <li class="nav-item">
               <a href="{% url 'cart:view_cart' %}" class="btn-no-bg">
-                <img
-                  src="{% static 'images/shopping-cart.png' %}"
-                  alt="View Cart"
-                  class="cart-icon"
-                />
+                <img src="{% static 'images/shopping-cart.png' %}" alt="View Cart" class="cart-icon" />
               </a>
             </li>
             <li class="nav-item">
               <a href="{% url 'userprofile' %}" class="btn-no-bg">
-                <img
-                  src="{% static 'images/user.svg' %}"
-                  alt="Go to Profile"
-                  class="cart-icon"
-                />
+                <img src="{% static 'images/user.svg' %}" alt="Go to Profile" class="cart-icon" />
               </a>
             </li>
           </ul>
@@ -462,14 +299,6 @@
     </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript">
-      function googleTranslateElementInit() {
-        new google.translate.TranslateElement(
-          { pageLanguage: "en" },
-          "google_translate_element"
-        );
-      }
-    </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </body>
 </html>
