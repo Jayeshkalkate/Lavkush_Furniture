@@ -12,17 +12,30 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
       rel="stylesheet"
     />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- AOS Animation Library -->
+    <link
+      href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+      rel="stylesheet"
+    />
 
     <style>
       :root {
         --primary-color: #ff5e00;
         --secondary-color: #ffc800;
         --danger-color: #e74c3c;
+        --success-color: #2ecc71;
         --background-light: #f9f9f9;
         --text-color: #333;
         --text-muted: #777;
         --card-bg: #ffffff;
         --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       }
 
       * {
@@ -36,6 +49,7 @@
         background-color: var(--background-light);
         color: var(--text-color);
         min-height: 100vh;
+        overflow-x: hidden;
       }
 
       h2 {
@@ -43,6 +57,21 @@
         font-size: 2.4rem;
         margin: 40px 0 20px;
         color: var(--primary-color);
+        position: relative;
+        display: inline-block;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      h2:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 10%;
+        width: 80%;
+        height: 4px;
+        background: linear-gradient(to right, transparent, var(--secondary-color), transparent);
+        border-radius: 2px;
       }
 
       .wishlist-container {
@@ -52,6 +81,60 @@
         background-color: var(--card-bg);
         border-radius: 16px;
         box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .wishlist-container:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      }
+
+      .wishlist-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding: 0 10px;
+      }
+
+      .wishlist-count {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .wishlist-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .action-btn {
+        background: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        padding: 8px 15px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .action-btn:hover {
+        background-color: var(--primary-color);
+        color: white;
       }
 
       .wishlist-items {
@@ -65,16 +148,26 @@
         background: var(--card-bg);
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
         position: relative;
         display: flex;
         flex-direction: column;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.5s ease forwards;
+      }
+
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .wishlist-item:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-hover);
       }
 
       .item-image {
@@ -84,16 +177,34 @@
         align-items: center;
         justify-content: center;
         overflow: hidden;
+        position: relative;
+      }
+
+      .item-image:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, transparent 70%, rgba(0,0,0,0.1));
+        z-index: 1;
+        opacity: 0;
+        transition: var(--transition);
+      }
+
+      .wishlist-item:hover .item-image:before {
+        opacity: 1;
       }
 
       .item-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease;
+        transition: var(--transition);
       }
 
-      .item-image:hover img {
+      .wishlist-item:hover .item-image img {
         transform: scale(1.08);
       }
 
@@ -108,6 +219,20 @@
         font-weight: 600;
         border-radius: 12px;
         text-transform: uppercase;
+        z-index: 2;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(255, 200, 0, 0.7);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(255, 200, 0, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(255, 200, 0, 0);
+        }
       }
 
       .item-info {
@@ -129,6 +254,11 @@
 
       .item-title i {
         color: var(--danger-color);
+        transition: var(--transition);
+      }
+
+      .wishlist-item:hover .item-title i {
+        transform: scale(1.2);
       }
 
       .item-price {
@@ -136,11 +266,18 @@
         color: var(--danger-color);
         font-weight: bold;
         margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
       }
 
       .item-actions {
         padding: 15px 10px 20px;
         text-align: center;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
       }
 
       .remove-btn {
@@ -155,12 +292,54 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        transition: background-color 0.3s ease;
+        transition: var(--transition);
         cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .remove-btn:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s;
+      }
+
+      .remove-btn:hover:before {
+        width: 300px;
+        height: 300px;
       }
 
       .remove-btn:hover {
         background: #c0392b;
+        transform: translateY(-2px);
+      }
+
+      .add-to-cart-btn {
+        background: var(--success-color);
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition);
+        cursor: pointer;
+      }
+
+      .add-to-cart-btn:hover {
+        background: #27ae60;
+        transform: translateY(-2px);
       }
 
       p {
@@ -179,12 +358,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
+        transition: var(--transition);
       }
 
       .btn-no-bg:hover {
         background-color: var(--secondary-color) !important;
         border-color: transparent !important;
+        transform: rotate(15deg);
       }
 
       .btn-no-bg:hover svg,
@@ -194,20 +374,6 @@
 
       .cart-icon {
         height: 20px;
-      }
-
-      @media (max-width: 600px) {
-        h2 {
-          font-size: 1.8rem;
-        }
-
-        .item-image {
-          height: 180px;
-        }
-
-        .remove-btn {
-          padding: 8px 16px;
-        }
       }
 
       .empty-wishlist {
@@ -227,6 +393,16 @@
       .empty-icon {
         width: 150px;
         margin-bottom: 20px;
+        animation: bounce 2s infinite;
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
       }
 
       .empty-wishlist h3 {
@@ -249,12 +425,34 @@
         font-weight: 600;
         border-radius: 8px;
         text-decoration: none;
-        transition: background-color 0.3s ease;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.5s;
+      }
+
+      .btn-primary:hover:before {
+        left: 100%;
       }
 
       .btn-primary:hover {
         background-color: var(--secondary-color);
         color: black;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       }
 
       @keyframes fadeIn {
@@ -267,17 +465,108 @@
           transform: translateY(0);
         }
       }
+
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        background-color: var(--success-color);
+        color: white;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        transform: translateX(150%);
+        transition: transform 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .notification.show {
+        transform: translateX(0);
+      }
+
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      @media (max-width: 600px) {
+        h2 {
+          font-size: 1.8rem;
+        }
+
+        .wishlist-header {
+          flex-direction: column;
+          gap: 15px;
+          align-items: flex-start;
+        }
+
+        .item-image {
+          height: 180px;
+        }
+
+        .remove-btn, .add-to-cart-btn {
+          padding: 8px 16px;
+          font-size: 0.85rem;
+        }
+
+        .item-actions {
+          flex-direction: column;
+          gap: 8px;
+        }
+      }
+
+      /* Animation delays for staggered item appearance */
+      .wishlist-item:nth-child(1) { animation-delay: 0.1s; }
+      .wishlist-item:nth-child(2) { animation-delay: 0.2s; }
+      .wishlist-item:nth-child(3) { animation-delay: 0.3s; }
+      .wishlist-item:nth-child(4) { animation-delay: 0.4s; }
+      .wishlist-item:nth-child(5) { animation-delay: 0.5s; }
+      .wishlist-item:nth-child(6) { animation-delay: 0.6s; }
     </style>
   </head>
   <body>
-    {% include "header.html" %} {% block content %}
-    <div class="wishlist-container" data-aos="fade-up">
+    {% include "header.html" %} 
+    
+    <!-- Notification Element -->
+    <div class="notification" id="notification">
+      <i class="fas fa-check-circle"></i>
+      <span id="notification-text">Item added to cart!</span>
+    </div>
+    
+    {% block content %}
+    <div class="wishlist-container">
       <h2>Your Wishlist</h2>
 
       {% if wishlist_items %}
+      <div class="wishlist-header">
+        <div class="wishlist-count">
+          <i class="fas fa-heart"></i> {{ wishlist_items|length }} item{{ wishlist_items|pluralize }}
+        </div>
+        <div class="wishlist-actions">
+          <button class="action-btn" id="share-wishlist">
+            <i class="fas fa-share-alt"></i> Share
+          </button>
+          <button class="action-btn" id="clear-wishlist">
+            <i class="fas fa-trash"></i> Clear All
+          </button>
+        </div>
+      </div>
+      
       <div class="wishlist-items">
         {% for w in wishlist_items %}
-        <div class="wishlist-item" data-aos="zoom-in" data-aos-delay="200">
+        <div class="wishlist-item" data-item-id="{{ w.item.id }}">
           {% if w.item.is_new %}
           <div class="badge">New</div>
           {% endif %}
@@ -297,6 +586,9 @@
             </p>
           </div>
           <div class="item-actions">
+            <button class="add-to-cart-btn" data-item-id="{{ w.item.id }}">
+              <i class="fas fa-shopping-cart"></i> Add to Cart
+            </button>
             <a
               href="{% url 'remove_from_wishlist' w.item.id %}"
               class="remove-btn"
@@ -319,10 +611,119 @@
           Looks like you haven't added anything yet. Explore our collection and
           find your favorites!
         </p>
-        <a href="{% url 'shop' %}" class="btn-primary">Continue Shopping</a>
+        <a href="{% url 'shop' %}" class="btn-primary">
+          <i class="fas fa-shopping-bag"></i> Continue Shopping
+        </a>
       </div>
       {% endif %}
     </div>
     {% endblock %}
+
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100
+      });
+
+      // Add to cart functionality
+      document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const itemId = this.getAttribute('data-item-id');
+          const button = this;
+          const originalText = button.innerHTML;
+          
+          // Show loading state
+          button.innerHTML = '<div class="loading"></div> Adding...';
+          button.disabled = true;
+          
+          // Simulate API call (replace with actual API call)
+          setTimeout(() => {
+            // Show success notification
+            showNotification('Item added to cart successfully!');
+            
+            // Reset button
+            button.innerHTML = originalText;
+            button.disabled = false;
+            
+            // Optional: Remove from wishlist after adding to cart
+            // Uncomment the line below if you want this behavior
+            // window.location.href = "{% url 'remove_from_wishlist' 0 %}".replace('0', itemId);
+          }, 1000);
+        });
+      });
+
+      // Clear wishlist functionality
+      document.getElementById('clear-wishlist')?.addEventListener('click', function() {
+        if (confirm('Are you sure you want to clear your entire wishlist?')) {
+          // Show loading state on all remove buttons
+          document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.innerHTML = '<div class="loading"></div>';
+            btn.disabled = true;
+          });
+          
+          // Simulate API call (replace with actual API call to clear all)
+          setTimeout(() => {
+            window.location.reload(); // In a real app, you'd redirect to a clear_all_wishlist URL
+          }, 1500);
+        }
+      });
+
+      // Share wishlist functionality
+      document.getElementById('share-wishlist')?.addEventListener('click', function() {
+        if (navigator.share) {
+          navigator.share({
+            title: 'My Wishlist',
+            text: 'Check out my wishlist!',
+            url: window.location.href,
+          })
+          .then(() => showNotification('Wishlist shared successfully!'))
+          .catch(error => console.log('Error sharing:', error));
+        } else {
+          // Fallback for browsers that don't support Web Share API
+          navigator.clipboard.writeText(window.location.href)
+            .then(() => showNotification('Wishlist link copied to clipboard!'))
+            .catch(err => {
+              console.error('Failed to copy: ', err);
+              // Fallback to prompt
+              prompt('Copy this link to share your wishlist:', window.location.href);
+            });
+        }
+      });
+
+      // Notification function
+      function showNotification(message) {
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notification-text');
+        
+        notificationText.textContent = message;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 3000);
+      }
+
+      // Item removal animation
+      document.querySelectorAll('.remove-btn').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const item = this.closest('.wishlist-item');
+          const url = this.getAttribute('href');
+          
+          // Animate removal
+          item.style.transform = 'scale(0.8)';
+          item.style.opacity = '0';
+          
+          setTimeout(() => {
+            window.location.href = url;
+          }, 300);
+        });
+      });
+    </script>
   </body>
 </html>

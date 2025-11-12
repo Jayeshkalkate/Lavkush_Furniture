@@ -42,24 +42,38 @@
       <div class="row justify-content-between">
         <div class="col-lg-5">
           <hr style="border: 1px solid #feffff" />
-          ⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘
-          <h2 style="font-weight: 600; font-size: 50 px; color: #007bff">
-            <!-- Welcome -->
-             ⌗ 🌈 𝓦𝓮𝓵𝓬𝓸𝓶𝓮 
-
+          <h3 style="font-weight: 600; font-size: 24px; color: #007bff">
+            Welcome
             <span class="d-block" style="color: #f57c00"
               >{{ request.user.username }}</span
             >
-          </h2>
+          </h3>
           <hr style="border: 1px solid #feffff" />
           <br />
           <div class="intro-excerpt">
-            <h1>Designs that Define
-               <span class="d-block">Your Space.
-            </h1>
-            ⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘
+            <h1>Modern Interior <span class="d-block">Design Studio</span></h1>
+            <div class="d-flex align-items-center gap-3 mt-4">
+              <a href="{% url 'gallery' %}" class="btn btn-secondary"
+                >View Gallery</a
+              >
+              <!-- <a href="{% url 'view_wishlist' %}" class="btn-no-bg">
+                            <img src="{% static 'images/wish-list.png' %}" alt="Wishlist" class="cart-icon">
+                        </a>
+                        <a href="{% url 'cart:view_cart' %}" class="btn-no-bg">
+                            <img src="{% static 'images/shopping-cart.png' %}" alt="Cart" class="cart-icon">
+                        </a> -->
+            </div>
           </div>
-        </div>        
+        </div>
+        <div class="col-lg-7">
+          <div class="hero-img-wrap">
+            <img
+              src="/static/images/couch2.png"
+              class="img-fluid"
+              style="top: auto"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>

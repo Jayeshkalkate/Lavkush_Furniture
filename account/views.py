@@ -13,12 +13,6 @@ def admin_user_list(request):
     users = User.objects.select_related('items').all()
     return render(request, 'admin_user_list.html', {'users': users})
 
-# @user_passes_test(lambda u: u.is_superuser)
-# def admin_user_list(request):
-#     users = User.objects.all().select_related('items')
-#     return render(request, 'admin_user_list.html', {'users': users})
-
-
 logger = logging.getLogger(__name__)
 
 @user_passes_test(lambda u: u.is_superuser)
