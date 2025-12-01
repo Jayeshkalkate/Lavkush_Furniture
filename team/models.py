@@ -6,7 +6,7 @@ class TeamMember(models.Model):
     role = models.CharField(max_length=200)
     bio = models.TextField()
     image = CloudinaryField('image')
-    is_visible = models.BooleanField(default=True)
+    # is_visible = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name

@@ -8,8 +8,10 @@ def is_admin(user):
     return user.is_superuser
 
 def our_team(request):
-    team_members = TeamMember.objects.filter(is_visible=True)
-    return render(request, 'ourteam.html', {'team_members': team_members})
+    # team_members = TeamMember.objects.filter(is_visible=True)
+    # return render(request, 'ourteam.html', {'team_members': team_members})
+    team_members = TeamMember.objects.all()
+    return render(request, "ourteam.html", {"team_members": team_members})
 
 @user_passes_test(is_admin)
 def add_team_member(request):
