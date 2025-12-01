@@ -4,6 +4,7 @@ from gallery.models import ImageWithCaption
 from django.contrib.auth.decorators import login_required
 from .models import Cart, CartItem
 
+@login_required
 def view_cart(request):
     cart = Cart.objects.get(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
@@ -26,13 +27,13 @@ def add_to_cart(request, product_id):
 
     return redirect('cart:view_cart')
 
-@login_required
+# @login_required
 def remove_from_cart(request, item_id):
     item = get_object_or_404(CartItem, id=item_id)
     item.delete()
     return redirect('cart:view_cart')
 
-@login_required
+# @login_required
 def update_quantity(request, item_id):
     item = get_object_or_404(CartItem, id=item_id)
     if request.method == 'POST':
