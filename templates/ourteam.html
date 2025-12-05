@@ -81,10 +81,51 @@
         </div>
         {% endif %}
       </div>
-      {% empty %}
+      <!-- {% empty %}
       <div class="col-12 text-center">
         <p>No team members added yet.</p>
       </div>
+      {% endfor %} -->
+      {% empty %}
+
+      <!-- Default Member 1 -->
+      <div class="col-12 col-md-6 col-lg-3 mb-5">
+        <img
+          src="{% static 'images/sureshkalkate.jpg' %}"
+          class="img-fluid mb-4"
+          alt="Suresh Kalkate"
+          style="max-height: 300px; object-fit: cover"
+        />
+        <h3 class="mb-2">Suresh Kalkate</h3>
+        <span class="d-block position mb-3"
+          >Sales, Marketing & Customer Relations Head</span
+        >
+        <p>
+          Experienced professional with strong expertise in sales strategy,
+          customer engagement, and business growth through relationship-driven
+          marketing. Dedicated to building trust and delivering client
+          satisfaction.
+        </p>
+      </div>
+
+      <!-- Default Member 2 -->
+      <div class="col-12 col-md-6 col-lg-3 mb-5">
+        <img
+          src="{% static 'images/rajendrakalkate.jpg' %}"
+          class="img-fluid mb-4"
+          alt="Rajendra Kalkate"
+          style="max-height: 300px; object-fit: cover"
+        />
+        <h3 class="mb-2">Rajendra Kalkate</h3>
+        <span class="d-block position mb-3">Operations & Production Head</span>
+        <p>
+          Responsible for overseeing day-to-day operations, optimizing
+          production processes, and ensuring quality standards are consistently
+          met. Focused on efficiency, teamwork, and delivering excellence in
+          every stage of production.
+        </p>
+      </div>
+
       {% endfor %}
     </div>
 
