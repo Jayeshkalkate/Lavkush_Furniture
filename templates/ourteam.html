@@ -1,4 +1,5 @@
-{% include "header.html" %} {% load cloudinary %} {% load static %}
+{% include "header.html" %}
+{% load static %}  {# cloudinary tag not needed when using .url #}
 
 <style>
   .btn-no-bg {
@@ -43,20 +44,22 @@
     <div class="row justify-content-center text-center">
       {% for member in team_members %}
       <div class="col-12 col-md-6 col-lg-3 mb-5">
-        {% if member.image %} {% cloudinary member.image as image %}
-        <img
-          src="{{ image.url }}"
-          class="img-fluid mb-4"
-          alt="{{ member.name }}"
-          style="max-height: 300px; object-fit: cover"
-        />
+
+        {# --- IMAGE FROM CLOUDINARY --- #}
+        {% if member.image %}
+          <img
+            src="{{ member.image.url }}"
+            class="img-fluid mb-4"
+            alt="{{ member.name }}"
+            style="max-height: 300px; object-fit: cover"
+          />
         {% else %}
-        <img
-          src="{% static 'images/default-user.jpg' %}"
-          class="img-fluid mb-4"
-          alt="No image"
-          style="max-height: 300px; object-fit: cover"
-        />
+          <img
+            src="{% static 'images/default-user.jpg' %}"
+            class="img-fluid mb-4"
+            alt="No image"
+            style="max-height: 300px; object-fit: cover"
+          />
         {% endif %}
 
         <h3 class="mb-2">{{ member.name }}</h3>
@@ -81,25 +84,20 @@
         </div>
         {% endif %}
       </div>
-      <!-- {% empty %}
-      <div class="col-12 text-center">
-        <p>No team members added yet.</p>
-      </div>
-      {% endfor %} -->
       {% empty %}
-
       <!-- Default Member 1 -->
       <div class="col-12 col-md-6 col-lg-3 mb-5">
         <img
           src="{% static 'images/sureshkalkate.jpg' %}"
           class="img-fluid mb-4"
           alt="Suresh Kalkate"
-          style="max-height: 300px; object-fit: cover"
+          style="width: 100%; height: 300px; object-fit: cover"
         />
+
         <h3 class="mb-2">Suresh Kalkate</h3>
-        <span class="d-block position mb-3"
-          >Sales, Marketing & Customer Relations Head</span
-        >
+        <span class="d-block position mb-3">
+          Sales, Marketing & Customer Relations Head
+        </span>
         <p>
           Experienced professional with strong expertise in sales strategy,
           customer engagement, and business growth through relationship-driven
@@ -114,10 +112,12 @@
           src="{% static 'images/rajendrakalkate.jpg' %}"
           class="img-fluid mb-4"
           alt="Rajendra Kalkate"
-          style="max-height: 300px; object-fit: cover"
+          style="width: 100%; height: 300px; object-fit: cover"
         />
         <h3 class="mb-2">Rajendra Kalkate</h3>
-        <span class="d-block position mb-3">Operations & Production Head</span>
+        <span class="d-block position mb-3">
+          Operations & Production Head
+        </span>
         <p>
           Responsible for overseeing day-to-day operations, optimizing
           production processes, and ensuring quality standards are consistently
@@ -125,7 +125,6 @@
           every stage of production.
         </p>
       </div>
-
       {% endfor %}
     </div>
 
