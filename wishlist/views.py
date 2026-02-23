@@ -10,7 +10,7 @@ from django.utils.timezone import now
 def add_to_wishlist(request, item_id):
     item = get_object_or_404(ImageWithCaption, id=item_id)
     Wishlist.objects.get_or_create(user=request.user, item=item)
-    return redirect('gallery')  # or use 'gallery:item_detail', etc.
+    return redirect('gallery')
 
 @login_required
 def remove_from_wishlist(request, item_id):
@@ -18,10 +18,12 @@ def remove_from_wishlist(request, item_id):
     Wishlist.objects.filter(user=request.user, item=item).delete()
     return redirect('gallery')
 
+
 @login_required
 def view_wishlist(request):
     wishlist_items = Wishlist.objects.filter(user=request.user)
-    return render(request, 'view_wishlist.html', {'wishlist_items': wishlist_items})
+    return render(request, "view_wishlist.html", {"wishlist_items": wishlist_items})
+
 
 @login_required
 def view_wishlist(request):
@@ -30,4 +32,4 @@ def view_wishlist(request):
     for w in wishlist_items:
         w.item.is_new = w.item.uploaded_at >= (now() - timedelta(days=7))
 
-    return render(request, 'view_wishlist.html', {'wishlist_items': wishlist_items})
+    return render(request, "view_wishlist.html", {"wishlist_items": wishlist_items})
