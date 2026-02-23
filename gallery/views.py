@@ -5,6 +5,60 @@ from django.contrib import messages
 from django.db.models import Avg
 from .forms import ImageForm
 from .forms import ImageForm, FilterForm
+import pandas as pd
+from .forms import BulkProductUploadForm
+from django.contrib.admin.views.decorators import staff_member_required
+import requests
+from django.core.files.base import ContentFile
+from django.utils.text import slugify
+
+
+@staff_member_required
+def bulk_upload_products(request):
+    if request.method == "POST":
+        form = BulkProductUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES["file"]
+
+            if file.name.endswith(".csv"):
+                df = pd.read_csv(file)
+            elif file.name.endswith(".xlsx"):
+                df = pd.read_excel(file)
+            else:
+                messages.error(request, "Invalid file format. Upload CSV or Excel.")
+                return redirect("bulk_upload")
+
+            for _, row in df.iterrows():
+                image_file = None
+
+                image_url = row.get("image_url")
+
+                if image_url:
+                    try:
+                        response = requests.get(image_url)
+                        if response.status_code == 200:
+                            file_name = slugify(row.get("caption")) + ".jpg"
+                            image_file = ContentFile(response.content, name=file_name)
+                    except Exception as e:
+                        print("Image download failed:", e)
+
+                ImageWithCaption.objects.create(
+                    caption=row.get("caption"),
+                    price=row.get("price"),
+                    description=row.get("description"),
+                    dimensions=row.get("dimensions"),
+                    materials=row.get("materials"),
+                    image=image_file,
+                )
+
+            messages.success(request, "Products uploaded successfully with images!")
+            return redirect("gallery")
+
+    else:
+        form = BulkProductUploadForm()
+
+    return render(request, "bulk_upload.html", {"form": form})
+
 
 def gallery_view(request):
     images = ImageWithCaption.objects.all()

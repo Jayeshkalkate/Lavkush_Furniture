@@ -126,6 +126,13 @@
           <span>Subtotal:</span>
           <span class="font-medium">₹{{ total_price|floatformat:2 }}</span>
         </p>
+        <a href="{% url 'cart:create_payment' %}">
+          <button
+            class="w-full mt-4 py-3 bg-green-600 text-white text-lg rounded-lg hover:bg-green-700 transition-all duration-300"
+          >
+            Proceed to Checkout 💳
+          </button>
+        </a>
       </div>
     </div>
 

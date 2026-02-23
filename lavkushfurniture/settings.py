@@ -6,6 +6,8 @@ from decouple import config
 import cloudinary
 import dj_database_url
 
+RAZORPAY_KEY_ID = config("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = config("RAZORPAY_KEY_SECRET")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -127,7 +129,7 @@ SITE_ID = 1
 
 # Media settings for file handling
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Login URL configuration
 LOGIN_URL = 'login'  # This should match the name used in urls.py for login

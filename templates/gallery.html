@@ -1,223 +1,376 @@
-{% load cloudinary %}
-{% load static %}
-{% include "header.html" %}
+{% load cloudinary %} {% load static %} {% include "header.html" %}
 
 <!-- Gallery Section -->
-<div class="untree_co-section product-section before-footer-section bg-custom py-5">
-    <div class="container">
-
-        <!-- Enhanced Filter and Sort UI with Emojis -->
-        <form method="get" class="row mb-5 p-4 bg-white rounded shadow-sm border border-light"><div class="col-md-3 mb-3">
-            <div class="input-group">
-                <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
-                <input type="text" name="keyword" class="form-control" placeholder="Search by name" value="{{ request.GET.keyword }}">
-            </div>
+<div
+  class="untree_co-section product-section before-footer-section bg-custom py-5"
+>
+  <div class="container">
+    <!-- Enhanced Filter and Sort UI with Emojis -->
+    <form
+      method="get"
+      class="row mb-5 p-4 bg-white rounded shadow-sm border border-light"
+    >
+      <div class="col-md-3 mb-3">
+        <div class="input-group">
+          <span class="input-group-text bg-light"
+            ><i class="bi bi-search"></i
+          ></span>
+          <input
+            type="text"
+            name="keyword"
+            class="form-control"
+            placeholder="Search by name"
+            value="{{ request.GET.keyword }}"
+          />
         </div>
-        <div class="col-md-2 mb-3">
-            <div class="input-group">
-                <span class="input-group-text bg-light">₹</span>
-                <input type="number" name="min_price" step="0.01" class="form-control" placeholder="Min" value="{{ request.GET.min_price }}">
-            </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <div class="input-group">
+          <span class="input-group-text bg-light">₹</span>
+          <input
+            type="number"
+            name="min_price"
+            step="0.01"
+            class="form-control"
+            placeholder="Min"
+            value="{{ request.GET.min_price }}"
+          />
         </div>
-        <div class="col-md-2 mb-3">
-            <div class="input-group">
-                <span class="input-group-text bg-light">₹</span>
-                <input type="number" name="max_price" step="0.01" class="form-control" placeholder="Max" value="{{ request.GET.max_price }}">
-            </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <div class="input-group">
+          <span class="input-group-text bg-light">₹</span>
+          <input
+            type="number"
+            name="max_price"
+            step="0.01"
+            class="form-control"
+            placeholder="Max"
+            value="{{ request.GET.max_price }}"
+          />
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="input-group">
-                <span class="input-group-text bg-light"><i class="bi bi-tree"></i></span>
-                <input type="text" name="materials" class="form-control" placeholder="Material (e.g. wood)" value="{{ request.GET.materials }}">
-                    </div>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <select name="sort_by" class="form-select">
-                        <option value="">Sort By</option>
-                        <option value="price_asc" {% if request.GET.sort_by == "price_asc" %}selected{% endif %}>Price: Low to High</option>
-                        <option value="price_desc" {% if request.GET.sort_by == "price_desc" %}selected{% endif %}>Price: High to Low</option>
-                        <option value="latest" {% if request.GET.sort_by == "latest" %}selected{% endif %}>Latest</option>
-                        <option value="oldest" {% if request.GET.sort_by == "oldest" %}selected{% endif %}>Oldest</option>
-                        <option value="rating" {% if request.GET.sort_by == "rating" %}selected{% endif %}>Top Rated</option>
-                    </select>
-                </div>
-                <div class="col-12 text-center mt-3">
-                    <button type="submit" class="btn btn-dark px-4 shadow-sm me-2"><i class="bi bi-funnel"></i> Apply Filters <span>🔍</span></button>
-                    <a href="{% url 'gallery' %}" class="btn btn-outline-secondary px-3"><i class="bi bi-x-circle"></i> Reset <span>♻️</span></a>
-                </div>
-            </form>
-
-        <!-- Flash Messages -->
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-success text-center my-3 shadow-sm rounded" data-aos="fade-down">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-
-        <!-- Upload Button for Superuser -->
-        {% if user.is_superuser %}
-            <div class="text-center" data-aos="fade-up">
-                <a href="{% url 'upload_image' %}" class="btn btn-dark mt-4 shadow">Upload New Image</a>
-            </div>
-        {% endif %}
-        
-        <!-- Image Gallery -->
-        <div class="row">
-            {% for image in images %}
-                <div class="col-12 col-md-6 col-lg-4 mb-5" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
-                    <div class="product-item text-center shadow rounded p-4 bg-white transition-hover">
-
-                        {% cloudinary image.image.public_id class="img-fluid product-thumbnail rounded mb-3" alt=image.caption style="max-height: 300px; object-fit: cover;" %}
-
-                        <!-- Image Caption and Link -->
-                        <div class="d-flex flex-column align-items-center">
-                            <h3 class="text-decoration-none text-dark">{{ image.caption }}</h3>
-                            <a href="{% url 'furniture_detail' image.id %}" class="text-decoration-none text-dark">View Details</a>
-                        </div>
-
-                        <!-- Price -->
-                        {% if image.price %}
-                            <p class="text-primary fw-bold">Price: ₹{{ image.price }}</p>
-                        {% endif %}
-
-                        <!-- Rating -->
-                        <p class="rating-display mb-2">
-                            <strong>Rating:</strong>
-                            <span class="stars">
-                                {% with "12345"|make_list as stars %}
-                                    {% for i in stars %}
-                                        <span class="star {% if forloop.counter <= image.avg_rating %}filled{% endif %}">★</span>
-                                    {% endfor %}
-                                {% endwith %}
-                            </span>
-                            <small>({{ image.avg_rating }}/5)</small>
-                        </p>
-
-                        <!-- Action Buttons -->
-                        <div class="d-flex align-items-center justify-content-center gap-2 mt-2 flex-wrap">
-                            {% if user.is_authenticated %}
-                                <form action="{% url 'add_to_wishlist' image.id %}" method="POST" class="m-0">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-danger btn-sm shadow-sm btn-no-bg">
-                                        <img src="{% static 'images/wish-list.png' %}" alt="Wishlist" width="20" height="20">
-                                    </button>
-                                </form>
-                            {% else %}
-                                <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-sm shadow-sm btn-no-bg">
-                                    <img src="{% static 'images/wish-list.png' %}" alt="Login to wishlist" width="20" height="20">
-                                </a>
-                            {% endif %}
-
-                            <a href="{% url 'cart:add_to_cart' image.id %}" class="btn btn-outline-success btn-sm shadow-sm btn-no-bg">
-                                <img src="{% static 'images/shopping-cart.png' %}" alt="Add to cart" class="cart-icon">
-                            </a>
-
-                            {% if user.is_superuser %}
-                                <a href="{% url 'edit_image' image.id %}" class="btn btn-outline-primary btn-sm shadow-sm btn-no-bg">✏️</a>
-                                <a href="{% url 'delete_image' image.id %}" class="btn btn-outline-danger btn-sm shadow-sm btn-no-bg" onclick="return confirm('Are you sure you want to delete this image?');">🗑️</a>
-                            {% endif %}
-                        </div>
-
-                        <small class="text-muted d-block mt-2">Uploaded at: {{ image.uploaded_at }}</small>
-
-                    </div>
-                </div>
-            {% empty %}
-                <div class="col-12" data-aos="fade-up">
-                    <p class="text-center text-muted fs-5">No images uploaded yet.</p>
-                </div>
-            {% endfor %}
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="input-group">
+          <span class="input-group-text bg-light"
+            ><i class="bi bi-tree"></i
+          ></span>
+          <input
+            type="text"
+            name="materials"
+            class="form-control"
+            placeholder="Material (e.g. wood)"
+            value="{{ request.GET.materials }}"
+          />
         </div>
+      </div>
+      <div class="col-md-2 mb-3">
+        <select name="sort_by" class="form-select">
+          <option value="">Sort By</option>
+          <option
+            value="price_asc"
+            {%
+            if
+            request.GET.sort_by=""
+            ="price_asc"
+            %}selected{%
+            endif
+            %}
+          >
+            Price: Low to High
+          </option>
+          <option
+            value="price_desc"
+            {%
+            if
+            request.GET.sort_by=""
+            ="price_desc"
+            %}selected{%
+            endif
+            %}
+          >
+            Price: High to Low
+          </option>
+          <option
+            value="latest"
+            {%
+            if
+            request.GET.sort_by=""
+            ="latest"
+            %}selected{%
+            endif
+            %}
+          >
+            Latest
+          </option>
+          <option
+            value="oldest"
+            {%
+            if
+            request.GET.sort_by=""
+            ="oldest"
+            %}selected{%
+            endif
+            %}
+          >
+            Oldest
+          </option>
+          <option
+            value="rating"
+            {%
+            if
+            request.GET.sort_by=""
+            ="rating"
+            %}selected{%
+            endif
+            %}
+          >
+            Top Rated
+          </option>
+        </select>
+      </div>
+      <div class="col-12 text-center mt-3">
+        <button type="submit" class="btn btn-dark px-4 shadow-sm me-2">
+          <i class="bi bi-funnel"></i> Apply Filters <span>🔍</span>
+        </button>
+        <a href="{% url 'gallery' %}" class="btn btn-outline-secondary px-3"
+          ><i class="bi bi-x-circle"></i> Reset <span>♻️</span></a
+        >
+      </div>
+    </form>
 
+    <!-- Flash Messages -->
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-success text-center my-3 shadow-sm rounded"
+      data-aos="fade-down"
+    >
+      {{ message }}
     </div>
+    {% endfor %} {% endif %}
+
+    <!-- Upload Button for Superuser -->
+    {% if user.is_superuser %}
+    <div class="text-center mt-4" data-aos="fade-up">
+      <a href="{% url 'upload_image' %}" class="btn btn-dark shadow me-2">
+        ➕ Upload Single Product
+      </a>
+
+      <a href="{% url 'bulk_upload' %}" class="btn btn-success shadow">
+        📂 Bulk Product Upload
+      </a>
+    </div>
+    {% endif %}
+
+    <!-- Image Gallery -->
+    <div class="row">
+      {% for image in images %}
+      <div
+        class="col-12 col-md-6 col-lg-4 mb-5"
+        data-aos="zoom-in"
+        data-aos-delay="{{ forloop.counter0|add:'1' }}00"
+      >
+        <div
+          class="product-item text-center shadow rounded p-4 bg-white transition-hover"
+        >
+          {% cloudinary image.image.public_id class="img-fluid product-thumbnail
+          rounded mb-3" alt=image.caption style="max-height: 300px; object-fit:
+          cover;" %}
+
+          <!-- Image Caption and Link -->
+          <div class="d-flex flex-column align-items-center">
+            <h3 class="text-decoration-none text-dark">{{ image.caption }}</h3>
+            <a
+              href="{% url 'furniture_detail' image.id %}"
+              class="text-decoration-none text-dark"
+              >View Details</a
+            >
+          </div>
+
+          <!-- Price -->
+          {% if image.price %}
+          <p class="text-primary fw-bold">Price: ₹{{ image.price }}</p>
+          {% endif %}
+
+          <!-- Rating -->
+          <p class="rating-display mb-2">
+            <strong>Rating:</strong>
+            <span class="stars">
+              {% with "12345"|make_list as stars %} {% for i in stars %}
+              <span
+                class="star {% if forloop.counter <= image.avg_rating %}filled{% endif %}"
+                >★</span
+              >
+              {% endfor %} {% endwith %}
+            </span>
+            <small>({{ image.avg_rating }}/5)</small>
+          </p>
+
+          <!-- Action Buttons -->
+          <div
+            class="d-flex align-items-center justify-content-center gap-2 mt-2 flex-wrap"
+          >
+            {% if user.is_authenticated %}
+            <form
+              action="{% url 'add_to_wishlist' image.id %}"
+              method="POST"
+              class="m-0"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="btn btn-outline-danger btn-sm shadow-sm btn-no-bg"
+              >
+                <img
+                  src="{% static 'images/wish-list.png' %}"
+                  alt="Wishlist"
+                  width="20"
+                  height="20"
+                />
+              </button>
+            </form>
+            {% else %}
+            <a
+              href="{% url 'login' %}"
+              class="btn btn-outline-secondary btn-sm shadow-sm btn-no-bg"
+            >
+              <img
+                src="{% static 'images/wish-list.png' %}"
+                alt="Login to wishlist"
+                width="20"
+                height="20"
+              />
+            </a>
+            {% endif %}
+
+            <a
+              href="{% url 'cart:add_to_cart' image.id %}"
+              class="btn btn-outline-success btn-sm shadow-sm btn-no-bg"
+            >
+              <img
+                src="{% static 'images/shopping-cart.png' %}"
+                alt="Add to cart"
+                class="cart-icon"
+              />
+            </a>
+
+            {% if user.is_superuser %}
+            <a
+              href="{% url 'edit_image' image.id %}"
+              class="btn btn-outline-primary btn-sm shadow-sm btn-no-bg"
+              >✏️</a
+            >
+            <a
+              href="{% url 'delete_image' image.id %}"
+              class="btn btn-outline-danger btn-sm shadow-sm btn-no-bg"
+              onclick="
+                return confirm('Are you sure you want to delete this image?');
+              "
+              >🗑️</a
+            >
+            {% endif %}
+          </div>
+
+          <small class="text-muted d-block mt-2"
+            >Uploaded at: {{ image.uploaded_at }}</small
+          >
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12" data-aos="fade-up">
+        <p class="text-center text-muted fs-5">No images uploaded yet.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </div>
 
 {% include "footer.html" %}
 
 <!-- Custom CSS Enhancements -->
 <style>
-    body {
-        font-family: 'Poppins', sans-serif;
-    }
+  body {
+    font-family: "Poppins", sans-serif;
+  }
 
-    .product-item {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+  .product-item {
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
 
-    .transition-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgb(210, 35, 35);
-    }
+  .transition-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgb(210, 35, 35);
+  }
 
-    .btn-no-bg {
-        background-color: rgb(229 241 0) !important;
-        border: 2px solid rgb(255, 200, 0) !important;
-        border-radius: 50% !important;
-        width: 40px;
-        height: 40px;
-        padding: 4px 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-    }
+  .btn-no-bg {
+    background-color: rgb(229 241 0) !important;
+    border: 2px solid rgb(255, 200, 0) !important;
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
 
-    .btn-no-bg:hover {
-        background-color: rgb(224, 208, 199) !important;
-        border-color: transparent !important;
-    }
+  .btn-no-bg:hover {
+    background-color: rgb(224, 208, 199) !important;
+    border-color: transparent !important;
+  }
 
-    .btn-no-bg:hover svg,
-    .btn-no-bg:hover i {
-        color: white;
-    }
+  .btn-no-bg:hover svg,
+  .btn-no-bg:hover i {
+    color: white;
+  }
 
-    .cart-icon {
-        height: 20px;
-    }
+  .cart-icon {
+    height: 20px;
+  }
 
-    .rating-display .stars {
-        display: inline-block;
-        font-size: 1.4rem;
-        color: #ffcc00;
-    }
+  .rating-display .stars {
+    display: inline-block;
+    font-size: 1.4rem;
+    color: #ffcc00;
+  }
 
-    .rating-display .star {
-        color: #ccc;
-        transition: color 0.3s ease;
-    }
+  .rating-display .star {
+    color: #ccc;
+    transition: color 0.3s ease;
+  }
 
-    .rating-display .star.filled {
-        color: #f5b301;
-    }
+  .rating-display .star.filled {
+    color: #f5b301;
+  }
 
-    .btn {
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
+  .btn {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
 
-    .btn:hover {
-        opacity: 0.9;
-    }
+  .btn:hover {
+    opacity: 0.9;
+  }
 
-    .product-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-    }
+  .product-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
 
-    .bg-custom {
-        background-color: #2F4F4F !important;
-    }
+  .bg-custom {
+    background-color: #2f4f4f !important;
+  }
 
-    .shadow-sm {
-        color: #ffffff;
-        border-color: #ffcc00;
-        box-shadow: 0 2px 6px rgba(255, 0, 0, 0.05);
-    }
+  .shadow-sm {
+    color: #ffffff;
+    border-color: #ffcc00;
+    box-shadow: 0 2px 6px rgba(255, 0, 0, 0.05);
+  }
 
-    .gap-2 {
-        gap: 0.5rem;
-    }
+  .gap-2 {
+    gap: 0.5rem;
+  }
 </style>
