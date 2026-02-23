@@ -4,17 +4,19 @@ from pathlib import Path
 import os
 from decouple import config
 import cloudinary
-# import dj_database_url
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Database settings (SQLite for development)
+# --------------------
+# DATABASE (Cloud PostgreSQL like ask_me)
+# --------------------
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": dj_database_url.parse(
+        config("DATABASE_URL"), conn_max_age=600, ssl_require=True
+    )
 }
 
 # Quick-start development settings - unsuitable for production
@@ -171,4 +173,3 @@ cloudinary.config(
     api_key=config('CLOUDINARY_API_KEY'),
     api_secret=config('CLOUDINARY_API_SECRET'),
 )
-
