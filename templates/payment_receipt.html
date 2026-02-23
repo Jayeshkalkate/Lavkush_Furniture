@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Receipt</title>
+    <style>
+        body { font-family: Arial; padding: 40px; }
+        .box { border: 1px solid #ddd; padding: 20px; width: 500px; }
+        .btn {
+            background: green;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>Lavkush Furniture - Payment Receipt</h2>
+        <hr>
+
+        <p><strong>Name:</strong> {{ payment.user.username }}</p>
+        <p><strong>Order ID:</strong> {{ payment.order_id }}</p>
+        <p><strong>Payment ID:</strong> {{ payment.payment_id }}</p>
+        <p><strong>Amount:</strong> ₹{{ payment.amount }}</p>
+        <p><strong>Status:</strong> {{ payment.status }}</p>
+        <p><strong>Date:</strong> {{ payment.created_at }}</p>
+
+        <br>
+
+        <a href="{% url 'cart:download_receipt_pdf' payment.id %}" class="btn">
+            Download PDF Receipt
+        </a>
+    </div>
+
+</body>
+</html>
