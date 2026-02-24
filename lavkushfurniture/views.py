@@ -12,11 +12,10 @@ def send_email_to_client(first_name, last_name, email, message):
     recipient_list = ["jayeshkalkate432@gmail.com"]
     send_mail(subject, full_message, from_email, recipient_list)
 
-# @login_required(login_url='login')
+
 def homepage(request):
     return render(request, "index.html")
 
-# @login_required(login_url='login')
 def aboutus(request):
     return render(request, "aboutus.html")
 
@@ -42,11 +41,9 @@ def contact(request):
 
     return render(request, "contact.html")
 
-# @login_required(login_url='login')
 def services(request):
     return render(request, "services.html")
 
-# @login_required(login_url='login')
 def gallery(request):
     return render(request, "gallery.html")
 
