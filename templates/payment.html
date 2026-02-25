@@ -5,26 +5,17 @@
     <title>Secure Payment | Lavkush Furniture</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <!-- Razorpay -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
         body {
             background: linear-gradient(135deg, #f6f9fc, #e9f0f7);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            font-family: Arial;
         }
 
         .payment-container {
@@ -34,94 +25,22 @@
             max-width: 500px;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            animation: fadeIn 0.8s ease-in-out;
-        }
-
-        .brand {
             text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .brand h1 {
-            color: #ff5e00;
-            font-size: 26px;
-            font-weight: 600;
-        }
-
-        .brand p {
-            color: #777;
-            font-size: 14px;
-        }
-
-        .amount-box {
-            background: #f9fafc;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .amount-box h2 {
-            font-size: 22px;
-            color: #333;
-        }
-
-        .amount-box span {
-            color: #ff5e00;
-            font-weight: 600;
-        }
-
-        .secure-info {
-            text-align: center;
-            font-size: 13px;
-            color: #777;
-            margin-bottom: 20px;
         }
 
         .pay-btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(90deg, #ff5e00, #ff8c42);
+            background: #ff5e00;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             color: white;
             font-size: 16px;
-            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
         .pay-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(255,94,0,0.3);
-        }
-
-        .footer-note {
-            text-align: center;
-            font-size: 12px;
-            margin-top: 15px;
-            color: #999;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media(max-width: 480px){
-            .payment-container {
-                padding: 25px;
-            }
-
-            .amount-box h2 {
-                font-size: 18px;
-            }
+            background: #e65300;
         }
     </style>
 </head>
@@ -130,31 +49,25 @@
 
 <div class="payment-container">
 
-    <div class="brand">
-        <h1>Lavkush Furniture</h1>
-        <p>Premium Quality Furniture Store</p>
-    </div>
-
-    <div class="amount-box">
-        <h2>Total Amount: <span>₹{{ total_amount }}</span></h2>
-    </div>
-
-    <div class="secure-info">
-        🔒 100% Secure Payment via Razorpay  
-        <br>Supports UPI, Cards, Net Banking
-    </div>
+    <h2>Lavkush Furniture</h2>
+    <p>Total Amount: <strong>₹{{ total_amount }}</strong></p>
 
     <button id="rzp-button" class="pay-btn">
         Proceed to Pay
     </button>
 
-    <div class="footer-note">
-        Your payment is encrypted and secure.
-    </div>
-
 </div>
 
+<!-- ✅ Hidden Form (VERY IMPORTANT) -->
+<form id="payment-form" method="POST" action="{% url 'order:payment_success' %}">
+    {% csrf_token %}
+    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+</form>
+
 <script>
+
 var options = {
     "key": "{{ razorpay_key }}",
     "amount": "{{ payment.amount }}",
@@ -162,10 +75,18 @@ var options = {
     "name": "Lavkush Furniture",
     "description": "Furniture Purchase",
     "order_id": "{{ payment.id }}",
+    
     "handler": function (response){
-        alert("✅ Payment Successful!");
-        window.location.href = "/";
+
+        // ✅ Fill hidden fields
+        document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+        document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+        document.getElementById('razorpay_signature').value = response.razorpay_signature;
+
+        // ✅ Submit to backend
+        document.getElementById('payment-form').submit();
     },
+
     "theme": {
         "color": "#ff5e00"
     }
@@ -177,6 +98,7 @@ document.getElementById('rzp-button').onclick = function(e){
     rzp1.open();
     e.preventDefault();
 }
+
 </script>
 
 </body>

@@ -34,3 +34,13 @@ render.yaml
 
 # keep the file locally not shows on git
 create_admin.py
+
+venv/
+__pycache__/
+*.pyc
+db.sqlite3
+.env
+.idea/
+.vscode/
+media/
+staticfiles/
