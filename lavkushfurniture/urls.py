@@ -16,7 +16,7 @@ sitemaps = {
 }
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path(f"{settings.ADMIN_URL}/", admin.site.urls),
     path("", views.homepage, name="homepage"),
     path("account/", include("account.urls")),
     path("gallery/", include("gallery.urls")),

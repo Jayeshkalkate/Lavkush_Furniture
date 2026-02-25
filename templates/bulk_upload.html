@@ -1,0 +1,66 @@
+{% load static %}
+{% include "header.html" %}
+
+<style>
+  .bulk-box {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+  }
+</style>
+
+<!-- Hero Section -->
+<div class="hero">
+  <div class="container">
+    <div class="row justify-content-between">
+      <div class="col-lg-6">
+        <div class="intro-excerpt">
+          <h1>Bulk Product Upload</h1>
+          <p class="lead">
+            Upload multiple products using Excel (.xlsx) or CSV file.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Upload Section -->
+<div class="untree_co-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="bulk-box">
+
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label">Select Excel / CSV File</label>
+              {{ form.file }}
+            </div>
+
+            <div class="mb-3">
+              <small class="text-muted">
+                Required Columns:<br>
+                caption | price | description | dimensions | materials | image_name
+              </small>
+            </div>
+
+            <button type="submit" class="btn btn-dark">
+              Upload Products
+            </button>
+
+            <a href="{% url 'gallery' %}" class="btn btn-secondary">
+              Back to Gallery
+            </a>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include "footer.html" %}

@@ -12,14 +12,15 @@ import requests
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 
-
 @staff_member_required
 def bulk_upload_products(request):
     if request.method == "POST":
         form = BulkProductUploadForm(request.POST, request.FILES)
+
         if form.is_valid():
             file = request.FILES["file"]
 
+            # Check file type
             if file.name.endswith(".csv"):
                 df = pd.read_csv(file)
             elif file.name.endswith(".xlsx"):
@@ -28,26 +29,47 @@ def bulk_upload_products(request):
                 messages.error(request, "Invalid file format. Upload CSV or Excel.")
                 return redirect("bulk_upload")
 
+            # Optional: Check required columns
+            required_columns = ["caption", "price"]
+            for col in required_columns:
+                if col not in df.columns:
+                    messages.error(request, f"Missing required column: {col}")
+                    return redirect("bulk_upload")
+
             for _, row in df.iterrows():
                 image_file = None
 
+                caption = row.get("caption")
+                price = row.get("price")
+                description = row.get("description")
+                dimensions = row.get("dimensions")
+                materials = row.get("materials")
                 image_url = row.get("image_url")
 
+                # Skip rows without caption (important for NOT NULL field)
+                if not caption:
+                    continue
+
+                # Download image if URL exists
                 if image_url:
                     try:
-                        response = requests.get(image_url)
+                        response = requests.get(image_url, timeout=5)
                         if response.status_code == 200:
-                            file_name = slugify(row.get("caption")) + ".jpg"
+                            safe_caption = slugify(caption)
+                            file_name = f"{safe_caption}.jpg"
                             image_file = ContentFile(response.content, name=file_name)
                     except Exception as e:
                         print("Image download failed:", e)
 
+                # Final safe caption
+                final_caption = caption or "No Caption"
+
                 ImageWithCaption.objects.create(
-                    caption=row.get("caption"),
-                    price=row.get("price"),
-                    description=row.get("description"),
-                    dimensions=row.get("dimensions"),
-                    materials=row.get("materials"),
+                    caption=final_caption,
+                    price=price,
+                    description=description,
+                    dimensions=dimensions,
+                    materials=materials,
                     image=image_file,
                 )
 

@@ -3,7 +3,11 @@ from .models import ImageWithCaption
 
 class BulkProductUploadForm(forms.Form):
     file = forms.FileField()
-    
+
+
+# class ProductUploadForm(forms.Form):
+#     file = forms.FileField()
+
 class ImageForm(forms.ModelForm):
     class Meta:
         model = ImageWithCaption
