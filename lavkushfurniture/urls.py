@@ -22,6 +22,7 @@ urlpatterns = [
     path("gallery/", include("gallery.urls")),
     path("wishlist/", include("wishlist.urls")),
     path("cart/", include("cart.urls")),
+    path("order/", include("order.urls")),
     path(
         "termsandconditions/",
         TemplateView.as_view(template_name="termsandconditions.html"),

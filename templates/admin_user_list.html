@@ -8,7 +8,6 @@
     color: #333;
     background: url("{% static 'images/background.jpg' %}") no-repeat center
       center/cover;
-    background-size: cover;
     animation: moveBg 20s linear infinite;
   }
 
@@ -31,7 +30,8 @@
     padding: 40px 30px;
     border-radius: 16px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-    color: #000;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
     overflow-x: auto;
   }
 
@@ -41,14 +41,22 @@
     font-weight: 600;
     color: #f9ff00;
     text-align: center;
-    letter-spacing: 1.5px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
-    transition: color 0.3s ease, transform 0.3s ease;
+    letter-spacing: 1px;
   }
 
-  h2.page-title:hover {
-    color: #fff700;
-    transform: scale(1.05);
+  .admin-link {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .admin-link a {
+    color: #ff6600;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .admin-link a:hover {
+    text-decoration: underline;
   }
 
   .search-bar {
@@ -64,6 +72,7 @@
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 14px;
+    width: 200px;
   }
 
   .search-bar button {
@@ -83,87 +92,139 @@
   .user-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.95);
+    font-size: 0.95rem;
   }
 
   .user-table th,
   .user-table td {
-    padding: 12px 15px;
+    padding: 12px;
     border: 1px solid #ddd;
     text-align: left;
   }
 
   .user-table th {
     background-color: #f4f4f4;
-    font-weight: bold;
   }
 
   .user-table tr:nth-child(even) {
     background-color: #f9f9f9;
   }
 
-  @media screen and (max-width: 768px) {
-    .user-table th,
-    .user-table td {
-      padding: 8px;
-      font-size: 0.9rem;
-    }
+  .delete-link {
+    color: red;
+    font-weight: bold;
+    text-decoration: none;
+  }
 
+  .delete-link:hover {
+    text-decoration: underline;
+  }
+
+  @media screen and (max-width: 768px) {
     .container {
       margin: 40px 15px;
       padding: 25px 20px;
-    }
-
-    h2.page-title {
-      font-size: 1.6rem;
     }
 
     .search-bar {
       flex-direction: column;
       align-items: center;
     }
-  }
 
-  .btn-no-bg {
-    background-color: #ff5e00 !important;
-    border: 2px solid rgb(255, 200, 0) !important;
-    border-radius: 50% !important;
-    width: 40px;
-    height: 40px;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-  }
+    .search-bar input {
+      width: 100%;
+    }
+    .dashboard-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      color: white;
+      transition: all 0.3s ease;
+    }
 
-  .btn-no-bg:hover {
-    background-color: #e5f100 !important;
-    border-color: transparent !important;
-  }
+    .admin-btn {
+      background: linear-gradient(135deg, #111827, #1f2937);
+    }
 
-  .btn-no-bg:hover svg,
-  .btn-no-bg:hover i {
-    color: white;
-  }
+    .finance-btn {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+    }
 
-  .cart-icon {
-    height: 20px;
+    .dashboard-btn:hover {
+      transform: translateY(-3px);
+      opacity: 0.9;
+    }
+
+    
+
+      .admin-link {
+        text-align: center;
+        margin-top: 30px;
+      }
+
+      .admin-link a {
+        font-size: 16px;
+        color: #ff6600;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      .admin-link a:hover {
+        text-decoration: underline;
+      }
+
+      form {
+        text-align: center;
+      }
+
+      button {
+        margin-top: 30px;
+        padding: 12px 25px;
+        background-color: #ff6600;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background-color 0.3s ease,
+          transform 0.2s ease;
+      }
   }
 </style>
 
 <div class="container">
-  <h2 class="page-title">
-    ˜”*°•.˜”*°• Lavkush Customers & Profiles •°*”˜.•°*”˜
-  </h2>
+  <h2 class="page-title">Lavkush Customers & Profiles</h2>
+
+  <div class="admin-link">
+    <a
+    href="{% url 'order:admin_finance_dashboard' %}"
+    class="dashboard-btn admin-btn"
+    >
+    🔐 Admin Finance Dashboard
+    </a>
+  </div>
+
+  <br>
+  <hr>
+  <br> <br>
 
   <div class="search-bar">
-    <input type="text" id="searchFirstName" placeholder="Search First Name" />
-    <input type="text" id="searchLastName" placeholder="Search Last Name" />
-    <input type="text" id="searchCity" placeholder="Search City" />
-    <button onclick="filterTable()">Search</button>
+    <input
+      type="text"
+      id="searchName"
+      placeholder="Search by Name"
+      onkeyup="filterTable()"
+    />
+    <input
+      type="text"
+      id="searchCity"
+      placeholder="Search by City"
+      onkeyup="filterTable()"
+    />
     <button onclick="resetFilter()">Reset</button>
   </div>
 
@@ -173,7 +234,7 @@
         <th>Full Name</th>
         <th>Username</th>
         <th>Email</th>
-        <th>Phone Number</th>
+        <th>Phone</th>
         <th>Address</th>
         <th>City</th>
         <th>Action</th>
@@ -182,7 +243,7 @@
     <tbody>
       {% for user in users %}
       <tr>
-        <td>{{ user.get_full_name }}</td>
+        <td>{{ user.get_full_name|default:user.username }}</td>
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
 
@@ -200,10 +261,11 @@
           {% if user != request.user %}
           <a
             href="{% url 'delete_user' user.id %}"
+            class="delete-link"
             onclick="return confirm('Are you sure you want to delete {{ user.username }}?')"
-            style="color: red; font-weight: bold"
-            >Delete</a
           >
+            Delete
+          </a>
           {% else %}
           <span style="color: gray">You</span>
           {% endif %}
@@ -216,23 +278,15 @@
 
 <script>
   function filterTable() {
-    const fname = document
-      .getElementById("searchFirstName")
-      .value.toLowerCase();
-    const lname = document.getElementById("searchLastName").value.toLowerCase();
-    const city = document.getElementById("searchCity").value.toLowerCase();
+    const nameInput = document.getElementById("searchName").value.toLowerCase();
+    const cityInput = document.getElementById("searchCity").value.toLowerCase();
     const rows = document.querySelectorAll("#userTable tbody tr");
 
     rows.forEach((row) => {
-      const firstName = row.cells[0].textContent.toLowerCase();
-      const lastName = row.cells[1].textContent.toLowerCase();
-      const userCity = row.cells[5].textContent.toLowerCase();
+      const fullName = row.cells[0].textContent.toLowerCase();
+      const city = row.cells[5].textContent.toLowerCase();
 
-      if (
-        firstName.includes(fname) &&
-        lastName.includes(lname) &&
-        userCity.includes(city)
-      ) {
+      if (fullName.includes(nameInput) && city.includes(cityInput)) {
         row.style.display = "";
       } else {
         row.style.display = "none";
@@ -241,9 +295,10 @@
   }
 
   function resetFilter() {
-    document.getElementById("searchFirstName").value = "";
-    document.getElementById("searchLastName").value = "";
+    document.getElementById("searchName").value = "";
     document.getElementById("searchCity").value = "";
-    filterTable();
+
+    const rows = document.querySelectorAll("#userTable tbody tr");
+    rows.forEach((row) => (row.style.display = ""));
   }
 </script>

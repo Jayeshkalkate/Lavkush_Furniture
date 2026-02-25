@@ -1,0 +1,129 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+  .dashboard-container {
+    max-width: 1200px;
+    margin: 60px auto;
+  }
+
+  .dashboard-title {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: #ff6a00;
+  }
+
+  .finance-card {
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+  }
+
+  .finance-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .finance-card h5 {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .finance-card h3 {
+    font-weight: bold;
+  }
+
+  .card-total { background: #e6ffed; }
+  .card-daily { background: #e6f2ff; }
+  .card-monthly { background: #fff4e6; }
+  .card-failed { background: #ffe6e6; }
+  .card-refunded { background: #f3e6ff; }
+
+  .table-section {
+    margin-top: 50px;
+  }
+
+  .refund-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .refund-btn:hover {
+    background-color: #b02a37;
+  }
+</style>
+
+<div class="container dashboard-container">
+
+    <h2 class="dashboard-title" >💰 User Finance Dashboard</h2>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card-custom card-total">
+                <h5>Total Revenue</h5>
+                <h2>₹{{ total }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-custom card-daily">
+                <h5>This Month</h5>
+                <h2>₹{{ monthly }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-custom card-failed">
+                <h5>Failed Payments</h5>
+                <h2>{{ failed }}</h2>
+            </div>
+        </div>
+
+    </div>
+
+    {% if payments %}
+    <div class="table-container mt-5">
+        <h4 class="mb-4">Recent Payments</h4>
+
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>₹{{ payment.amount }}</td>
+                    <td>
+                        {% if payment.status == "paid" %}
+                            <span class="badge bg-success">Paid</span>
+                        {% elif payment.status == "failed" %}
+                            <span class="badge bg-danger">Failed</span>
+                        {% elif payment.status == "refunded" %}
+                            <span class="badge bg-warning text-dark">Refunded</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ payment.created_at|date:"d M Y H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

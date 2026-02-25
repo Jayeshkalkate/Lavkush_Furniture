@@ -1,5 +1,5 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -103,7 +103,9 @@
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
+        transition:
+          background-color 0.3s ease,
+          transform 0.2s ease;
       }
 
       button:hover {
@@ -179,9 +181,18 @@
 
       {% if user.is_authenticated and user.is_superuser %}
       <div class="admin-link">
-        <a href="{% url 'admin_user_list' %}">View All Users</a>
+        <a href="{% url 'admin_user_list' %}">🏠 Admin Dashboard</a>
       </div>
       {% endif %}
+
+      <div class="admin-link">
+        <a
+          href="{% url 'order:customer_finance_dashboard' %}"
+          class="dashboard-btn finance-btn"
+        >
+          📊 Customer Finance Dashboard
+        </a>
+      </div>
     </div>
 
     <form action="{% url 'logout' %}" method="post">
