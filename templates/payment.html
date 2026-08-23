@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment – Lavkush Furniture</title>
+    <meta name="robots" content="noindex, nofollow">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .payment-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 40px 32px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .payment-card:hover {
+            transform: translateY(-4px);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .brand img {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .brand h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .brand span {
+            color: #e67e22;
+        }
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: #e67e22;
+            margin: 16px auto 24px;
+            border-radius: 4px;
+        }
+        .amount-box {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 28px;
+        }
+        .amount-box label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .amount-box .amount {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .amount-box .currency {
+            font-size: 1.4rem;
+            color: #e67e22;
+        }
+        .pay-btn {
+            width: 100%;
+            padding: 16px;
+            background: #e67e22;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .pay-btn:hover {
+            background: #d35400;
+        }
+        .pay-btn:active {
+            transform: scale(0.97);
+        }
+        .secure-badge {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .secure-badge i {
+            color: #28a745;
+        }
+        .footer-note {
+            margin-top: 16px;
+            font-size: 0.75rem;
+            color: #adb5bd;
+        }
+        .footer-note a {
+            color: #e67e22;
+            text-decoration: none;
+        }
+        @media (max-width: 480px) {
+            .payment-card {
+                padding: 28px 20px;
+            }
+            .amount-box .amount {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="payment-card">
+    <div class="brand">
+        <!-- Static logo – you can use {% static %} if needed, but this is a standalone page -->
+        <img src="https://via.placeholder.com/50x50?text=LF" alt="Lavkush Furniture">
+        <h1>Lavkush <span>Furniture</span></h1>
+    </div>
+    <div class="divider"></div>
+
+    <div class="amount-box">
+        <label>Total Amount</label>
+        <div class="amount"><span class="currency">₹</span> {{ total_amount|floatformat:2 }}</div>
+    </div>
+
+    <button id="rzp-button" class="pay-btn">
+        <i class="fas fa-lock" style="font-size:1rem;"></i> Proceed to Pay
+    </button>
+
+    <div class="secure-badge">
+        <i class="fas fa-shield-alt"></i> Secured by Razorpay
+    </div>
+    <div class="footer-note">
+        <a href="{% url 'cart:view_cart' %}">← Back to Cart</a>
+    </div>
+</div>
+
+<!-- Hidden form for success redirection -->
+<form id="payment-form" method="POST" action="{% url 'order:payment_success' %}">
+    {% csrf_token %}
+    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+</form>
+
+<!-- Font Awesome for icons (optional, but used for security badge) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script>
+    var options = {
+        "key": "{{ razorpay_key }}",
+        "amount": "{{ payment.amount }}",
+        "currency": "INR",
+        "name": "Lavkush Furniture",
+        "description": "Furniture Purchase",
+        "order_id": "{{ payment.order_id }}",   // ✅ FIXED: use Razorpay order ID, not payment.id
+        "handler": function (response) {
+            document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+            document.getElementById('razorpay_signature').value = response.razorpay_signature;
+            document.getElementById('payment-form').submit();
+        },
+        "theme": {
+            "color": "#e67e22"
+        },
+        "modal": {
+            "ondismiss": function() {
+                // Optional: handle if user closes the modal
+                console.log('Payment modal closed');
+            }
+        }
+    };
+
+    var rzp = new Razorpay(options);
+
+    document.getElementById('rzp-button').onclick = function(e) {
+        rzp.open();
+        e.preventDefault();
+    };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+{% extends "header.html" %}
+{% load static %}
+
+{% block title %}Edit Image – Lavkush Furniture{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-edit me-2 text-warning"></i> Edit Product
+                    </h5>
+                </div>
+                <div class="card-body p-4 p-lg-5">
+
+                    <!-- Display Messages -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Image preview (current) -->
+                        <div class="text-center mb-4">
+                            <img src="{% if image.image %}{{ image.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" 
+                                 alt="Current Image" 
+                                 class="img-fluid rounded shadow" 
+                                 style="max-height: 200px; object-fit: cover;">
+                            <p class="text-muted small mt-2">Current image</p>
+                        </div>
+
+                        <!-- Form fields with Bootstrap classes -->
+                        <div class="mb-3">
+                            <label for="{{ form.image.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-image me-1"></i> Image
+                            </label>
+                            {{ form.image }}
+                            <div class="form-text">Upload a new image (optional). Leave blank to keep current.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.caption.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-tag me-1"></i> Caption <span class="text-danger">*</span>
+                            </label>
+                            {{ form.caption }}
+                            {% if form.caption.errors %}
+                                <div class="text-danger small">{{ form.caption.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.price.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-rupee-sign me-1"></i> Price (₹)
+                            </label>
+                            {{ form.price }}
+                            <div class="form-text">Enter a valid price (e.g., 4999.99)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-align-left me-1"></i> Description
+                            </label>
+                            {{ form.description }}
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.dimensions.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-ruler-combined me-1"></i> Dimensions
+                                    </label>
+                                    {{ form.dimensions }}
+                                    <div class="form-text">e.g., 120x60x45 cm</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.materials.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-cubes me-1"></i> Materials
+                                    </label>
+                                    {{ form.materials }}
+                                    <div class="form-text">e.g., Solid Wood, Metal, Fabric</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Note: rating field is not part of ImageForm; it's separate. So we removed it. -->
+
+                        <div class="d-flex flex-wrap gap-3 mt-4">
+                            <button type="submit" class="btn btn-warning btn-lg px-5">
+                                <i class="fas fa-save me-2"></i> Save Changes
+                            </button>
+                            <a href="{% url 'gallery' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

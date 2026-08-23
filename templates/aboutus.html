@@ -1,0 +1,106 @@
+{% extends "header.html" %}
+{% load static %}
+
+{% block title %}About Us – Lavkush Furniture{% endblock %}
+
+{% block content %}
+
+<!-- ==================== HERO SECTION ==================== -->
+<section class="hero-section bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold" style="color: #2c3e50;">About Us</h1>
+                <p class="lead text-muted">
+                    At Lavkush Furniture, we believe that furniture is more than just wood and nails — 
+                    it's about comfort, style, and the feeling of home. Based in Ranale, Maharashtra, 
+                    we specialize in crafting high-quality, durable, and beautifully designed furniture 
+                    that fits every space and lifestyle.
+                </p>
+                <div class="d-flex gap-3 mt-4 flex-wrap">
+                    <a href="{% url 'gallery' %}" class="btn btn-warning btn-lg px-4">
+                        <i class="fas fa-images"></i> View Gallery
+                    </a>
+                    <a href="{% url 'our_team' %}" class="btn btn-outline-secondary btn-lg px-4">
+                        <i class="fas fa-users"></i> Our Team
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-4 mt-lg-0">
+                <div class="hero-image text-center">
+                    <img src="{% static 'images/couch2.png' %}" 
+                         alt="Lavkush Furniture" 
+                         class="img-fluid rounded shadow-lg"
+                         style="max-height: 400px; width: auto;"
+                         onerror="this.src='https://via.placeholder.com/600x400?text=Furniture'">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== WHY CHOOSE US ==================== -->
+<section class="why-choose-us py-5 bg-light">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-4">Why Choose Us</h2>
+                <p class="text-muted">
+                    At Lavkush Furniture, we combine premium quality materials, a wide variety of 
+                    stylish designs, and customizable options to bring you furniture that suits your 
+                    taste and budget. Our affordable pricing, seamless shopping experience, and 
+                    exceptional customer service ensure your home is furnished with care and convenience. 
+                    Plus, we are committed to sustainability — your choices are both stylish and eco-friendly.
+                </p>
+                <div class="row mt-4 g-4">
+                    <div class="col-6">
+                        <div class="feature d-flex align-items-start gap-3">
+                            <i class="fas fa-truck fa-2x text-warning"></i>
+                            <div>
+                                <h5 class="fw-semibold">Fast & Free Shipping</h5>
+                                <p class="small text-muted">Quick, safe delivery at no extra cost.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="feature d-flex align-items-start gap-3">
+                            <i class="fas fa-images fa-2x text-warning"></i>
+                            <div>
+                                <h5 class="fw-semibold">Easy Gallery</h5>
+                                <p class="small text-muted">Clean, user-friendly browsing.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="feature d-flex align-items-start gap-3">
+                            <i class="fas fa-headset fa-2x text-warning"></i>
+                            <div>
+                                <h5 class="fw-semibold">24/7 Support</h5>
+                                <p class="small text-muted">Always here to help.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="feature d-flex align-items-start gap-3">
+                            <i class="fas fa-undo-alt fa-2x text-warning"></i>
+                            <div>
+                                <h5 class="fw-semibold">Hassle-Free Returns</h5>
+                                <p class="small text-muted">No questions asked.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="image-wrap">
+                    <img src="{% static 'images/d2.jpg' %}" 
+                         alt="Why choose us" 
+                         class="img-fluid rounded shadow-lg"
+                         onerror="this.src='https://via.placeholder.com/600x400?text=Why+Choose+Us'">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

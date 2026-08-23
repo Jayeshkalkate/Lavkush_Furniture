@@ -1,0 +1,108 @@
+{% extends "header.html" %}
+{% load static %}
+
+{% block title %}My Finance Dashboard – Lavkush Furniture{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold" style="color: #2c3e50;">
+            <i class="fas fa-wallet text-warning"></i> My Finance Dashboard
+        </h1>
+        <p class="text-muted">Track your orders, payments, and refunds</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card border-0 shadow-sm h-100 bg-success bg-opacity-10">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-success">Total Spent</h5>
+                    <h2 class="fw-bold">₹{{ total|floatformat:2 }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card border-0 shadow-sm h-100 bg-warning bg-opacity-10">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-warning">This Month</h5>
+                    <h2 class="fw-bold">₹{{ monthly|floatformat:2 }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card border-0 shadow-sm h-100 bg-danger bg-opacity-10">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-danger">Failed Payments</h5>
+                    <h2 class="fw-bold">{{ failed }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card border-0 shadow-sm h-100 bg-info bg-opacity-10">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-info">Total Refunded</h5>
+                    <h2 class="fw-bold">₹{{ refunded|floatformat:2 }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Payments -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-history me-2 text-warning"></i>Recent Payments</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if payments %}
+                            {% for payment in payments %}
+                            <tr>
+                                <td>₹{{ payment.amount }}</td>
+                                <td>
+                                    {% if payment.status == "paid" %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% elif payment.status == "failed" %}
+                                        <span class="badge bg-danger">Failed</span>
+                                    {% elif payment.status == "refunded" %}
+                                        <span class="badge bg-warning text-dark">Refunded</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ payment.created_at|date:"d M Y H:i" }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">No payment history yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="d-flex flex-wrap gap-3 mt-4">
+        <a href="{% url 'gallery' %}" class="btn btn-warning">
+            <i class="fas fa-shopping-bag me-2"></i> Continue Shopping
+        </a>
+        <a href="{% url 'order:payment_receipt' payment.id %}" class="btn btn-outline-secondary">
+            <i class="fas fa-receipt me-2"></i> View Last Receipt
+        </a>
+    </div>
+</div>
+
+{% endblock %}

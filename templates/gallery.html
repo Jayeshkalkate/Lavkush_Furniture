@@ -1,0 +1,183 @@
+{% extends "header.html" %}
+{% load static %}
+{% load cloudinary %}
+
+{% block title %}Gallery – Lavkush Furniture{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <!-- Filter & Sort Form -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-12 col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
+                        <input type="text" name="keyword" class="form-control" placeholder="Search..." value="{{ request.GET.keyword }}">
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="input-group">
+                        <span class="input-group-text">₹</span>
+                        <input type="number" name="min_price" class="form-control" placeholder="Min" value="{{ request.GET.min_price }}">
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="input-group">
+                        <span class="input-group-text">₹</span>
+                        <input type="number" name="max_price" class="form-control" placeholder="Max" value="{{ request.GET.max_price }}">
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-cubes"></i></span>
+                        <input type="text" name="materials" class="form-control" placeholder="Material" value="{{ request.GET.materials }}">
+                    </div>
+                </div>
+                <div class="col-12 col-md-2">
+                    <select name="sort_by" class="form-select">
+                        <option value="">Sort By</option>
+                        <option value="price_asc" {% if request.GET.sort_by == "price_asc" %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_desc" {% if request.GET.sort_by == "price_desc" %}selected{% endif %}>Price: High to Low</option>
+                        <option value="latest" {% if request.GET.sort_by == "latest" %}selected{% endif %}>Latest</option>
+                        <option value="oldest" {% if request.GET.sort_by == "oldest" %}selected{% endif %}>Oldest</option>
+                        <option value="rating" {% if request.GET.sort_by == "rating" %}selected{% endif %}>Top Rated</option>
+                    </select>
+                </div>
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-warning px-4">
+                        <i class="fas fa-filter me-2"></i> Apply Filters
+                    </button>
+                    <a href="{% url 'gallery' %}" class="btn btn-outline-secondary px-4">
+                        <i class="fas fa-undo me-2"></i> Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Upload Buttons -->
+    {% if user.is_superuser %}
+        <div class="d-flex flex-wrap gap-3 mb-4 justify-content-center">
+            <a href="{% url 'upload_image' %}" class="btn btn-dark">
+                <i class="fas fa-plus me-2"></i> Upload Single
+            </a>
+            <a href="{% url 'bulk_upload' %}" class="btn btn-success">
+                <i class="fas fa-file-upload me-2"></i> Bulk Upload
+            </a>
+        </div>
+    {% endif %}
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Gallery Grid -->
+    <div class="row g-4">
+        {% for image in images %}
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-shadow">
+                    <div class="product-image">
+                        {% cloudinary image.image.public_id class="card-img-top" alt=image.caption %}
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold">{{ image.caption }}</h5>
+                        {% if image.price %}
+                            <p class="text-warning fw-bold">₹{{ image.price }}</p>
+                        {% endif %}
+
+                        <!-- Rating -->
+                        <div class="mb-2">
+                            <span class="text-warning">
+                                {% for i in "12345"|make_list %}
+                                    <span class="star {% if forloop.counter <= image.avg_rating %}filled{% endif %}">★</span>
+                                {% endfor %}
+                            </span>
+                            <small class="text-muted">({{ image.avg_rating|floatformat:1 }})</small>
+                        </div>
+
+                        <div class="mt-auto">
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="{% url 'furniture_detail' image.id %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+
+                                <!-- Wishlist -->
+                                {% if user.is_authenticated %}
+                                    <form action="{% url 'add_to_wishlist' image.id %}" method="POST" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                {% endif %}
+
+                                <!-- Cart -->
+                                <a href="{% url 'cart:add_to_cart' image.id %}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </a>
+
+                                <!-- Admin Actions -->
+                                {% if user.is_superuser %}
+                                    <a href="{% url 'edit_image' image.id %}" class="btn btn-outline-info btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'delete_image' image.id %}" class="btn btn-outline-danger btn-sm"
+                                       onclick="return confirm('Delete this image?')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted d-block mt-2">{{ image.uploaded_at|date:"d M Y" }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <h4 class="text-muted">No products found.</h4>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .product-image img {
+        height: 250px;
+        object-fit: cover;
+        border-radius: 8px 8px 0 0;
+    }
+    .hover-shadow {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .star {
+        color: #ccc;
+    }
+    .star.filled {
+        color: #f5b301;
+    }
+    .card-body {
+        padding: 1.25rem;
+    }
+    .btn-group-sm .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+    }
+</style>
+
+{% endblock %}

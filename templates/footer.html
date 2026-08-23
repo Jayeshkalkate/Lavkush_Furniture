@@ -1,0 +1,75 @@
+{% load static %}
+
+<footer class="footer-section" style="background: #2c3e50; color: #fff; padding: 3rem 0 1.5rem;">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h4 class="text-warning mb-3">Lavkush Furniture</h4>
+                <p style="color: rgba(255,255,255,0.7);">
+                    Discover comfort, elegance, and durability in every piece. Handcrafted furniture 
+                    that blends timeless design with modern craftsmanship.
+                </p>
+                <div class="d-flex gap-3 fs-4">
+                    <a href="https://chat.whatsapp.com/LsBBfgWAXqIJiUAHXMPbMn" target="_blank" 
+                       class="text-white" aria-label="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://www.instagram.com/jayesh.kalkate/" target="_blank" 
+                       class="text-white" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/jayesh-kalkate-31a250242" target="_blank" 
+                       class="text-white" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-6 col-md-3">
+                        <h6 class="text-warning">Quick Links</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="{% url 'aboutus' %}" class="text-white-50 text-decoration-none">About</a></li>
+                            <li><a href="{% url 'services' %}" class="text-white-50 text-decoration-none">Services</a></li>
+                            <li><a href="{% url 'contactus' %}" class="text-white-50 text-decoration-none">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <h6 class="text-warning">Company</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="{% url 'our_team' %}" class="text-white-50 text-decoration-none">Our Team</a></li>
+                            <li><a href="{% url 'terms' %}" class="text-white-50 text-decoration-none">Terms</a></li>
+                            <li><a href="{% url 'privacy_policy' %}" class="text-white-50 text-decoration-none">Privacy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-secondary mt-4" />
+
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="mb-0 text-white-50 small">
+                    &copy; 2025 Lavkush Furniture. All rights reserved.
+                </p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <a href="#" class="btn btn-outline-warning btn-sm rounded-pill scroll-top" 
+                   style="padding: 0.3rem 1.2rem;">
+                    <i class="fas fa-arrow-up"></i> Back to Top
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Scripts for footer functionality -->
+<script>
+    // Back to top smooth scroll
+    document.querySelector('.scroll-top')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>

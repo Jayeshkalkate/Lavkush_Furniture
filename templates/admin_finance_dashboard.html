@@ -1,0 +1,124 @@
+{% extends "header.html" %}
+{% load static %}
+
+{% block title %}Admin Finance Dashboard – Lavkush Furniture{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold" style="color: #2c3e50;">
+            <i class="fas fa-chart-line text-warning"></i> Finance Dashboard
+        </h1>
+        <p class="text-muted">Overview of revenue, payments, and refunds</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100 bg-success bg-opacity-10">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-success">Total Revenue</h5>
+                    <h2 class="fw-bold">₹{{ total|floatformat:2 }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100 bg-primary bg-opacity-10">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-primary">Today's Revenue</h5>
+                    <h2 class="fw-bold">₹{{ daily|floatformat:2 }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100 bg-warning bg-opacity-10">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-warning">This Month</h5>
+                    <h2 class="fw-bold">₹{{ monthly|floatformat:2 }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100 bg-danger bg-opacity-10">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-danger">Failed Payments</h5>
+                    <h2 class="fw-bold">{{ failed }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100 bg-info bg-opacity-10">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-info">Total Refunded</h5>
+                    <h2 class="fw-bold">₹{{ refunded|floatformat:2 }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Payments Table -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-list me-2"></i>Recent Payments</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>User</th>
+                            <th>Payment ID</th>
+                            <th>Order ID</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if payments %}
+                            {% for payment in payments %}
+                            <tr>
+                                <td>{{ payment.user.username }}</td>
+                                <td><code>{{ payment.payment_id|default:"-" }}</code></td>
+                                <td><code>{{ payment.order_id|default:"-" }}</code></td>
+                                <td>₹{{ payment.amount }}</td>
+                                <td>
+                                    {% if payment.status == "paid" %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% elif payment.status == "failed" %}
+                                        <span class="badge bg-danger">Failed</span>
+                                    {% elif payment.status == "refunded" %}
+                                        <span class="badge bg-warning text-dark">Refunded</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ payment.created_at|date:"d M Y H:i" }}</td>
+                                <td>
+                                    {% if payment.status == "paid" %}
+                                        <a href="{% url 'order:refund_payment' payment.id %}"
+                                           class="btn btn-sm btn-outline-danger"
+                                           onclick="return confirm('Refund this payment?')">
+                                            <i class="fas fa-undo-alt"></i> Refund
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">No payments found.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

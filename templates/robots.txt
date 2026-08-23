@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://lavkushfurniture.onrender.com/sitemap.xml

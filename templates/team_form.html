@@ -1,0 +1,100 @@
+{% extends "header.html" %}
+{% load static %}
+
+{% block title %}{{ form.instance.pk|yesno:"Edit Team Member,Add Team Member" }} – Lavkush Furniture{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-users me-2 text-warning"></i>
+                        {{ form.instance.pk|yesno:"Edit Team Member,Add New Team Member" }}
+                    </h5>
+                </div>
+                <div class="card-body p-4 p-lg-5">
+
+                    <!-- Messages -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-user me-1"></i> Full Name <span class="text-danger">*</span>
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="text-danger small">{{ form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Role -->
+                        <div class="mb-3">
+                            <label for="{{ form.role.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-briefcase me-1"></i> Role <span class="text-danger">*</span>
+                            </label>
+                            {{ form.role }}
+                            {% if form.role.errors %}
+                                <div class="text-danger small">{{ form.role.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Bio -->
+                        <div class="mb-3">
+                            <label for="{{ form.bio.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-align-left me-1"></i> Bio
+                            </label>
+                            {{ form.bio }}
+                            <div class="form-text">Brief description of the member's background and expertise.</div>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="mb-3">
+                            <label for="{{ form.image.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-image me-1"></i> Profile Image
+                            </label>
+                            {{ form.image }}
+                            <div class="form-text">Upload a professional photo (JPEG, PNG).</div>
+                            {% if form.image.errors %}
+                                <div class="text-danger small">{{ form.image.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Visibility -->
+                        <div class="mb-3 form-check">
+                            {{ form.is_visible }}
+                            <label for="{{ form.is_visible.id_for_label }}" class="form-check-label fw-semibold">
+                                <i class="fas fa-eye me-1"></i> Visible on website
+                            </label>
+                            <div class="form-text">Uncheck to hide this member from public view.</div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-3 mt-4">
+                            <button type="submit" class="btn btn-warning btn-lg px-5">
+                                <i class="fas fa-save me-2"></i> Save
+                            </button>
+                            <a href="{% url 'our_team' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

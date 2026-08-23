@@ -1,0 +1,125 @@
+{% extends "header.html" %}
+{% load static %}
+
+{% block title %}Upload Product – Lavkush Furniture{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-cloud-upload-alt me-2 text-warning"></i> Upload New Product
+                    </h5>
+                </div>
+                <div class="card-body p-4 p-lg-5">
+
+                    <!-- Messages -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Image -->
+                        <div class="mb-3">
+                            <label for="{{ form.image.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-image me-1"></i> Product Image <span class="text-danger">*</span>
+                            </label>
+                            {{ form.image }}
+                            <div class="form-text">Upload a clear product image (JPEG, PNG, WEBP).</div>
+                            {% if form.image.errors %}
+                                <div class="text-danger small">{{ form.image.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Caption -->
+                        <div class="mb-3">
+                            <label for="{{ form.caption.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-tag me-1"></i> Caption <span class="text-danger">*</span>
+                            </label>
+                            {{ form.caption }}
+                            <div class="form-text">Product name or title.</div>
+                            {% if form.caption.errors %}
+                                <div class="text-danger small">{{ form.caption.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Price -->
+                        <div class="mb-3">
+                            <label for="{{ form.price.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-rupee-sign me-1"></i> Price (₹)
+                            </label>
+                            {{ form.price }}
+                            <div class="form-text">Enter a valid price (e.g., 4999.99). Leave blank if not applicable.</div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label fw-semibold">
+                                <i class="fas fa-align-left me-1"></i> Description
+                            </label>
+                            {{ form.description }}
+                            <div class="form-text">Brief description of the product.</div>
+                        </div>
+
+                        <!-- Dimensions & Materials -->
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.dimensions.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-ruler-combined me-1"></i> Dimensions
+                                    </label>
+                                    {{ form.dimensions }}
+                                    <div class="form-text">e.g., 120x60x45 cm</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.materials.id_for_label }}" class="form-label fw-semibold">
+                                        <i class="fas fa-cubes me-1"></i> Materials
+                                    </label>
+                                    {{ form.materials }}
+                                    <div class="form-text">e.g., Solid Wood, Metal, Fabric</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Note: rating field is not part of ImageForm, so we remove it -->
+
+                        <div class="d-flex flex-wrap gap-3 mt-4">
+                            <button type="submit" class="btn btn-warning btn-lg px-5">
+                                <i class="fas fa-upload me-2"></i> Upload Product
+                            </button>
+                            <a href="{% url 'gallery' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Helpful Tips -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h6 class="fw-bold"><i class="fas fa-lightbulb text-warning me-2"></i> Tips</h6>
+                    <ul class="text-muted small mb-0">
+                        <li>Use high-quality images (minimum 500x500px).</li>
+                        <li>Be descriptive in the caption to attract customers.</li>
+                        <li>Provide accurate dimensions and materials for better searchability.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

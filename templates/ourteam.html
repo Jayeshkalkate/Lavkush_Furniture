@@ -1,0 +1,100 @@
+{% extends "header.html" %}
+{% load static %}
+
+{% block title %}Our Team – Lavkush Furniture{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold" style="color: #2c3e50;">
+            <i class="fas fa-users text-warning"></i> Our Team
+        </h1>
+        <p class="text-muted">Meet the people behind Lavkush Furniture</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        {% for member in team_members %}
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="team-image">
+                        {% if member.image %}
+                            <img src="{{ member.image.url }}" class="card-img-top" alt="{{ member.name }}">
+                        {% else %}
+                            <img src="{% static 'images/default-user.jpg' %}" class="card-img-top" alt="Team member">
+                        {% endif %}
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">{{ member.name }}</h5>
+                        <span class="badge bg-warning text-dark">{{ member.role }}</span>
+                        <p class="card-text text-muted mt-2">{{ member.bio|truncatewords:20 }}</p>
+
+                        {% if user.is_superuser %}
+                            <div class="d-flex justify-content-center gap-2 mt-3">
+                                <a href="{% url 'edit_team_member' member.id %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a href="{% url 'delete_team_member' member.id %}" class="btn btn-outline-danger btn-sm"
+                                   onclick="return confirm('Delete this member?')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <!-- Fallback team members if database is empty -->
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="team-image">
+                        <img src="{% static 'images/sureshkalkate.jpg' %}" class="card-img-top" alt="Suresh Kalkate">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Suresh Kalkate</h5>
+                        <span class="badge bg-warning text-dark">Sales & Marketing Head</span>
+                        <p class="card-text text-muted mt-2">Experienced in sales strategy, customer engagement, and business growth.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="team-image">
+                        <img src="{% static 'images/rajendrakalkate.jpg' %}" class="card-img-top" alt="Rajendra Kalkate">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Rajendra Kalkate</h5>
+                        <span class="badge bg-warning text-dark">Operations & Production Head</span>
+                        <p class="card-text text-muted mt-2">Oversees production, quality control, and operational efficiency.</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Admin Add Button -->
+    {% if user.is_superuser %}
+        <div class="text-center mt-5">
+            <a href="{% url 'add_team_member' %}" class="btn btn-warning btn-lg px-5">
+                <i class="fas fa-plus me-2"></i> Add Team Member
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .team-image img {
+        height: 250px;
+        object-fit: cover;
+        border-radius: 8px 8px 0 0;
+    }
+    .hover-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+</style>
+
+{% endblock %}

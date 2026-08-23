@@ -1,0 +1,103 @@
+{% extends "header.html" %}
+{% load static %}
+
+{% block title %}Payment Receipt – Lavkush Furniture{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-white py-4 border-bottom">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h4 class="mb-0 fw-bold text-warning">
+                            <i class="fas fa-receipt me-2"></i> Payment Receipt
+                        </h4>
+                        <span class="badge {% if payment.status == 'paid' %}bg-success{% elif payment.status == 'pending' %}bg-warning{% else %}bg-danger{% endif %} px-3 py-2">
+                            {{ payment.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body p-4 p-lg-5">
+
+                    <!-- Customer Details -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <p class="text-muted small mb-0">Customer</p>
+                            <p class="fw-semibold">{{ payment.user.get_full_name|default:payment.user.username }}</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-muted small mb-0">Date</p>
+                            <p class="fw-semibold">{{ payment.created_at|date:"d M Y, h:i A" }}</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-muted small mb-0">Order ID</p>
+                            <p class="fw-semibold"><code>{{ payment.order_id }}</code></p>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-muted small mb-0">Payment ID</p>
+                            <p class="fw-semibold"><code>{{ payment.payment_id|default:"—" }}</code></p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Amount -->
+                    <div class="d-flex justify-content-between align-items-center py-2">
+                        <span class="fw-bold">Total Amount</span>
+                        <span class="h4 fw-bold text-success">₹{{ payment.amount|floatformat:2 }}</span>
+                    </div>
+
+                    <!-- Order Items (if order exists) -->
+                    {% if payment.order %}
+                        <hr>
+                        <h5 class="fw-bold mt-3"><i class="fas fa-list me-2"></i>Order Items</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Qty</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in payment.order.items.all %}
+                                    <tr>
+                                        <td>{{ item.product_name }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>₹{{ item.price }}</td>
+                                        <td>₹{{ item.subtotal|floatformat:2 }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    <tr class="table-active fw-bold">
+                                        <td colspan="3" class="text-end">Grand Total</td>
+                                        <td>₹{{ payment.amount|floatformat:2 }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-muted small">Invoice #{{ payment.order.invoice_number }}</p>
+                    {% endif %}
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+                        <a href="{% url 'order:download_receipt_pdf' payment.id %}" class="btn btn-warning px-4">
+                            <i class="fas fa-file-pdf me-2"></i> Download PDF
+                        </a>
+                        <a href="{% url 'gallery' %}" class="btn btn-outline-secondary px-4">
+                            <i class="fas fa-shopping-bag me-2"></i> Continue Shopping
+                        </a>
+                        <a href="{% url 'order:customer_finance_dashboard' %}" class="btn btn-outline-info px-4">
+                            <i class="fas fa-chart-line me-2"></i> My Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
