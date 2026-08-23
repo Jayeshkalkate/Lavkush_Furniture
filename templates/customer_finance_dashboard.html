@@ -99,9 +99,13 @@
         <a href="{% url 'gallery' %}" class="btn btn-warning">
             <i class="fas fa-shopping-bag me-2"></i> Continue Shopping
         </a>
+        {% if payment %}
         <a href="{% url 'order:payment_receipt' payment.id %}" class="btn btn-outline-secondary">
             <i class="fas fa-receipt me-2"></i> View Last Receipt
         </a>
+        {% else %}
+            <span class="text-muted">No receipts yet</span>
+        {% endif %}
     </div>
 </div>
 
