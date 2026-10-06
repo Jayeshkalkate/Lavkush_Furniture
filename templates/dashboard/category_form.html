@@ -1,0 +1,2 @@
+{% extends 'dashboard/base.html' %}{% block title %}Category{% endblock %}{% block heading %}{% if category %}Edit category{% else %}Add category{% endif %}{% endblock %}
+{% block content %}<div class="panel"><form method="post">{% csrf_token %}{% include 'dashboard/_form_fields.html' %}<div class="d-flex gap-2 mt-4"><button class="btn btn-brand" type="submit">Save category</button><a class="btn btn-light" href="{% url 'dashboard:categories' %}">Cancel</a></div></form></div>{% endblock %}

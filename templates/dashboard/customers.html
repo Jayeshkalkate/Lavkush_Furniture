@@ -1,0 +1,8 @@
+{% extends 'dashboard/base.html' %}{% block title %}Customers{% endblock %}{% block heading %}Customers{% endblock %}
+{% block content %}
+<div class="toolbar"><form class="toolbar-form" method="get"><input class="form-control" name="q" value="{{ q }}" placeholder="Search name, username, email, phone..."><button class="btn btn-outline-brand" type="submit">Search</button></form></div>
+<div class="panel p-0"><div class="table-responsive"><table class="table dash-table align-middle mb-0"><thead><tr><th>Customer</th><th>Contact</th><th>City</th><th>Orders</th><th>Spent</th><th>Joined</th><th class="text-end">Account</th></tr></thead><tbody>
+{% for c in page_obj %}<tr><td class="fw-semibold">{{ c.get_full_name|default:c.username }}<br><small class="text-muted">@{{ c.username }}</small></td><td>{{ c.email }}<br><small class="text-muted">{{ c.items.phone_number }}</small></td><td>{{ c.items.city|default:"—" }}</td><td>{{ c.order_count }}</td><td>₹{{ c.spent|default:0|floatformat:0 }}</td><td>{{ c.date_joined|date:"d M Y" }}</td>
+<td class="text-end"><form method="post" action="{% url 'dashboard:customer_toggle' c.pk %}" onsubmit="return confirm('{% if c.is_active %}Block{% else %}Unblock{% endif %} this customer?');">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="chip-btn {% if c.is_active %}on{% endif %}" type="submit">{% if c.is_active %}Active{% else %}Blocked{% endif %}</button></form></td></tr>
+{% empty %}<tr><td colspan="7" class="text-center text-muted py-5">No customers yet.</td></tr>{% endfor %}</tbody></table></div></div>
+{% include 'dashboard/_pagination.html' %}{% endblock %}

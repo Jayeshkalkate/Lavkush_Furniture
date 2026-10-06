@@ -126,7 +126,7 @@ def user_login(request):
                 request.session.pop('login_locked_until', None)
                 login(request, user)
                 merge_guest_cart(request, user)
-                return redirect(safe_next_url(request, request.POST.get('next') or request.GET.get('next'), reverse('homepage')))
+                return redirect(safe_next_url(request, request.POST.get('next') or request.GET.get('next'), reverse('dashboard:home') if user.is_staff else reverse('homepage')))
             cache.set(ip_key, cache.get(ip_key, 0) + 1, 600)
             failures = int(request.session.get('login_failures', 0) or 0) + 1
             request.session['login_failures'] = failures

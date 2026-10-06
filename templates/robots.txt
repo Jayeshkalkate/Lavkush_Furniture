@@ -5,6 +5,7 @@ Disallow: /cart/
 Disallow: /wishlist/
 Disallow: /order/
 Disallow: /admin/
+Disallow: /dashboard/
 Disallow: /healthz/
 Disallow: /password_reset/
 Sitemap: {{ site_url }}/sitemap.xml

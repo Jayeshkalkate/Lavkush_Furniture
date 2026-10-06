@@ -111,3 +111,17 @@ python manage.py test
 ## Release packaging
 
 The source-release ZIP intentionally excludes `.git`, `.env`, Python bytecode, logs and local SQLite/media data. Use `.env.example` as the deployment template.
+
+
+## Business dashboard (owner / staff)
+
+Open `/dashboard/` after signing in with a staff account (staff users land there automatically after login).
+Create the owner account with `python manage.py createsuperuser`; other staff: tick "Staff status" in `/admin/`.
+
+- **Overview:** revenue (today / month / total), 7-day sales chart, orders to ship, returns, low stock, best sellers, system status.
+- **Orders:** search/filter, update status, courier + tracking number, delivery date, returns, one-click refund. Customers are emailed on shipped / delivered / cancelled.
+- **Payments, Customers (block/unblock), Coupons, Reviews (show/hide), Categories, Team.**
+- **Products:** add / edit / hide / feature, quick edit of price and stock, CSV/Excel bulk upload. Deleting is superuser-only.
+- Advanced settings (Django admin) stay available to superusers.
+
+Colour theme: green + blue (`static/css/app.css`, `static/css/dashboard.css`).

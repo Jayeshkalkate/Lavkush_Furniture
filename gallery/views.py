@@ -206,66 +206,74 @@ def _read_bulk(file):
     return rows
 
 
+def import_products_from_file(file):
+    """Validate a CSV/XLSX upload and create products. Returns the number created.
+
+    Raises ValueError with a human readable message if anything is wrong;
+    nothing is saved in that case.
+    """
+    if file.size > 10 * 1024 * 1024:
+        raise ValueError('Maximum file size is 10 MB.')
+    rows = _read_bulk(file)
+    if not rows:
+        raise ValueError('The import file has no data rows.')
+    required = {'caption', 'price'}
+    if not required.issubset({str(k).strip() for k in rows[0].keys()}):
+        raise ValueError('Required columns are: caption, price.')
+    prepared = []
+    for index, row in enumerate(rows, start=2):
+        caption = str(row.get('caption') or '').strip()
+        if not caption:
+            raise ValueError(f'Row {index}: caption is required.')
+        try:
+            price = Decimal(str(row.get('price') or 0).replace(',', '').strip())
+        except (TypeError, ValueError, InvalidOperation):
+            raise ValueError(f'Row {index}: price must be numeric.')
+        if price < 0:
+            raise ValueError(f'Row {index}: price cannot be negative.')
+        try:
+            stock_qty = int(float(row.get('stock_quantity') or 20))
+        except (TypeError, ValueError):
+            raise ValueError(f'Row {index}: stock_quantity must be a whole number.')
+        category_name = str(row.get('category') or '').strip()
+        image_data = None
+        image_url = str(row.get('image_url') or '').strip()
+        if image_url:
+            image_data = _safe_image_response(image_url)
+        prepared.append((row, caption, price, image_data, index, stock_qty, category_name))
+    with transaction.atomic():
+        for row, caption, price, image_data, index, stock_qty, category_name in prepared:
+            category = None
+            if category_name:
+                category, _ = Category.objects.get_or_create(name=category_name, defaults={'slug': slugify(category_name) or 'category'})
+            product = ImageWithCaption.objects.create(
+                category=category,
+                caption=caption, price=price,
+                description=str(row.get('description') or '').strip(),
+                dimensions=str(row.get('dimensions') or '').strip(),
+                materials=str(row.get('materials') or '').strip(),
+                color=str(row.get('color') or '').strip(),
+                stock_quantity=max(0, stock_qty),
+                warranty=str(row.get('warranty') or '').strip(),
+                lead_time=str(row.get('lead_time') or '').strip(),
+                is_active=True,
+            )
+            if image_data:
+                product.image.save(f'{slugify(caption) or "product"}-{index}.jpg', ContentFile(image_data), save=True)
+    return len(prepared)
+
+
 @staff_member_required
 def bulk_upload_products(request):
     form = BulkProductUploadForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
-        file = request.FILES['file']
-        if file.size > 10 * 1024 * 1024:
-            form.add_error('file', 'Maximum file size is 10 MB.')
-        else:
-            try:
-                rows = _read_bulk(file)
-                if not rows:
-                    raise ValueError('The import file has no data rows.')
-                required = {'caption', 'price'}
-                if not required.issubset({str(k).strip() for k in rows[0].keys()}):
-                    raise ValueError('Required columns are: caption, price.')
-                prepared = []
-                for index, row in enumerate(rows, start=2):
-                    caption = str(row.get('caption') or '').strip()
-                    if not caption:
-                        raise ValueError(f'Row {index}: caption is required.')
-                    try:
-                        price = Decimal(str(row.get('price') or 0).replace(',', '').strip())
-                    except (TypeError, ValueError, InvalidOperation):
-                        raise ValueError(f'Row {index}: price must be numeric.')
-                    try:
-                        stock_qty = int(float(row.get('stock_quantity') or 20))
-                    except (TypeError, ValueError):
-                        raise ValueError(f'Row {index}: stock_quantity must be a whole number.')
-                    category_name = str(row.get('category') or '').strip()
-                    if price < 0:
-                        raise ValueError(f'Row {index}: price cannot be negative.')
-                    image_data = None
-                    image_url = str(row.get('image_url') or '').strip()
-                    if image_url:
-                        image_data = _safe_image_response(image_url)
-                    prepared.append((row, caption, price, image_data, index, stock_qty, category_name))
-                with transaction.atomic():
-                    for row, caption, price, image_data, index, stock_qty, category_name in prepared:
-                        category = None
-                        if category_name:
-                            category, _ = Category.objects.get_or_create(name=category_name, defaults={'slug': slugify(category_name) or 'category'})
-                        product = ImageWithCaption.objects.create(
-                            category=category,
-                            caption=caption, price=price,
-                            description=str(row.get('description') or '').strip(),
-                            dimensions=str(row.get('dimensions') or '').strip(),
-                            materials=str(row.get('materials') or '').strip(),
-                            color=str(row.get('color') or '').strip(),
-                            stock_quantity=max(0, stock_qty),
-                            warranty=str(row.get('warranty') or '').strip(),
-                            lead_time=str(row.get('lead_time') or '').strip(),
-                            is_active=True,
-                        )
-                        if image_data:
-                            product.image.save(f'{slugify(caption) or "product"}-{index}.jpg', ContentFile(image_data), save=True)
-                messages.success(request, f'{len(prepared)} products imported successfully.')
-                return redirect('gallery')
-            except Exception as exc:
-                logger.exception('Bulk import failed')
-                messages.error(request, f'Import failed: {exc}')
+        try:
+            count = import_products_from_file(request.FILES['file'])
+            messages.success(request, f'{count} products imported successfully.')
+            return redirect('gallery')
+        except Exception as exc:
+            logger.exception('Bulk import failed')
+            messages.error(request, f'Import failed: {exc}')
     return render(request, 'bulk_upload.html', {'form': form})
 
 

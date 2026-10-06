@@ -25,6 +25,7 @@ from xml.sax.saxutils import escape as xml_escape
 
 from cart.models import Cart
 from gallery.models import ImageWithCaption
+from lavkushfurniture.utils import safe_next_url
 from .forms import CheckoutForm
 from .email_utils import send_order_event_email
 from .models import Coupon, Order, OrderItem, Payment
@@ -387,15 +388,20 @@ def admin_finance_dashboard(request):
     return render(request, 'admin_finance_dashboard.html', context)
 
 
+def _refund_redirect(request):
+    from django.urls import reverse
+    return redirect(safe_next_url(request, request.POST.get('next'), reverse('order:admin_finance_dashboard')))
+
+
 @user_passes_test(_admin)
 @transaction.atomic
 def refund_payment(request, payment_id):
     if request.method != 'POST':
-        return redirect('order:admin_finance_dashboard')
+        return _refund_redirect(request)
     payment = get_object_or_404(Payment.objects.select_for_update().select_related('order'), pk=payment_id)
     if payment.status != 'paid' or not payment.payment_id:
         messages.warning(request, 'Only captured payments can be refunded.')
-        return redirect('order:admin_finance_dashboard')
+        return _refund_redirect(request)
     try:
         _get_client().payment.refund(payment.payment_id)
         payment.status = 'refunded'
@@ -419,7 +425,7 @@ def refund_payment(request, payment_id):
     except Exception:
         logger.exception('Refund failed')
         messages.error(request, 'Refund failed. No local payment status was changed.')
-    return redirect('order:admin_finance_dashboard')
+    return _refund_redirect(request)
 
 
 @login_required

@@ -1,0 +1,12 @@
+{% extends 'dashboard/base.html' %}{% block title %}Orders{% endblock %}{% block heading %}Orders{% endblock %}
+{% block content %}
+<div class="toolbar"><form class="toolbar-form" method="get"><input class="form-control" name="q" value="{{ q }}" placeholder="Search order no., name, phone, email, tracking...">
+<select class="form-select" name="status"><option value="">Active orders</option>{% for value, label in status_choices %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select><button class="btn btn-outline-brand" type="submit">Filter</button></form>
+<div class="toolbar-actions"><a class="btn btn-light" href="?all=1">Include unpaid</a></div></div>
+<div class="panel p-0"><div class="table-responsive"><table class="table dash-table align-middle mb-0"><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody>
+{% for o in page_obj %}<tr><td><a class="fw-semibold" href="{% url 'dashboard:order_detail' o.invoice_number %}">{{ o.invoice_number }}</a><br><small class="text-muted">{{ o.created_at|date:"d M Y, h:i A" }}</small></td>
+<td>{{ o.first_name }} {{ o.last_name }}<br><small class="text-muted">{{ o.phone }} &middot; {{ o.city }}</small></td><td>{{ o.items.count }}</td><td class="fw-semibold">₹{{ o.total_amount|floatformat:0 }}</td>
+<td><span class="chip chip-{{ o.order_status }}">{{ o.get_order_status_display }}</span>{% if o.return_status == 'requested' %}<br><small class="text-muted">Return requested</small>{% endif %}</td>
+<td class="text-end"><a class="btn btn-sm btn-outline-brand" href="{% url 'dashboard:order_detail' o.invoice_number %}">Manage</a></td></tr>
+{% empty %}<tr><td colspan="6" class="text-center text-muted py-5">No orders found.</td></tr>{% endfor %}</tbody></table></div></div>
+{% include 'dashboard/_pagination.html' %}{% endblock %}

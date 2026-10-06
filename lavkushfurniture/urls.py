@@ -22,6 +22,7 @@ urlpatterns = [
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
     path('termsandconditions/', TemplateView.as_view(template_name='termsandconditions.html'), name='terms'),
+    path('dashboard/', include('dashboard.urls')),
     path('account/', include('account.urls')),
     path('gallery/', include('gallery.urls')),
     path('wishlist/', include('wishlist.urls')),

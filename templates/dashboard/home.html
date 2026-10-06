@@ -1,0 +1,40 @@
+{% extends 'dashboard/base.html' %}{% block title %}Overview{% endblock %}{% block heading %}Business overview{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3"><div class="kpi kpi-green"><i class="fa-solid fa-indian-rupee-sign"></i><small>Revenue today</small><strong>₹{{ revenue_today|floatformat:0 }}</strong></div></div>
+  <div class="col-6 col-xl-3"><div class="kpi kpi-blue"><i class="fa-solid fa-calendar"></i><small>Revenue this month</small><strong>₹{{ revenue_month|floatformat:0 }}</strong></div></div>
+  <div class="col-6 col-xl-3"><div class="kpi kpi-green"><i class="fa-solid fa-wallet"></i><small>Total revenue</small><strong>₹{{ revenue_total|floatformat:0 }}</strong></div></div>
+  <div class="col-6 col-xl-3"><div class="kpi kpi-blue"><i class="fa-solid fa-box"></i><small>Orders (paid)</small><strong>{{ orders_total }}</strong></div></div>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><a class="todo" href="{% url 'dashboard:orders' %}?status=processing"><strong>{{ to_process }}</strong><span>Orders to ship</span></a></div>
+  <div class="col-6 col-lg-3"><a class="todo" href="{% url 'dashboard:orders' %}?status=shipped"><strong>{{ to_deliver }}</strong><span>Out for delivery</span></a></div>
+  <div class="col-6 col-lg-3"><a class="todo" href="{% url 'dashboard:orders' %}?status=return_pending"><strong>{{ returns_open }}</strong><span>Return requests</span></a></div>
+  <div class="col-6 col-lg-3"><a class="todo" href="{% url 'dashboard:products' %}?status=out"><strong>{{ out_of_stock }}</strong><span>Out of stock</span></a></div>
+</div>
+<div class="row g-4">
+  <div class="col-lg-7"><div class="panel"><div class="panel-head"><h2>Sales — last 7 days</h2></div>
+    <div class="bars">{% for d in days %}<div class="bar-col"><span class="bar-val">{% if d.amount %}₹{{ d.amount|floatformat:0 }}{% endif %}</span><div class="bar-track"><div class="bar" style="height:{{ d.pct }}%"></div></div><span class="bar-label">{{ d.label }}</span></div>{% endfor %}</div></div>
+    <div class="panel mt-4"><div class="panel-head"><h2>Recent orders</h2><a href="{% url 'dashboard:orders' %}">View all</a></div>
+      <div class="table-responsive"><table class="table dash-table align-middle mb-0"><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead><tbody>
+      {% for o in recent_orders %}<tr><td><a href="{% url 'dashboard:order_detail' o.invoice_number %}">{{ o.invoice_number }}</a><br><small class="text-muted">{{ o.created_at|date:"d M, h:i A" }}</small></td><td>{{ o.first_name }} {{ o.last_name }}</td><td>₹{{ o.total_amount|floatformat:0 }}</td><td><span class="chip chip-{{ o.order_status }}">{{ o.get_order_status_display }}</span></td></tr>
+      {% empty %}<tr><td colspan="4" class="text-center text-muted py-4">No orders yet. They will appear here as soon as customers pay.</td></tr>{% endfor %}</tbody></table></div></div>
+  </div>
+  <div class="col-lg-5">
+    <div class="panel"><div class="panel-head"><h2>Quick actions</h2></div><div class="d-grid gap-2">
+      <a class="btn btn-brand" href="{% url 'dashboard:product_add' %}"><i class="fa-solid fa-plus me-2"></i>Add a product</a>
+      <a class="btn btn-outline-brand" href="{% url 'dashboard:bulk_upload' %}"><i class="fa-solid fa-file-arrow-up me-2"></i>Bulk upload products</a>
+      <a class="btn btn-outline-brand" href="{% url 'dashboard:coupon_add' %}"><i class="fa-solid fa-ticket me-2"></i>Create a coupon</a></div></div>
+    <div class="panel mt-4"><div class="panel-head"><h2>Low stock</h2><a href="{% url 'dashboard:products' %}?status=low">View</a></div>
+      {% for p in low_stock %}<div class="list-row"><a href="{% url 'dashboard:product_edit' p.pk %}">{{ p.caption }}</a><span class="chip chip-low">{{ p.stock_quantity }} left</span></div>{% empty %}<p class="text-muted mb-0">All products are well stocked.</p>{% endfor %}</div>
+    <div class="panel mt-4"><div class="panel-head"><h2>Best sellers</h2></div>
+      {% for t in top_products %}<div class="list-row"><span>{{ t.product_name }}</span><strong>{{ t.units }} sold</strong></div>{% empty %}<p class="text-muted mb-0">Sales data will appear after your first orders.</p>{% endfor %}</div>
+    <div class="panel mt-4"><div class="panel-head"><h2>Business at a glance</h2></div>
+      <div class="list-row"><span>Customers</span><strong>{{ customers }} <small class="text-muted">(+{{ new_customers }} this month)</small></strong></div>
+      <div class="list-row"><span>Products listed</span><strong>{{ products_count }}</strong></div>
+      <div class="list-row"><span>Total refunded</span><strong>₹{{ refunded|floatformat:0 }}</strong></div></div>
+    <div class="panel mt-4"><div class="panel-head"><h2>System status</h2></div>
+      {% for label, ok in health %}<div class="list-row"><span>{{ label }}</span>{% if ok %}<span class="chip chip-delivered"><i class="fa-solid fa-check me-1"></i>Ready</span>{% else %}<span class="chip chip-payment_pending">Setup needed</span>{% endif %}</div>{% endfor %}</div>
+  </div>
+</div>
+{% endblock %}

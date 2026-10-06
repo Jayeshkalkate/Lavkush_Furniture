@@ -1,0 +1,55 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0a5c47">
+<title>{% block title %}Dashboard{% endblock %} | Lavkush Furniture Business</title>
+<link rel="icon" href="{% static 'images/favicon.ico' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body class="dash">
+<aside class="dash-side" id="dashSide">
+  <a class="dash-brand" href="{% url 'dashboard:home' %}"><img src="{% static 'images/lavkushfurniturelogo.webp' %}" alt="" width="40" height="40"><span><strong>Lavkush</strong><small>Business Dashboard</small></span></a>
+  <nav class="dash-nav">
+    <div class="dash-group">Overview</div>
+    <a class="{% if active == 'home' %}active{% endif %}" href="{% url 'dashboard:home' %}"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+    <div class="dash-group">Sales</div>
+    <a class="{% if active == 'orders' %}active{% endif %}" href="{% url 'dashboard:orders' %}"><i class="fa-solid fa-box"></i> Orders</a>
+    <a class="{% if active == 'payments' %}active{% endif %}" href="{% url 'dashboard:payments' %}"><i class="fa-solid fa-indian-rupee-sign"></i> Payments</a>
+    <a class="{% if active == 'customers' %}active{% endif %}" href="{% url 'dashboard:customers' %}"><i class="fa-solid fa-users"></i> Customers</a>
+    <a class="{% if active == 'coupons' %}active{% endif %}" href="{% url 'dashboard:coupons' %}"><i class="fa-solid fa-ticket"></i> Coupons</a>
+    <div class="dash-group">Catalogue</div>
+    <a class="{% if active == 'products' %}active{% endif %}" href="{% url 'dashboard:products' %}"><i class="fa-solid fa-couch"></i> Products</a>
+    <a class="{% if active == 'categories' %}active{% endif %}" href="{% url 'dashboard:categories' %}"><i class="fa-solid fa-layer-group"></i> Categories</a>
+    <a class="{% if active == 'reviews' %}active{% endif %}" href="{% url 'dashboard:reviews' %}"><i class="fa-solid fa-star"></i> Reviews</a>
+    <a class="{% if active == 'team' %}active{% endif %}" href="{% url 'dashboard:team' %}"><i class="fa-solid fa-people-group"></i> Team</a>
+    <div class="dash-group">More</div>
+    <a href="{% url 'homepage' %}" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> View website</a>
+    {% if user.is_superuser %}<a href="{% url 'admin:index' %}"><i class="fa-solid fa-gear"></i> Advanced settings</a>{% endif %}
+  </nav>
+  <form method="post" action="{% url 'logout' %}" class="dash-logout">{% csrf_token %}<button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Sign out</button></form>
+</aside>
+<div class="dash-backdrop" id="dashBackdrop"></div>
+<div class="dash-main">
+  <header class="dash-top">
+    <button class="dash-burger" id="dashBurger" type="button" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+    <h1>{% block heading %}Dashboard{% endblock %}</h1>
+    <div class="dash-user"><span class="d-none d-sm-inline">{{ user.get_full_name|default:user.username }}</span><span class="dash-avatar">{{ user.username|slice:":1"|upper }}</span></div>
+  </header>
+  <main class="dash-content">
+    {% if messages %}{% for message in messages %}<div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>{% endfor %}{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script>
+(function(){var s=document.getElementById('dashSide'),b=document.getElementById('dashBackdrop');
+function t(){document.body.classList.toggle('side-open')}
+document.getElementById('dashBurger').addEventListener('click',t);b.addEventListener('click',t);})();
+</script>
+</body>
+</html>

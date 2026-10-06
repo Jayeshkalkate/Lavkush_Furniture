@@ -1,0 +1,5 @@
+{% extends 'dashboard/base.html' %}{% block title %}{% if product %}Edit product{% else %}Add product{% endif %}{% endblock %}{% block heading %}{% if product %}Edit product{% else %}Add product{% endif %}{% endblock %}
+{% block content %}<div class="panel"><form method="post" enctype="multipart/form-data">{% csrf_token %}{% include 'dashboard/_form_fields.html' %}
+{% if product and product.image %}<div class="mt-3"><small class="text-muted d-block mb-1">Current photo</small><img src="{{ product.image.url }}" alt="" style="max-height:140px;border-radius:12px"></div>{% endif %}
+<div class="d-flex gap-2 mt-4"><button class="btn btn-brand" type="submit">Save product</button><a class="btn btn-light" href="{% url 'dashboard:products' %}">Cancel</a></div>
+{% if product %}<p class="small text-muted mt-3 mb-0">Need more photos for this product? Use <em>Advanced settings → Products</em> (superuser) to attach extra gallery images.</p>{% endif %}</form></div>{% endblock %}

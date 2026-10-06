@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#15382b">
+  <meta name="theme-color" content="#0a5c47">
   <meta name="description" content="{% block description %}Lavkush Furniture creates quality furniture for homes and workspaces in Nandurbar, Maharashtra — browse sofas, beds, dining sets, tables and custom furniture.{% endblock %}">
   <meta name="robots" content="{% block robots %}index,follow{% endblock %}">
   <meta name="author" content="Lavkush Furniture">
@@ -75,7 +75,7 @@
             <li><a class="dropdown-item" href="{% url 'userprofile' %}">My profile</a></li>
             <li><a class="dropdown-item" href="{% url 'order:customer_orders' %}">My orders</a></li>
             <li><a class="dropdown-item" href="{% url 'order:customer_finance_dashboard' %}">Payments</a></li>
-            {% if user.is_staff %}<li><hr class="dropdown-divider"><a class="dropdown-item" href="{% url 'order:admin_finance_dashboard' %}">Admin dashboard</a></li>{% endif %}
+            {% if user.is_staff %}<li><hr class="dropdown-divider"><a class="dropdown-item" href="{% url 'dashboard:home' %}">Business dashboard</a></li>{% endif %}
             <li><hr class="dropdown-divider"><form method="post" action="{% url 'logout' %}" class="px-3">{% csrf_token %}<button class="btn btn-link dropdown-item p-0 text-start" type="submit">Sign out</button></form></li>
           </ul></li>
           {% else %}

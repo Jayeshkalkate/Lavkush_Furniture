@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.staticfiles',
     'django.contrib.sites', 'django.contrib.sitemaps',
     'cloudinary', 'cloudinary_storage',
-    'account', 'gallery', 'team', 'cart', 'order', 'wishlist',
+    'account', 'gallery', 'team', 'cart', 'order', 'wishlist', 'dashboard',
 ]
 
 MIDDLEWARE = [
