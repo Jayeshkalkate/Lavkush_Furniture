@@ -19,6 +19,13 @@ class OrderAdmin(admin.ModelAdmin):
         old_status = None
         if change:
             old_status = Order.objects.filter(pk=obj.pk).values_list('order_status', flat=True).first()
+        from django.utils import timezone
+        if obj.order_status == 'shipped' and not obj.shipped_at:
+            obj.shipped_at = timezone.now()
+        if obj.order_status == 'delivered' and not obj.delivered_at:
+            obj.delivered_at = timezone.now()
+            if not obj.shipped_at:
+                obj.shipped_at = obj.delivered_at
         super().save_model(request, obj, form, change)
         if change and old_status != obj.order_status and obj.order_status in {'shipped', 'delivered', 'cancelled', 'return_pending', 'returned'}:
             from django.db import transaction

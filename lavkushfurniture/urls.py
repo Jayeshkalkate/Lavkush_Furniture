@@ -14,6 +14,7 @@ sitemaps = {'static': StaticViewSitemap, 'categories': CategorySitemap, 'product
 urlpatterns = [
     path(f'{settings.ADMIN_URL}/', admin.site.urls),
     path('', views.homepage, name='homepage'),
+    path('healthz/', views.healthz, name='healthz'),
     path('aboutus/', views.aboutus, name='aboutus'),
     path('services/', views.services, name='services'),
     path('contactus/', views.contact, name='contactus'),

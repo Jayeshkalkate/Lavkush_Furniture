@@ -1,8 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from .models import Wishlist
 from gallery.models import ImageWithCaption
+from lavkushfurniture.utils import safe_next_url
 
 
 @login_required
@@ -12,7 +14,7 @@ def add_to_wishlist(request, item_id):
         return redirect(item.get_absolute_url())
     obj, created = Wishlist.objects.get_or_create(user=request.user, item=item)
     messages.success(request, f"'{item.caption}' was {'added to' if created else 'already in'} your wishlist.")
-    return redirect(request.POST.get('next') or item.get_absolute_url())
+    return redirect(safe_next_url(request, request.POST.get('next'), item.get_absolute_url()))
 
 
 @login_required
@@ -21,7 +23,7 @@ def remove_from_wishlist(request, item_id):
     if request.method == 'POST':
         Wishlist.objects.filter(user=request.user, item=item).delete()
         messages.success(request, f"Removed '{item.caption}' from your wishlist.")
-    return redirect(request.POST.get('next') or 'wishlist:view_wishlist')
+    return redirect(safe_next_url(request, request.POST.get('next'), reverse('wishlist:view_wishlist')))
 
 
 @login_required

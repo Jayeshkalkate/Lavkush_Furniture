@@ -23,3 +23,10 @@ class CartTests(TestCase):
             self.client.post(reverse('cart:add_to_cart', args=[self.product.pk]), {'next': reverse('cart:view_cart')})
         item = CartItem.objects.get(cart__user=user, product=self.product)
         self.assertEqual(item.quantity, 3)
+
+
+class RedirectSafetyTests(TestCase):
+    def test_add_to_cart_ignores_external_next_url(self):
+        product = ImageWithCaption.objects.create(caption='Safe Sofa', price=9000, stock_quantity=2, is_active=True)
+        response = self.client.post(reverse('cart:add_to_cart', args=[product.pk]), {'next': 'https://evil.example.com/'})
+        self.assertRedirects(response, reverse('cart:view_cart'))

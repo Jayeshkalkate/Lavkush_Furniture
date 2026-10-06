@@ -6,11 +6,12 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='dev-only-change-me')
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
+if not DEBUG and len(SECRET_KEY) < 32:
+    raise RuntimeError('SECRET_KEY must be a strong random value (32+ characters) when DEBUG=False.')
+
 SITE_URL = config('SITE_URL', default='http://127.0.0.1:8000').rstrip('/')
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
-if not DEBUG and SECRET_KEY == 'dev-only-change-me':
-    raise RuntimeError('SECRET_KEY must be set to a strong value when DEBUG=False.')
 if not DEBUG and not ALLOWED_HOSTS:
     raise RuntimeError('ALLOWED_HOSTS must be configured when DEBUG=False.')
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
@@ -81,6 +82,8 @@ cloudinary_key = config('CLOUDINARY_API_KEY', default='')
 cloudinary_secret = config('CLOUDINARY_API_SECRET', default='')
 USE_CLOUDINARY = all([cloudinary_name, cloudinary_key, cloudinary_secret])
 
+WHITENOISE_MANIFEST_STRICT = False
+
 STORAGES = {
     'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'},
     'default': {'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage' if USE_CLOUDINARY else 'django.core.files.storage.FileSystemStorage'},
@@ -124,6 +127,18 @@ SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 X_FRAME_OPTIONS = 'DENY'
 
+from django.contrib.messages import constants as message_constants
+MESSAGE_TAGS = {message_constants.ERROR: 'danger'}
+
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 14
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+DATA_UPLOAD_MAX_MEMORY_SIZE = 12 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+
+CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', 'LOCATION': 'lavkush-default'}}
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGGING = {
@@ -136,5 +151,6 @@ LOGGING = {
         'account': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
         'gallery': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
         'order': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
+        'cart': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
     },
 }

@@ -21,6 +21,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from xml.sax.saxutils import escape as xml_escape
 
 from cart.models import Cart
 from gallery.models import ImageWithCaption
@@ -93,11 +94,11 @@ def _finalize_paid_payment(payment, payment_id=None, signature=None, gateway_pay
         coupon_code = (order.coupon_code or '').strip().upper()
         if coupon_code:
             coupon = Coupon.objects.select_for_update().filter(code=coupon_code).first()
-            if coupon and coupon.uses < (coupon.usage_limit if coupon.usage_limit is not None else 10**9) and coupon.is_valid(order.subtotal):
+            if coupon:
+                # The discount was already applied to the amount the customer paid,
+                # so always honour it and just record the usage.
                 coupon.uses += 1
                 coupon.save(update_fields=['uses'])
-            elif coupon_code:
-                raise ValueError('The coupon could not be reserved for this order.')
         if not _deduct_inventory(order):
             raise ValueError('One or more items are no longer available in the requested quantity.')
         order.order_status = 'processing'
@@ -106,6 +107,7 @@ def _finalize_paid_payment(payment, payment_id=None, signature=None, gateway_pay
         return order
 
 
+@login_required
 def checkout(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
     cart_items = list(cart.items.select_related('product').all())
@@ -149,7 +151,7 @@ def checkout(request):
                 for cart_item in cart_items:
                     OrderItem.objects.create(order=order, product=cart_item.product, product_name=cart_item.product.caption, sku=cart_item.product.sku or '', price=cart_item.product.price, quantity=cart_item.quantity)
                 client = _get_client()
-                rzp_order = client.order.create({'amount': int(total * 100), 'currency': 'INR', 'receipt': order.invoice_number, 'notes': {'order': order.invoice_number, 'user': request.user.username}})
+                rzp_order = client.order.create({'amount': int((total * 100).quantize(Decimal('1'))), 'currency': 'INR', 'receipt': order.invoice_number, 'notes': {'order': order.invoice_number, 'user': request.user.username}})
                 payment = Payment.objects.create(user=request.user, order_id=rzp_order['id'], amount=total, status='pending', gateway_response=rzp_order)
                 order.payment = payment
                 order.save(update_fields=['payment', 'updated_at'])
@@ -185,10 +187,11 @@ def payment_success(request):
         # Payment may be captured while stock changed; try an automatic refund.
         try:
             _get_client().payment.refund(razorpay_payment_id)
+            payment.payment_id = payment.payment_id or razorpay_payment_id
             payment.status = 'refunded'
             payment.refund_amount = payment.amount
             payment.refunded_at = timezone.now()
-            payment.save(update_fields=['status', 'refund_amount', 'refunded_at'])
+            payment.save(update_fields=['status', 'refund_amount', 'refunded_at', 'payment_id'])
             payment.order.order_status = 'cancelled'
             payment.order.cancellation_reason = 'Automatic refund: inventory was no longer available.'
             payment.order.save(update_fields=['order_status', 'cancellation_reason', 'updated_at'])
@@ -200,8 +203,7 @@ def payment_success(request):
         return redirect('cart:view_cart')
     except Exception:
         logger.exception('Payment verification failed')
-        payment.status = 'failed'
-        payment.save(update_fields=['status'])
+        Payment.objects.filter(pk=payment.pk).exclude(status__in=['paid', 'refunded']).update(status='failed')
         messages.error(request, 'Payment verification failed. No order was marked as paid.')
         return redirect('cart:view_cart')
     cart = Cart.objects.filter(user=request.user).first()
@@ -256,13 +258,27 @@ def razorpay_webhook(request):
                     payment.order.save(update_fields=['order_status', 'cancellation_reason', 'updated_at'])
                 except Exception:
                     logger.exception('Automatic webhook refund failed for %s', payment.order.invoice_number)
-        elif event == 'payment.failed':
+        elif event == 'payment.failed' and payment.status not in {'paid', 'refunded'}:
             payment.status = 'failed'
             payment.save(update_fields=['status'])
-        elif event == 'refund.created':
-            payment.status = 'refunded'
-            payment.refund_amount = Decimal(str((entity.get('amount_refunded') or payment.amount * 100))) / 100
+        elif event in {'refund.created', 'refund.processed'} and payment.status != 'refunded':
+            refunded_paise = Decimal(str(entity.get('amount_refunded') or (payment.amount * 100)))
+            payment.refund_amount = (refunded_paise / 100).quantize(Decimal('0.01'))
             payment.refunded_at = timezone.now()
+            if payment.refund_amount >= payment.amount:
+                payment.status = 'refunded'
+                order = getattr(payment, 'order', None)
+                if order and order.order_status not in {'cancelled', 'returned'}:
+                    if order.inventory_deducted:
+                        for item in order.items.select_related('product'):
+                            if item.product_id:
+                                product = ImageWithCaption.objects.select_for_update().get(pk=item.product_id)
+                                product.stock_quantity += item.quantity
+                                product.save(update_fields=['stock_quantity', 'updated_at'])
+                        order.inventory_deducted = False
+                    order.order_status = 'cancelled'
+                    order.cancellation_reason = order.cancellation_reason or 'Payment refunded through Razorpay.'
+                    order.save(update_fields=['order_status', 'cancellation_reason', 'inventory_deducted', 'updated_at'])
             payment.save(update_fields=['status', 'refund_amount', 'refunded_at'])
     return JsonResponse({'status': 'ok'})
 
@@ -353,8 +369,8 @@ def admin_finance_dashboard(request):
     totals = paid.aggregate(total=Sum('amount'))
     daily = paid.filter(created_at__date=today).aggregate(value=Sum('amount'))['value'] or 0
     monthly = paid.filter(created_at__year=today.year, created_at__month=today.month).aggregate(value=Sum('amount'))['value'] or 0
-    order_qs = Order.objects.exclude(order_status='cancelled')
-    top_products = OrderItem.objects.filter(order__in=order_qs).values('product_name').annotate(units=Sum('quantity'), revenue=Sum('price')).order_by('-units')[:5]
+    order_qs = Order.objects.exclude(order_status__in=['cancelled', 'payment_pending'])
+    top_products = OrderItem.objects.filter(order__in=order_qs).values('product_name').annotate(units=Sum('quantity'), revenue=Sum(ExpressionWrapper(F('price') * F('quantity'), output_field=DecimalField(max_digits=14, decimal_places=2)))).order_by('-units')[:5]
     from django.contrib.auth.models import User
     context = {
         'total': totals.get('total') or 0, 'daily': daily, 'monthly': monthly,
@@ -423,19 +439,30 @@ def customer_finance_dashboard(request):
 def download_receipt_pdf(request, payment_id):
     payment = get_object_or_404(Payment.objects.select_related('order'), pk=payment_id, user=request.user)
     order = get_object_or_404(Order.objects.prefetch_related('items'), payment=payment)
+    if payment.status not in {'paid', 'refunded'}:
+        messages.warning(request, 'A receipt is available only after a payment is completed.')
+        return redirect('order:customer_orders')
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="{order.invoice_number}.pdf"'
     doc = SimpleDocTemplate(response, pagesize=A4, rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36)
     styles = getSampleStyleSheet()
     title = ParagraphStyle('LFTitle', parent=styles['Title'], alignment=TA_CENTER, spaceAfter=16)
     elements = [Paragraph('Lavkush Furniture', title), Paragraph(f'Invoice: {order.invoice_number}', styles['Normal']), Paragraph(f'Date: {order.created_at:%d %b %Y, %I:%M %p}', styles['Normal']), Spacer(1, 12)]
-    elements.append(Paragraph(f'<b>Ship to:</b> {order.first_name} {order.last_name}, {order.shipping_address}, {order.city}, {order.state} - {order.postal_code}, {order.country}', styles['BodyText']))
+    ship_to = xml_escape(f'{order.first_name} {order.last_name}, {order.shipping_address}, {order.address_line2}, {order.city}, {order.state} - {order.postal_code}, {order.country}'.replace(', ,', ','))
+    elements.append(Paragraph(f'<b>Ship to:</b> {ship_to}', styles['BodyText']))
     elements.append(Spacer(1, 14))
     data = [['Product', 'Qty', 'Price', 'Total']]
     for item in order.items.all():
-        data.append([item.product_name, str(item.quantity), f'₹{item.price:.2f}', f'₹{item.subtotal:.2f}'])
-    data.append(['', '', 'Grand Total', f'₹{order.total_amount:.2f}'])
-    table = Table(data, colWidths=[3.1 * inch, .6 * inch, .9 * inch, 1.0 * inch])
+        data.append([Paragraph(xml_escape(item.product_name), styles['BodyText']), str(item.quantity), f'Rs. {item.price:.2f}', f'Rs. {item.subtotal:.2f}'])
+    data.append(['', '', 'Subtotal', f'Rs. {order.subtotal:.2f}'])
+    if order.discount_amount:
+        data.append(['', '', 'Discount', f'- Rs. {order.discount_amount:.2f}'])
+    if order.shipping_amount:
+        data.append(['', '', 'Shipping', f'Rs. {order.shipping_amount:.2f}'])
+    if order.tax_amount:
+        data.append(['', '', 'GST', f'Rs. {order.tax_amount:.2f}'])
+    data.append(['', '', 'Grand Total', f'Rs. {order.total_amount:.2f}'])
+    table = Table(data, colWidths=[3.0 * inch, .6 * inch, 1.0 * inch, 1.2 * inch])
     table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#243244')), ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
         ('GRID', (0, 0), (-1, -1), .5, colors.HexColor('#cbd5e1')), ('ALIGN', (1, 1), (-1, -1), 'RIGHT'),

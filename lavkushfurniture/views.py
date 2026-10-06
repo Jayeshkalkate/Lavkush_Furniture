@@ -2,7 +2,10 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
+from django.core.validators import validate_email
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from .forms import ProfileForm, UserForm
 from account.models import Items
@@ -17,6 +20,10 @@ def homepage(request):
         featured = ImageWithCaption.objects.filter(is_active=True).select_related('category').order_by('-uploaded_at')[:8]
     categories = Category.objects.filter(is_active=True)[:6]
     return render(request, 'index.html', {'featured_products': featured, 'categories': categories})
+
+
+def healthz(request):
+    return HttpResponse('ok', content_type='text/plain')
 
 
 def aboutus(request):
@@ -38,6 +45,14 @@ def contact(request):
             return redirect('contactus')
         if not all([first_name, email, message]):
             messages.error(request, 'Please fill in your name, email and message.')
+            return redirect('contactus')
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(request, 'Please enter a valid email address.')
+            return redirect('contactus')
+        first_name, last_name, message = first_name[:100], last_name[:100], message[:5000]
+        if '\n' in email or '\r' in email:
             return redirect('contactus')
         try:
             mail = EmailMessage(f'New website enquiry from {first_name} {last_name}'.strip(), f'Name: {first_name} {last_name}\nEmail: {email}\n\nMessage:\n{message}', settings.DEFAULT_FROM_EMAIL, [settings.DEFAULT_FROM_EMAIL], reply_to=[email])

@@ -10,7 +10,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN python manage.py collectstatic --noinput
+RUN SECRET_KEY=build-only-not-a-real-secret-key-0123456789 python manage.py collectstatic --noinput
+
+RUN useradd -m app && chown -R app /app
+USER app
 
 EXPOSE 8000
 CMD ["gunicorn", "lavkushfurniture.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "120"]

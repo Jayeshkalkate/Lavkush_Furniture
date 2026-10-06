@@ -26,3 +26,13 @@ class CatalogTests(TestCase):
         response = self.client.get(self.product.get_absolute_url())
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Comfortable and solid.')
+
+
+class HealthAndPagesTests(TestCase):
+    def test_health_endpoint(self):
+        response = self.client.get(reverse('healthz'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_public_pages_render(self):
+        for name in ['homepage', 'aboutus', 'services', 'contactus', 'gallery', 'our_team', 'privacy_policy', 'terms', 'login', 'register', 'robots_txt']:
+            self.assertEqual(self.client.get(reverse(name)).status_code, 200, name)

@@ -9,6 +9,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      DEBUG: 'True'
+      SECRET_KEY: ci-only-secret-key-ci-only-secret-key-1234
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

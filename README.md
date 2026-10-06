@@ -58,7 +58,7 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-For local development, leave `DATABASE_URL` empty and Django will use SQLite. Cloudinary is optional locally; uploaded media will use local file storage until Cloudinary credentials are provided.
+`DEBUG` now defaults to **False** (safe for production). For local development set `DEBUG=True` in `.env` (already set in `.env.example`) and leave `DATABASE_URL` empty and Django will use SQLite. Cloudinary is optional locally; uploaded media will use local file storage until Cloudinary credentials are provided.
 
 ## Production environment
 
@@ -77,6 +77,14 @@ Register the Razorpay webhook URL as:
 `https://YOUR-DOMAIN/order/webhook/razorpay/`
 
 Use the same webhook secret in `RAZORPAY_WEBHOOK_SECRET`.
+
+## Housekeeping
+
+- Health check endpoint: `/healthz/` (used by `render.yaml`).
+- Cancel abandoned unpaid orders daily (cron / Render cron job): `python manage.py cancel_stale_orders --hours 24`.
+- Deleting a user who has orders deactivates the account instead, so financial records are never lost.
+- Bulk import CSV/XLSX accepts an optional `category` column (created if missing).
+- **Security:** never commit `.env`. If an earlier copy of `.env` was ever shared or pushed, rotate the database password, email password and any API keys.
 
 ## Google / browser discoverability
 

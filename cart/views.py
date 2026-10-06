@@ -3,8 +3,10 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from .models import Cart, CartItem
 from gallery.models import ImageWithCaption
+from lavkushfurniture.utils import safe_next_url
 
 logger = logging.getLogger(__name__)
 SESSION_KEY = 'guest_cart'
@@ -12,15 +14,20 @@ SESSION_KEY = 'guest_cart'
 
 def _guest_rows(request):
     raw = request.session.get(SESSION_KEY, {})
-    product_ids = [int(pid) for pid in raw.keys()]
+    product_ids = [int(pid) for pid in raw.keys() if str(pid).isdigit()]
     products = {p.id: p for p in ImageWithCaption.objects.filter(id__in=product_ids, is_active=True)}
     rows = []
     clean = {}
     for pid_str, qty in raw.items():
+        if not str(pid_str).isdigit():
+            continue
         product = products.get(int(pid_str))
         if not product or product.price is None or product.stock_quantity <= 0:
             continue
-        quantity = max(1, min(int(qty), product.stock_quantity))
+        try:
+            quantity = max(1, min(int(qty), product.stock_quantity))
+        except (TypeError, ValueError):
+            quantity = 1
         clean[str(product.id)] = quantity
         rows.append({'product': product, 'quantity': quantity, 'subtotal': product.price * quantity})
     request.session[SESSION_KEY] = clean
@@ -35,10 +42,12 @@ def merge_guest_cart(request, user):
     for pid_str, qty in raw.items():
         try:
             product = ImageWithCaption.objects.get(pk=int(pid_str), is_active=True)
-            quantity = max(1, min(int(qty), product.stock_quantity or 1))
+            if product.stock_quantity <= 0:
+                continue
+            quantity = max(1, min(int(qty), product.stock_quantity))
             item, created = CartItem.objects.get_or_create(cart=cart, product=product, defaults={'quantity': quantity})
             if not created:
-                item.quantity = min(item.quantity + quantity, product.stock_quantity or 1)
+                item.quantity = min(item.quantity + quantity, product.stock_quantity)
                 item.save(update_fields=['quantity'])
         except (ImageWithCaption.DoesNotExist, ValueError):
             continue
@@ -75,7 +84,7 @@ def add_to_cart(request, product_id):
         guest[str(product.id)] = min(current + 1, product.stock_quantity)
         request.session.modified = True
         messages.success(request, f"'{product.caption}' was added to your cart. Sign in at checkout to place the order.")
-    return redirect(request.POST.get('next') or 'cart:view_cart')
+    return redirect(safe_next_url(request, request.POST.get('next'), reverse('cart:view_cart')))
 
 
 def remove_from_cart(request, item_id):

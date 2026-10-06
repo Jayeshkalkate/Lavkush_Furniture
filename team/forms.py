@@ -11,7 +11,7 @@ class TeamMemberForm(forms.ModelForm):
         }
 
     def clean_name(self):
-        name = self.cleaned_data.get('name').strip()
+        name = (self.cleaned_data.get('name') or '').strip()
         if not name:
             raise forms.ValidationError("Name is required.")
         return name

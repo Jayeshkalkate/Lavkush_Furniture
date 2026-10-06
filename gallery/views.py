@@ -10,6 +10,7 @@ from PIL import Image as PILImage
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from decimal import Decimal, InvalidOperation
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.files.base import ContentFile
 from django.core.paginator import Paginator
@@ -178,6 +179,7 @@ def _safe_image_response(image_url):
         chunks.append(chunk)
     data = b''.join(chunks)
     try:
+        PILImage.MAX_IMAGE_PIXELS = 40_000_000
         img = PILImage.open(io.BytesIO(data))
         img.verify()
     except Exception as exc:
@@ -225,25 +227,34 @@ def bulk_upload_products(request):
                     if not caption:
                         raise ValueError(f'Row {index}: caption is required.')
                     try:
-                        price = float(row.get('price') or 0)
-                    except (TypeError, ValueError):
+                        price = Decimal(str(row.get('price') or 0).replace(',', '').strip())
+                    except (TypeError, ValueError, InvalidOperation):
                         raise ValueError(f'Row {index}: price must be numeric.')
+                    try:
+                        stock_qty = int(float(row.get('stock_quantity') or 20))
+                    except (TypeError, ValueError):
+                        raise ValueError(f'Row {index}: stock_quantity must be a whole number.')
+                    category_name = str(row.get('category') or '').strip()
                     if price < 0:
                         raise ValueError(f'Row {index}: price cannot be negative.')
                     image_data = None
                     image_url = str(row.get('image_url') or '').strip()
                     if image_url:
                         image_data = _safe_image_response(image_url)
-                    prepared.append((row, caption, price, image_data, index))
+                    prepared.append((row, caption, price, image_data, index, stock_qty, category_name))
                 with transaction.atomic():
-                    for row, caption, price, image_data, index in prepared:
+                    for row, caption, price, image_data, index, stock_qty, category_name in prepared:
+                        category = None
+                        if category_name:
+                            category, _ = Category.objects.get_or_create(name=category_name, defaults={'slug': slugify(category_name) or 'category'})
                         product = ImageWithCaption.objects.create(
+                            category=category,
                             caption=caption, price=price,
                             description=str(row.get('description') or '').strip(),
                             dimensions=str(row.get('dimensions') or '').strip(),
                             materials=str(row.get('materials') or '').strip(),
                             color=str(row.get('color') or '').strip(),
-                            stock_quantity=max(0, int(row.get('stock_quantity') or 20)),
+                            stock_quantity=max(0, stock_qty),
                             warranty=str(row.get('warranty') or '').strip(),
                             lead_time=str(row.get('lead_time') or '').strip(),
                             is_active=True,
@@ -263,6 +274,6 @@ def download_sample_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="lavkush_product_import_sample.csv"'
     writer = csv.writer(response)
-    writer.writerow(['caption', 'price', 'description', 'dimensions', 'materials', 'color', 'stock_quantity', 'warranty', 'lead_time', 'image_url'])
-    writer.writerow(['Classic Teak Sofa', '34999', 'Hand-finished teak frame with comfortable fabric seating.', '210 x 85 x 90 cm', 'Teak wood, fabric', 'Natural wood', '10', '5 years', '2-3 weeks', ''])
+    writer.writerow(['caption', 'price', 'description', 'dimensions', 'materials', 'color', 'stock_quantity', 'warranty', 'lead_time', 'image_url', 'category'])
+    writer.writerow(['Classic Teak Sofa', '34999', 'Hand-finished teak frame with comfortable fabric seating.', '210 x 85 x 90 cm', 'Teak wood, fabric', 'Natural wood', '10', '5 years', '2-3 weeks', '', 'Sofas & Seating'])
     return response

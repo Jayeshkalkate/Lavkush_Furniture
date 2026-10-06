@@ -9,8 +9,13 @@ class CategoryAdmin(admin.ModelAdmin):
     list_filter = ('is_active',)
     search_fields = ('name', 'description')
     prepopulated_fields = {'slug': ('name',)}
+
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(product_count=models.Count('products'))
+
+    @admin.display(description='Products', ordering='product_count')
+    def product_count(self, obj):
+        return obj.product_count
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
