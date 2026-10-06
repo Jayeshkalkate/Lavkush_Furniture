@@ -1,276 +1,446 @@
+import hashlib
+import hmac
+import json
 import logging
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.conf import settings
-from django.http import HttpResponse
-from django.db.models import Sum
-from django.utils import timezone
-from django.db import transaction
-from django.contrib import messages
+from datetime import timedelta
+from decimal import Decimal
+
 import razorpay
-
-from cart.models import Cart, CartItem
-from .models import Payment, Order, OrderItem
-
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db import transaction
+from django.db.models import Avg, Count, Sum, F, DecimalField, ExpressionWrapper
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch
 from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+
+from cart.models import Cart
+from gallery.models import ImageWithCaption
+from .forms import CheckoutForm
+from .email_utils import send_order_event_email
+from .models import Coupon, Order, OrderItem, Payment
 
 logger = logging.getLogger(__name__)
 
 
-def get_razorpay_client():
-    """Helper to get Razorpay client with keys from settings."""
+def _admin(user):
+    return user.is_staff
+
+
+def _get_client():
+    if not settings.RAZORPAY_KEY_ID or not settings.RAZORPAY_KEY_SECRET:
+        raise RuntimeError('Razorpay is not configured. Add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.')
     return razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 
-# ===============================
-# 💰 ADMIN FINANCE DASHBOARD
-# ===============================
-@login_required
-def admin_finance_dashboard(request):
-    if not request.user.is_staff:
-        messages.error(request, "Access denied.")
-        return redirect("homepage")
-
-    today = timezone.now().date()
-
-    # Use efficient aggregations
-    totals = Payment.objects.filter(status="paid").aggregate(
-        total=Sum("amount"), daily=Sum("amount", filter=models.Q(created_at__date=today)),
-        monthly=Sum("amount", filter=models.Q(created_at__year=today.year, created_at__month=today.month))
-    )
-    total = totals.get("total") or 0
-    daily = totals.get("daily") or 0
-    monthly = totals.get("monthly") or 0
-
-    failed = Payment.objects.filter(status="failed").count()
-    refunded = Payment.objects.filter(status="refunded").aggregate(refund=Sum("refund_amount"))["refund"] or 0
-
-    payments = Payment.objects.select_related("user").order_by("-created_at")[:20]
-
-    context = {
-        "total": total,
-        "daily": daily,
-        "monthly": monthly,
-        "failed": failed,
-        "refunded": refunded,
-        "payments": payments,
-    }
-    return render(request, "admin_finance_dashboard.html", context)
+def _calculate_totals(items, coupon=None):
+    subtotal = sum((item.subtotal for item in items), Decimal('0.00'))
+    shipping = Decimal(str(settings.SHIPPING_FLAT_RATE)) if subtotal > 0 else Decimal('0.00')
+    discount = coupon.discount_for(subtotal) if coupon else Decimal('0.00')
+    taxable = max(subtotal - discount, Decimal('0.00'))
+    tax = (taxable * Decimal(str(settings.GST_RATE)) / Decimal('100')).quantize(Decimal('0.01'))
+    total = taxable + shipping + tax
+    return subtotal, shipping, tax, discount, total
 
 
-# ===============================
-# 🔁 REFUND PAYMENT
-# ===============================
-@login_required
-def refund_payment(request, payment_id):
-    if not request.user.is_staff:
-        messages.error(request, "Access denied.")
-        return redirect("homepage")
-
-    payment = get_object_or_404(Payment, id=payment_id)
-    if payment.status != "paid":
-        messages.warning(request, "Payment is not in 'paid' status.")
-        return redirect("admin_finance_dashboard")
-
-    client = get_razorpay_client()
-    try:
-        client.payment.refund(payment.payment_id)
-        payment.status = "refunded"
-        payment.refund_amount = payment.amount
-        payment.save()
-        messages.success(request, f"Refund processed for payment {payment.payment_id}.")
-        logger.info(f"Admin {request.user.username} refunded payment {payment.payment_id}")
-    except Exception as e:
-        logger.error(f"Refund error: {e}")
-        messages.error(request, f"Refund failed: {str(e)}")
-
-    return redirect("admin_finance_dashboard")
+def _send_order_email(order):
+    send_order_event_email(order, 'confirmed', f'Total: ₹{order.total_amount:.2f}')
 
 
-# ===============================
-# 💳 CREATE PAYMENT (CHECKOUT)
-# ===============================
-@login_required
-def create_payment(request):
+def _deduct_inventory(order):
+    if order.inventory_deducted:
+        return True
+    items = list(order.items.select_related('product').all())
+    for item in items:
+        if not item.product_id:
+            continue
+        product = ImageWithCaption.objects.select_for_update().get(pk=item.product_id)
+        if product.stock_quantity < item.quantity:
+            return False
+    for item in items:
+        if not item.product_id:
+            continue
+        product = ImageWithCaption.objects.select_for_update().get(pk=item.product_id)
+        product.stock_quantity -= item.quantity
+        product.save(update_fields=['stock_quantity', 'updated_at'])
+    order.inventory_deducted = True
+    order.save(update_fields=['inventory_deducted', 'updated_at'])
+    return True
+
+
+def _finalize_paid_payment(payment, payment_id=None, signature=None, gateway_payload=None):
+    with transaction.atomic():
+        payment = Payment.objects.select_for_update().select_related('order').get(pk=payment.pk)
+        order = payment.order
+        if payment.status == 'refunded':
+            return order
+        payment.status = 'paid'
+        payment.payment_id = payment_id or payment.payment_id
+        payment.signature = signature or payment.signature
+        payment.paid_at = payment.paid_at or timezone.now()
+        if gateway_payload:
+            payment.gateway_response = gateway_payload
+            payment.gateway_status = gateway_payload.get('status', payment.gateway_status)
+        payment.save(update_fields=['status', 'payment_id', 'signature', 'paid_at', 'gateway_response', 'gateway_status'])
+        coupon_code = (order.coupon_code or '').strip().upper()
+        if coupon_code:
+            coupon = Coupon.objects.select_for_update().filter(code=coupon_code).first()
+            if coupon and coupon.uses < (coupon.usage_limit if coupon.usage_limit is not None else 10**9) and coupon.is_valid(order.subtotal):
+                coupon.uses += 1
+                coupon.save(update_fields=['uses'])
+            elif coupon_code:
+                raise ValueError('The coupon could not be reserved for this order.')
+        if not _deduct_inventory(order):
+            raise ValueError('One or more items are no longer available in the requested quantity.')
+        order.order_status = 'processing'
+        order.save(update_fields=['order_status', 'updated_at'])
+        transaction.on_commit(lambda: _send_order_email(order))
+        return order
+
+
+def checkout(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
-    cart_items = cart.items.select_related('product').all()
-    total_amount = sum(item.subtotal for item in cart_items)
-
-    if total_amount <= 0:
-        messages.warning(request, "Your cart is empty.")
-        return redirect("cart:view_cart")
-
-    amount_in_paise = int(total_amount * 100)
-    client = get_razorpay_client()
-
-    try:
-        razorpay_order = client.order.create({
-            "amount": amount_in_paise,
-            "currency": "INR",
-            "payment_capture": "1",
-        })
-    except Exception as e:
-        logger.error(f"Razorpay order creation failed: {e}")
-        messages.error(request, "Payment gateway error. Please try again.")
-        return redirect("cart:view_cart")
-
-    payment = Payment.objects.create(
-        user=request.user,
-        order_id=razorpay_order["id"],
-        amount=total_amount,
-        status="pending",
-    )
-
-    context = {
-        "payment": razorpay_order,
-        "total_amount": total_amount,
-        "razorpay_key": settings.RAZORPAY_KEY_ID,
+    cart_items = list(cart.items.select_related('product').all())
+    if not cart_items:
+        messages.info(request, 'Your cart is empty.')
+        return redirect('cart:view_cart')
+    unavailable = [item.product.caption for item in cart_items if not item.product.is_active or item.product.stock_quantity < item.quantity]
+    if unavailable:
+        messages.error(request, f"Please update unavailable items before checkout: {', '.join(unavailable[:3])}.")
+        return redirect('cart:view_cart')
+    subtotal, shipping, tax, discount, total = _calculate_totals(cart_items)
+    profile = getattr(request.user, 'items', None)
+    initial = {
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'email': request.user.email,
+        'phone': getattr(profile, 'phone_number', ''),
+        'shipping_address': getattr(profile, 'address', ''),
+        'city': getattr(profile, 'city', ''),
+        'country': 'India',
     }
-    return render(request, "payment.html", context)
+    form = CheckoutForm(request.POST or None, initial=initial if request.method != 'POST' else None)
+    if request.method == 'POST' and form.is_valid():
+        try:
+            coupon = getattr(form, 'coupon', None)
+            if coupon and not coupon.is_valid(subtotal):
+                form.add_error('coupon_code', 'This coupon is not valid for the current cart total.')
+                return render(request, 'checkout.html', {'form': form, 'cart_items': cart_items, 'subtotal': subtotal, 'shipping': shipping, 'tax': tax, 'discount': Decimal('0.00'), 'total': subtotal + shipping + tax})
+            subtotal, shipping, tax, discount, total = _calculate_totals(cart_items, coupon)
+            with transaction.atomic():
+                order = form.save(commit=False)
+                order.user = request.user
+                order.coupon_code = coupon.code if coupon else ''
+                order.subtotal = subtotal
+                order.shipping_amount = shipping
+                order.tax_amount = tax
+                order.discount_amount = discount
+                order.total_amount = total
+                order.order_status = 'payment_pending'
+                order.save()
+                for cart_item in cart_items:
+                    OrderItem.objects.create(order=order, product=cart_item.product, product_name=cart_item.product.caption, sku=cart_item.product.sku or '', price=cart_item.product.price, quantity=cart_item.quantity)
+                client = _get_client()
+                rzp_order = client.order.create({'amount': int(total * 100), 'currency': 'INR', 'receipt': order.invoice_number, 'notes': {'order': order.invoice_number, 'user': request.user.username}})
+                payment = Payment.objects.create(user=request.user, order_id=rzp_order['id'], amount=total, status='pending', gateway_response=rzp_order)
+                order.payment = payment
+                order.save(update_fields=['payment', 'updated_at'])
+        except RuntimeError as exc:
+            form.add_error(None, str(exc))
+        except Exception:
+            logger.exception('Checkout creation failed')
+            form.add_error(None, 'We could not start the payment. Please try again.')
+        else:
+            return render(request, 'payment.html', {'payment': payment, 'rzp_order': rzp_order, 'total_amount': total, 'razorpay_key': settings.RAZORPAY_KEY_ID, 'order': order})
+    return render(request, 'checkout.html', {'form': form, 'cart_items': cart_items, 'subtotal': subtotal, 'shipping': shipping, 'tax': tax, 'discount': discount, 'total': total})
 
 
-# ===============================
-# ✅ PAYMENT SUCCESS
-# ===============================
 @login_required
 @transaction.atomic
 def payment_success(request):
-    if request.method != "POST":
-        return redirect("cart:view_cart")
-
-    razorpay_order_id = request.POST.get("razorpay_order_id")
-    razorpay_payment_id = request.POST.get("razorpay_payment_id")
-    razorpay_signature = request.POST.get("razorpay_signature")
-
+    if request.method != 'POST':
+        return redirect('cart:view_cart')
+    razorpay_order_id = request.POST.get('razorpay_order_id', '').strip()
+    razorpay_payment_id = request.POST.get('razorpay_payment_id', '').strip()
+    razorpay_signature = request.POST.get('razorpay_signature', '').strip()
     if not all([razorpay_order_id, razorpay_payment_id, razorpay_signature]):
-        messages.error(request, "Invalid payment response.")
-        return redirect("cart:view_cart")
-
-    client = get_razorpay_client()
+        messages.error(request, 'Payment response was incomplete.')
+        return redirect('cart:view_cart')
+    payment = get_object_or_404(Payment.objects.select_related('order'), order_id=razorpay_order_id, user=request.user)
+    if payment.status == 'paid':
+        return redirect('order:payment_receipt', payment_id=payment.pk)
     try:
-        client.utility.verify_payment_signature({
-            "razorpay_order_id": razorpay_order_id,
-            "razorpay_payment_id": razorpay_payment_id,
-            "razorpay_signature": razorpay_signature,
-        })
-    except Exception as e:
-        logger.error(f"Payment verification failed: {e}")
-        Payment.objects.filter(order_id=razorpay_order_id, user=request.user).update(status="failed")
-        messages.error(request, "Payment verification failed.")
-        return redirect("cart:view_cart")
-
-    payment = get_object_or_404(Payment, order_id=razorpay_order_id, user=request.user)
-    payment.payment_id = razorpay_payment_id
-    payment.signature = razorpay_signature
-    payment.status = "paid"
-    payment.save()
-
-    # Create order
-    cart = Cart.objects.get(user=request.user)
-    cart_items = cart.items.select_related('product').all()
-    order = Order.objects.create(
-        user=request.user,
-        payment=payment,
-        total_amount=payment.amount,
-    )
-
-    for item in cart_items:
-        OrderItem.objects.create(
-            order=order,
-            product_name=item.product.caption,
-            price=item.product.price,
-            quantity=item.quantity,
-        )
-
-    cart_items.delete()  # empty cart
-    messages.success(request, "Payment successful! Order placed.")
-    return redirect("order:payment_receipt", payment.id)
+        client = _get_client()
+        client.utility.verify_payment_signature({'razorpay_order_id': razorpay_order_id, 'razorpay_payment_id': razorpay_payment_id, 'razorpay_signature': razorpay_signature})
+        order = _finalize_paid_payment(payment, razorpay_payment_id, razorpay_signature)
+    except ValueError:
+        # Payment may be captured while stock changed; try an automatic refund.
+        try:
+            _get_client().payment.refund(razorpay_payment_id)
+            payment.status = 'refunded'
+            payment.refund_amount = payment.amount
+            payment.refunded_at = timezone.now()
+            payment.save(update_fields=['status', 'refund_amount', 'refunded_at'])
+            payment.order.order_status = 'cancelled'
+            payment.order.cancellation_reason = 'Automatic refund: inventory was no longer available.'
+            payment.order.save(update_fields=['order_status', 'cancellation_reason', 'updated_at'])
+            transaction.on_commit(lambda: send_order_event_email(payment.order, 'refunded', 'A payment was refunded automatically because the requested stock was unavailable.'))
+            messages.error(request, 'Payment was received but the selected stock was no longer available. The payment was sent for refund.')
+        except Exception:
+            logger.exception('Automatic refund failed after inventory conflict')
+            messages.error(request, 'Payment was received but stock changed. Please contact support for immediate assistance.')
+        return redirect('cart:view_cart')
+    except Exception:
+        logger.exception('Payment verification failed')
+        payment.status = 'failed'
+        payment.save(update_fields=['status'])
+        messages.error(request, 'Payment verification failed. No order was marked as paid.')
+        return redirect('cart:view_cart')
+    cart = Cart.objects.filter(user=request.user).first()
+    if cart:
+        cart.items.all().delete()
+    messages.success(request, 'Payment successful — your order is confirmed.')
+    return redirect('order:payment_receipt', payment_id=payment.pk)
 
 
-# ===============================
-# 🧾 RECEIPT VIEW
-# ===============================
+@csrf_exempt
+@transaction.atomic
+def razorpay_webhook(request):
+    if request.method != 'POST':
+        return JsonResponse({'detail': 'POST required'}, status=405)
+    secret = settings.RAZORPAY_WEBHOOK_SECRET
+    if not secret:
+        return JsonResponse({'detail': 'Webhook secret not configured'}, status=503)
+    signature = request.headers.get('X-Razorpay-Signature', '')
+    expected = hmac.new(secret.encode(), request.body, hashlib.sha256).hexdigest()
+    if not signature or not hmac.compare_digest(expected, signature):
+        return JsonResponse({'detail': 'Invalid signature'}, status=400)
+    try:
+        payload = json.loads(request.body.decode('utf-8'))
+    except json.JSONDecodeError:
+        return JsonResponse({'detail': 'Invalid JSON'}, status=400)
+    event = payload.get('event', '')
+    entity = (((payload.get('payload') or {}).get('payment') or {}).get('entity') or {})
+    order_entity = (((payload.get('payload') or {}).get('order') or {}).get('entity') or {})
+    order_id = entity.get('order_id') or order_entity.get('id')
+    payment_id = entity.get('id')
+    payment = Payment.objects.select_for_update().filter(order_id=order_id).select_related('order').first()
+    if not payment and payment_id:
+        payment = Payment.objects.select_for_update().filter(payment_id=payment_id).select_related('order').first()
+    if payment:
+        payment.webhook_event = event
+        payment.gateway_response = payload
+        payment.gateway_status = entity.get('status', payment.gateway_status)
+        payment.save(update_fields=['webhook_event', 'gateway_response', 'gateway_status'])
+        if event in {'payment.captured', 'order.paid'} and payment.status != 'paid':
+            try:
+                _finalize_paid_payment(payment, payment_id=payment_id, gateway_payload=entity)
+            except ValueError:
+                logger.error('Webhook payment captured but inventory unavailable for %s', payment.order.invoice_number)
+                try:
+                    _get_client().payment.refund(payment_id)
+                    payment.status = 'refunded'
+                    payment.refund_amount = payment.amount
+                    payment.refunded_at = timezone.now()
+                    payment.save(update_fields=['status', 'refund_amount', 'refunded_at'])
+                    payment.order.order_status = 'cancelled'
+                    payment.order.cancellation_reason = 'Automatic refund: inventory was no longer available.'
+                    payment.order.save(update_fields=['order_status', 'cancellation_reason', 'updated_at'])
+                except Exception:
+                    logger.exception('Automatic webhook refund failed for %s', payment.order.invoice_number)
+        elif event == 'payment.failed':
+            payment.status = 'failed'
+            payment.save(update_fields=['status'])
+        elif event == 'refund.created':
+            payment.status = 'refunded'
+            payment.refund_amount = Decimal(str((entity.get('amount_refunded') or payment.amount * 100))) / 100
+            payment.refunded_at = timezone.now()
+            payment.save(update_fields=['status', 'refund_amount', 'refunded_at'])
+    return JsonResponse({'status': 'ok'})
+
+
 @login_required
 def payment_receipt(request, payment_id):
-    payment = get_object_or_404(Payment, id=payment_id, user=request.user)
-    return render(request, "payment_receipt.html", {"payment": payment})
+    payment = get_object_or_404(Payment.objects.select_related('order'), pk=payment_id, user=request.user)
+    return render(request, 'payment_receipt.html', {'payment': payment})
 
 
-# ===============================
-# 📊 USER FINANCE DASHBOARD
-# ===============================
+@login_required
+def customer_orders(request):
+    orders = Order.objects.filter(user=request.user).prefetch_related('items').select_related('payment')
+    return render(request, 'orders.html', {'orders': orders})
+
+
+@login_required
+def order_detail(request, invoice_number):
+    order = get_object_or_404(Order.objects.prefetch_related('items').select_related('payment'), invoice_number=invoice_number, user=request.user)
+    return render(request, 'order_detail.html', {'order': order})
+
+
+@login_required
+@transaction.atomic
+def cancel_order(request, invoice_number):
+    order = get_object_or_404(Order.objects.select_for_update().select_related('payment'), invoice_number=invoice_number, user=request.user)
+    if request.method != 'POST':
+        return redirect('order:order_detail', invoice_number=invoice_number)
+    reason = request.POST.get('reason', '').strip() or 'Customer requested cancellation.'
+    if order.order_status not in {'payment_pending', 'processing'}:
+        messages.warning(request, 'This order can no longer be cancelled online.')
+        return redirect('order:order_detail', invoice_number=invoice_number)
+    if order.payment and order.payment.status == 'paid':
+        try:
+            client = _get_client()
+            client.payment.refund(order.payment.payment_id)
+        except Exception:
+            logger.exception('Order refund failed')
+            messages.error(request, 'We could not process the refund right now. Please contact support.')
+            return redirect('order:order_detail', invoice_number=invoice_number)
+        order.payment.status = 'refunded'
+        order.payment.refund_amount = order.payment.amount
+        order.payment.refunded_at = timezone.now()
+        order.payment.save(update_fields=['status', 'refund_amount', 'refunded_at'])
+        if order.inventory_deducted:
+            for item in order.items.select_related('product'):
+                if item.product_id:
+                    product = ImageWithCaption.objects.select_for_update().get(pk=item.product_id)
+                    product.stock_quantity += item.quantity
+                    product.save(update_fields=['stock_quantity', 'updated_at'])
+            order.inventory_deducted = False
+    order.order_status = 'cancelled'
+    order.cancellation_reason = reason
+    order.save(update_fields=['order_status', 'cancellation_reason', 'inventory_deducted', 'updated_at'])
+    transaction.on_commit(lambda: send_order_event_email(order, 'cancelled', f'Reason: {reason}'))
+    if order.payment and order.payment.status == 'refunded':
+        transaction.on_commit(lambda: send_order_event_email(order, 'refunded', 'The payment refund has been initiated through Razorpay.'))
+    messages.success(request, 'Your cancellation request was processed.')
+    return redirect('order:order_detail', invoice_number=invoice_number)
+
+
+@login_required
+def request_return(request, invoice_number):
+    order = get_object_or_404(Order, invoice_number=invoice_number, user=request.user)
+    if request.method != 'POST':
+        return redirect('order:order_detail', invoice_number=invoice_number)
+    if order.order_status != 'delivered' or not order.delivered_at or order.delivered_at < timezone.now() - timedelta(days=7):
+        messages.warning(request, 'Returns are available for delivered orders within 7 days.')
+        return redirect('order:order_detail', invoice_number=invoice_number)
+    reason = request.POST.get('reason', '').strip()
+    if not reason:
+        messages.error(request, 'Please tell us why you are requesting a return.')
+        return redirect('order:order_detail', invoice_number=invoice_number)
+    order.return_requested = True
+    order.return_reason = reason
+    order.return_status = 'requested'
+    order.order_status = 'return_pending'
+    order.save(update_fields=['return_requested', 'return_reason', 'return_status', 'order_status', 'updated_at'])
+    transaction.on_commit(lambda: send_order_event_email(order, 'return_pending', f'Reason: {reason}'))
+    messages.success(request, 'Your return request has been sent to the Lavkush Furniture team.')
+    return redirect('order:order_detail', invoice_number=invoice_number)
+
+
+@user_passes_test(_admin)
+def admin_finance_dashboard(request):
+    today = timezone.localdate()
+    paid = Payment.objects.filter(status='paid')
+    totals = paid.aggregate(total=Sum('amount'))
+    daily = paid.filter(created_at__date=today).aggregate(value=Sum('amount'))['value'] or 0
+    monthly = paid.filter(created_at__year=today.year, created_at__month=today.month).aggregate(value=Sum('amount'))['value'] or 0
+    order_qs = Order.objects.exclude(order_status='cancelled')
+    top_products = OrderItem.objects.filter(order__in=order_qs).values('product_name').annotate(units=Sum('quantity'), revenue=Sum('price')).order_by('-units')[:5]
+    from django.contrib.auth.models import User
+    context = {
+        'total': totals.get('total') or 0, 'daily': daily, 'monthly': monthly,
+        'failed': Payment.objects.filter(status='failed').count(),
+        'refunded': Payment.objects.filter(status='refunded').aggregate(value=Sum('refund_amount'))['value'] or 0,
+        'orders_count': order_qs.count(), 'customers_count': order_qs.values('user_id').distinct().count(),
+        'new_customers_month': User.objects.filter(date_joined__year=today.year, date_joined__month=today.month).count(),
+        'repeat_customers': order_qs.values('user_id').annotate(order_count=Count('id')).filter(order_count__gte=2).count(),
+        'avg_order_value': order_qs.aggregate(value=Avg('total_amount'))['value'] or 0,
+        'top_products': top_products,
+        'payments': Payment.objects.select_related('user').order_by('-created_at')[:20],
+        'recent_orders': Order.objects.select_related('user', 'payment').order_by('-created_at')[:12],
+    }
+    return render(request, 'admin_finance_dashboard.html', context)
+
+
+@user_passes_test(_admin)
+@transaction.atomic
+def refund_payment(request, payment_id):
+    if request.method != 'POST':
+        return redirect('order:admin_finance_dashboard')
+    payment = get_object_or_404(Payment.objects.select_for_update().select_related('order'), pk=payment_id)
+    if payment.status != 'paid' or not payment.payment_id:
+        messages.warning(request, 'Only captured payments can be refunded.')
+        return redirect('order:admin_finance_dashboard')
+    try:
+        _get_client().payment.refund(payment.payment_id)
+        payment.status = 'refunded'
+        payment.refund_amount = payment.amount
+        payment.refunded_at = timezone.now()
+        payment.save(update_fields=['status', 'refund_amount', 'refunded_at'])
+        if payment.order:
+            order = payment.order
+            if order.inventory_deducted:
+                for item in order.items.select_related('product'):
+                    if item.product_id:
+                        product = ImageWithCaption.objects.select_for_update().get(pk=item.product_id)
+                        product.stock_quantity += item.quantity
+                        product.save(update_fields=['stock_quantity', 'updated_at'])
+                order.inventory_deducted = False
+            order.order_status = 'cancelled'
+            order.cancellation_reason = 'Refund processed by staff.'
+            order.save(update_fields=['order_status', 'cancellation_reason', 'inventory_deducted', 'updated_at'])
+            transaction.on_commit(lambda: send_order_event_email(order, 'refunded', f'Refund amount: ₹{payment.refund_amount:.2f}'))
+        messages.success(request, f'Refund started for {payment.payment_id}.')
+    except Exception:
+        logger.exception('Refund failed')
+        messages.error(request, 'Refund failed. No local payment status was changed.')
+    return redirect('order:admin_finance_dashboard')
+
+
 @login_required
 def customer_finance_dashboard(request):
-    today = timezone.now().date()
-    qs = Payment.objects.filter(user=request.user, status="paid")
-    total = qs.aggregate(total=Sum("amount"))["total"] or 0
-    monthly = qs.filter(created_at__year=today.year, created_at__month=today.month).aggregate(monthly=Sum("amount"))["monthly"] or 0
-    failed = Payment.objects.filter(user=request.user, status="failed").count()
-    refunded = Payment.objects.filter(user=request.user, status="refunded").aggregate(refund=Sum("refund_amount"))["refund"] or 0
-
-    payments = Payment.objects.filter(user=request.user).select_related("user").order_by("-created_at")[:10]
-
-    context = {
-        "total": total,
-        "monthly": monthly,
-        "failed": failed,
-        "refunded": refunded,
-        "payments": payments,
-    }
-    return render(request, "customer_finance_dashboard.html", context)
+    qs = Payment.objects.filter(user=request.user)
+    total = qs.filter(status='paid').aggregate(total=Sum('amount'))['total'] or 0
+    now = timezone.localdate()
+    monthly = qs.filter(status='paid', created_at__year=now.year, created_at__month=now.month).aggregate(total=Sum('amount'))['total'] or 0
+    refunded = qs.filter(status='refunded').aggregate(total=Sum('refund_amount'))['total'] or 0
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    latest_payment = qs.select_related('order').first()
+    context = {'total': total, 'monthly': monthly, 'failed': qs.filter(status='failed').count(), 'refunded': refunded, 'payments': qs[:10], 'orders': orders[:8], 'payment': latest_payment}
+    return render(request, 'customer_finance_dashboard.html', context)
 
 
-# ===============================
-# 📄 DOWNLOAD RECEIPT PDF
-# ===============================
 @login_required
 def download_receipt_pdf(request, payment_id):
-    payment = get_object_or_404(Payment, id=payment_id, user=request.user)
-    order = get_object_or_404(Order, payment=payment)
-    order_items = order.items.all()
-
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="Receipt_{payment.payment_id or payment.id}.pdf"'
-
-    doc = SimpleDocTemplate(response)
-    elements = []
+    payment = get_object_or_404(Payment.objects.select_related('order'), pk=payment_id, user=request.user)
+    order = get_object_or_404(Order.objects.prefetch_related('items'), payment=payment)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{order.invoice_number}.pdf"'
+    doc = SimpleDocTemplate(response, pagesize=A4, rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36)
     styles = getSampleStyleSheet()
-    title_style = ParagraphStyle(
-        'TitleStyle',
-        parent=styles['Title'],
-        alignment=TA_CENTER,
-        spaceAfter=12,
-    )
-
-    elements.append(Paragraph("<b>Lavkush Furniture</b>", title_style))
-    elements.append(Spacer(1, 0.3 * inch))
-    elements.append(Paragraph(f"Date: {payment.created_at.strftime('%d %b %Y %H:%M')}", styles["Normal"]))
-    elements.append(Paragraph(f"Customer: {payment.user.username}", styles["Normal"]))
-    elements.append(Paragraph(f"Order ID: {order.invoice_number}", styles["Normal"]))
-    elements.append(Paragraph(f"Payment ID: {payment.payment_id}", styles["Normal"]))
-    elements.append(Spacer(1, 0.3 * inch))
-
-    data = [["Product", "Qty", "Price", "Total"]]
-    for item in order_items:
-        total = item.price * item.quantity
-        data.append([item.product_name, str(item.quantity), f"₹{item.price}", f"₹{total}"])
-
-    table = Table(data)
+    title = ParagraphStyle('LFTitle', parent=styles['Title'], alignment=TA_CENTER, spaceAfter=16)
+    elements = [Paragraph('Lavkush Furniture', title), Paragraph(f'Invoice: {order.invoice_number}', styles['Normal']), Paragraph(f'Date: {order.created_at:%d %b %Y, %I:%M %p}', styles['Normal']), Spacer(1, 12)]
+    elements.append(Paragraph(f'<b>Ship to:</b> {order.first_name} {order.last_name}, {order.shipping_address}, {order.city}, {order.state} - {order.postal_code}, {order.country}', styles['BodyText']))
+    elements.append(Spacer(1, 14))
+    data = [['Product', 'Qty', 'Price', 'Total']]
+    for item in order.items.all():
+        data.append([item.product_name, str(item.quantity), f'₹{item.price:.2f}', f'₹{item.subtotal:.2f}'])
+    data.append(['', '', 'Grand Total', f'₹{order.total_amount:.2f}'])
+    table = Table(data, colWidths=[3.1 * inch, .6 * inch, .9 * inch, 1.0 * inch])
     table.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
-        ("GRID", (0, 0), (-1, -1), 1, colors.black),
-        ("ALIGN", (1, 1), (-1, -1), "CENTER"),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#243244')), ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('GRID', (0, 0), (-1, -1), .5, colors.HexColor('#cbd5e1')), ('ALIGN', (1, 1), (-1, -1), 'RIGHT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'), ('FONTNAME', (-2, -1), (-1, -1), 'Helvetica-Bold'),
     ]))
-
-    elements.append(table)
-    elements.append(Spacer(1, 0.5 * inch))
-    elements.append(Paragraph(f"Total Paid: ₹{payment.amount}", styles["Normal"]))
-    elements.append(Spacer(1, 0.3 * inch))
-    elements.append(Paragraph("Thank you for shopping with us!", styles["Normal"]))
-
+    elements += [table, Spacer(1, 14), Paragraph('Thank you for choosing Lavkush Furniture.', styles['BodyText'])]
     doc.build(elements)
     return response

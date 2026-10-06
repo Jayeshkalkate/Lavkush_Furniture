@@ -9,7 +9,7 @@ class Items(models.Model):
     city = models.CharField(max_length=100)
 
     class Meta:
-        verbose_name_plural = 'Items'
+        verbose_name_plural = 'Profiles'
 
     def __str__(self):
         return f"{self.user.username}'s profile"

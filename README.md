@@ -1,219 +1,105 @@
-# 🪑 Lavkush Furniture – Full Stack E-Commerce Platform
+# Lavkush Furniture
 
-Lavkush Furniture is a production-ready **Full Stack Furniture E-Commerce Web Application** built using **Python & Django**, designed to simulate a real-world online shopping system with secure authentication, product management, payments, analytics, and admin control.
+Lavkush Furniture is a Django-based furniture catalogue and e-commerce application for Nandurbar, Maharashtra. This release focuses on a complete customer journey, clean product discovery, safer state-changing actions, indexable public pages, and a more polished responsive UI.
 
-🔗 **Live Website:** https://lavkushfurniture.onrender.com  
-💻 **GitHub Repository:** https://github.com/Jayeshkalkate/Lavkush_Furniture  
+## What is included in this release
 
----
+### Shopping experience
+- Searchable, paginated furniture catalogue with category, price, material and sort filters.
+- SEO-friendly product URLs: `/gallery/product/<slug>/`.
+- Featured products and category navigation are database-driven.
+- Guest cart stored in the browser session, with automatic merge after sign-in.
+- Account wishlist with a real Clear Wishlist action.
+- Checkout page captures a delivery snapshot on the order.
+- Order history, order detail, cancellation and 7-day delivered-order return request flow.
+- Inventory quantity is checked and decremented under database row locks when payment is confirmed.
+- Product ratings now support title and written review text with moderation fields.
+- Payment receipts can be viewed and downloaded as PDF.
 
-# 📌 Project Overview
+### Payment reliability
+- Razorpay checkout is created server-side only after the cart and delivery details are validated.
+- Payment callbacks verify Razorpay signatures on the server.
+- Payment finalization locks the payment record to avoid duplicate processing.
+- Razorpay webhook endpoint validates the `X-Razorpay-Signature` HMAC and reconciles captured/failed/refunded events.
+- If a payment is captured but stock becomes unavailable, the application attempts an automatic Razorpay refund and cancels the order.
 
-Lavkush Furniture is not just a product gallery — it is a complete e-commerce ecosystem that includes:
+### SEO and discoverability
+Public pages use self-referencing canonical URLs, dynamic page titles/descriptions, product `Product` structured data, a product sitemap, and a robots policy that keeps private application areas out of indexing. Google does not index a local project automatically; the deployed site still needs to be publicly reachable and submitted/verified in Google Search Console.
 
-- User authentication system
-- Product catalog with filtering
-- Wishlist & Cart functionality
-- Razorpay Payment Gateway integration
-- Order management system
-- Bulk product upload (CSV/Excel support)
-- Admin analytics dashboard
-- Cloud media hosting
-- Secure deployment with DevOps practices
+### UI/UX
+- New responsive visual system with furniture-focused typography, spacing and cards.
+- Mobile-first navigation and search.
+- Accessible skip link, descriptive image alt text, clearer button labels and reduced-motion support.
+- Light/dark theme toggle stored locally.
+- Better empty states, stock visibility, order status chips, review presentation and checkout hierarchy.
+- Optimized WebP copies of the primary hero/catalog assets plus local favicon/placeholder assets.
+- PWA manifest included for a cleaner browser install/share experience.
 
-This project demonstrates real-world implementation of Django-based scalable web architecture.
+### Operations and deployment
+- SQLite fallback for development; PostgreSQL-ready production configuration.
+- `.env.example` documents all required production values.
+- Dockerfile, Render blueprint, Procfile and GitHub Actions CI included.
+- Seed command for realistic local/demo categories and products: `python manage.py seed_catalog`.
+- Bulk CSV/XLSX product import validates file size, image type, image size and safe host/IP rules before saving.
+- State-changing operations such as delete/refund/cart/wishlist/cancel actions are POST-only.
 
----
-
-# 🚀 Core Features
-
-## 👤 Customer Features
-
-- ✅ Secure User Registration & Login
-- ✅ Profile Management
-- ✅ Browse Furniture by Category
-- ✅ Advanced Filtering (Price, Rating, Category)
-- ✅ Product Detail Page with Specifications
-- ✅ Wishlist ❤️ System
-- ✅ Add to Cart 🛒
-- ✅ Quantity Management
-- ✅ Razorpay Secure Payment Gateway
-- ✅ Order Confirmation & Receipt Generation (PDF)
-- ✅ Order History
-- ✅ Ratings & Reviews System
-- ✅ Fully Responsive UI (Mobile + Desktop)
-- ✅ SEO Friendly Structure
-
----
-
-## 🔐 Admin (Superuser) Features
-
-- 🔑 Django Admin Control Panel
-- ➕ Add / Edit / Delete Products
-- 📦 Bulk Upload Products via CSV/Excel
-- 📊 Sales Analytics Dashboard
-- 👥 Manage Users
-- 📋 Order Monitoring
-- ⭐ Manage Reviews
-- 🖼 Manage Product Images via Cloudinary
-- 🧾 Payment Tracking
-- 📈 Revenue Summary
-
----
-
-# 💳 Payment Integration
-
-- Integrated with **Razorpay API**
-- Secure transaction handling
-- Payment verification
-- Order creation only after successful payment
-- Receipt generation system
-- Protection against duplicate payments
-
----
-
-# 📊 Analytics & Monitoring
-
-- Total Revenue Calculation
-- Total Orders Count
-- Best Selling Products
-- User Growth Monitoring
-- Monthly Sales Overview
-- Admin Dashboard Metrics
-
----
-
-# 📦 Bulk Upload System
-
-Admin can:
-- Upload CSV/Excel sheet
-- Automatically create multiple products
-- Validate data before saving
-- Handle image URLs dynamically
-- Reduce manual data entry
-
----
-
-# 🛠️ Technology Stack
-
-| Layer        | Technologies Used |
-|-------------|------------------|
-| Frontend     | HTML5, CSS3, Bootstrap 5, JavaScript |
-| Backend      | Python, Django |
-| Database     | SQLite (Development), PostgreSQL (Production Ready) |
-| Media Storage| Cloudinary |
-| Payment      | Razorpay |
-| Deployment   | Render |
-| Version Control | Git & GitHub |
-| DevOps Tools | Docker (Ready Setup), CI/CD Concepts |
-| IDE          | VS Code |
-
----
-
-# 🏗️ Project Architecture
-
-```
-Lavkush_Furniture/
-│
-├── account/           # Authentication System
-├── gallery/           # Product Management
-├── cart/              # Cart & Wishlist Logic
-├── order/             # Payment & Order Handling
-├── analytics/         # Revenue & Dashboard Metrics
-├── templates/         # HTML Templates
-├── static/            # CSS, JS, Assets
-├── media/             # Uploaded Media
-├── manage.py
-└── requirements.txt
-```
-
----
-
-# 🔒 Security Implementations
-
-- CSRF Protection
-- Secure Payment Verification
-- Login Required Decorators
-- Admin-only Views Protection
-- Session Management
-- Data Validation before saving
-- Atomic Database Transactions
-
----
-
-# 🧪 Installation & Local Setup
+## Local setup
 
 ```bash
-# Clone Repository
-git clone https://github.com/Jayeshkalkate/Lavkush_Furniture.git
-cd Lavkush_Furniture
-
-# Create Virtual Environment
-python -m venv env
-env\Scripts\activate   # Windows
-# source env/bin/activate (Mac/Linux)
-
-# Install Dependencies
+python -m venv .venv
+# Windows: .venv\\Scripts\\activate
+# macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-
-# Apply Migrations
+copy .env.example .env   # Windows
+# cp .env.example .env   # macOS/Linux
 python manage.py migrate
-
-# Create Superuser
+python manage.py seed_catalog
 python manage.py createsuperuser
-
-# Run Server
 python manage.py runserver
 ```
 
-Visit: http://127.0.0.1:8000
+For local development, leave `DATABASE_URL` empty and Django will use SQLite. Cloudinary is optional locally; uploaded media will use local file storage until Cloudinary credentials are provided.
 
----
+## Production environment
 
-# 🌍 Deployment
+Set `DEBUG=False`, a strong `SECRET_KEY`, `SITE_URL`, `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, PostgreSQL `DATABASE_URL`, Cloudinary credentials, Razorpay credentials + webhook secret, real SMTP credentials, and `BULK_IMAGE_ALLOWED_HOSTS`.
 
-- Hosted on **Render**
-- Connected with GitHub Auto Deploy
-- Environment Variables for:
-  - SECRET_KEY
-  - DEBUG
-  - DATABASE_URL
-  - Razorpay Keys
-  - Cloudinary Credentials
+Run:
 
----
+```bash
+python manage.py migrate
+python manage.py collectstatic --noinput
+python manage.py check --deploy
+```
 
-# 👨‍💻 Developer
+Register the Razorpay webhook URL as:
 
-**Jayesh Rajendra Kalkate**  
-B.Tech Computer Engineering (2022–2026)  
-Godavari College of Engineering, Jalgaon  
+`https://YOUR-DOMAIN/order/webhook/razorpay/`
 
-📧 kalkatejayesh@gmail.com  
-📱 +91 84829 98343  
-🌐 Portfolio: https://devjayesh-portfolio.netlify.app  
-🔗 LinkedIn: https://www.linkedin.com/in/jayesh-kalkate-31a250242  
-💻 GitHub: https://github.com/Jayeshkalkate  
+Use the same webhook secret in `RAZORPAY_WEBHOOK_SECRET`.
 
----
+## Google / browser discoverability
 
-# 📜 License
+1. Deploy the site on a real HTTPS domain.
+2. Confirm `/robots.txt` and `/sitemap.xml` are publicly reachable.
+3. Add and verify the site in Google Search Console.
+4. Submit `/sitemap.xml` and request indexing for the homepage and important product/category pages.
+5. Keep product titles, descriptions, prices, availability, images and review content accurate in the database.
 
-This project is licensed under the MIT License.
+Search engines can discover the site from public links and the sitemap, but no code change can guarantee a ranking or instant indexing.
 
----
+## Store configuration notes
 
-# 💡 Project Purpose
+`GST_RATE` and `SHIPPING_FLAT_RATE` are environment-driven so the business can choose the applicable values. This release does not guess a legal GST rate; set the value appropriate to the business and tax configuration.
 
-Lavkush Furniture was built to:
+## Testing
 
-- Demonstrate Full Stack Django expertise
-- Showcase real-world E-Commerce architecture
-- Practice payment gateway integration
-- Implement secure authentication systems
-- Apply DevOps & deployment practices
-- Build a portfolio-ready production-level project
+The repository now includes functional tests for registration/profile persistence, slug/SKU creation, catalogue search, ratings, guest/authenticated carts, wishlist clearing, order creation, and POST-only destructive actions. Run:
 
----
+```bash
+python manage.py test
+```
 
-> Built with passion, real-world architecture, and production mindset 🚀
+## Release packaging
+
+The source-release ZIP intentionally excludes `.git`, `.env`, Python bytecode, logs and local SQLite/media data. Use `.env.example` as the deployment template.

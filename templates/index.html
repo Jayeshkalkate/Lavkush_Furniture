@@ -1,213 +1,22 @@
-{% extends "header.html" %}
+{% extends 'base.html' %}
 {% load static %}
-
-{% block title %}Lavkush Furniture – Custom Wooden Furniture{% endblock %}
-
+{% block title %}Lavkush Furniture | Quality Furniture in Nandurbar{% endblock %}
+{% block description %}Shop Lavkush Furniture in Nandurbar for sofas, beds, dining furniture, tables and custom-made wooden pieces with clear specifications and simple online ordering.{% endblock %}
 {% block content %}
+<section class="hero-wrap"><div class="container"><div class="row align-items-center g-5 py-5 py-lg-6"><div class="col-lg-6">
+  <div class="eyebrow">NANDURBAR • MAHARASHTRA</div><h1>Furniture that makes <span>your space feel yours.</span></h1>
+  <p class="hero-copy">Discover practical, comfortable furniture for living rooms, bedrooms, dining spaces and work areas. Browse online, compare details and reach out when you need something made to fit.</p>
+  <div class="d-flex flex-wrap gap-3"><a href="{% url 'gallery' %}" class="btn btn-brand btn-lg">Shop the collection <i class="fa-solid fa-arrow-right ms-2"></i></a><a href="{% url 'contactus' %}" class="btn btn-outline-dark btn-lg">Talk to us</a></div>
+  <div class="trust-row mt-4"><span><i class="fa-solid fa-check"></i> Clear product details</span><span><i class="fa-solid fa-check"></i> Secure checkout</span><span><i class="fa-solid fa-check"></i> Local support</span></div>
+</div><div class="col-lg-6"><div class="hero-image-card"><img src="{% static 'images/heroimage.webp' %}" alt="Lavkush Furniture collection showing contemporary home furniture" width="720" height="520" fetchpriority="high"></div></div></div></div></section>
 
-<!-- ==================== HERO SECTION ==================== -->
-<section class="hero-section bg-light py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <div class="hero-content">
-                    <h1 class="display-4 fw-bold" style="color: #2c3e50;">
-                        Designs that Define <br>
-                        <span class="text-warning">Your Space</span>
-                    </h1>
-                    <p class="lead text-muted">
-                        Handcrafted furniture with timeless elegance and modern durability. 
-                        Made for comfort, built to last.
-                    </p>
-                    <div class="d-flex gap-3 mt-4 flex-wrap">
-                        <a href="{% url 'gallery' %}" class="btn btn-warning btn-lg px-4">
-                            <i class="fas fa-eye"></i> Browse Gallery
-                        </a>
-                        <a href="{% url 'contactus' %}" class="btn btn-outline-secondary btn-lg px-4">
-                            <i class="fas fa-phone"></i> Contact Us
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mt-4 mt-lg-0">
-                <div class="hero-image text-center">
-                    <img src="{% static 'images/heroimage.png' %}" 
-                    alt="Lavkush Furniture Collection" 
-                    class="img-fluid rounded shadow-lg" 
-                    style="max-height: 400px; width: auto;"
-                    onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400?text=Lavkush+Furniture'">
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<section class="section-space"><div class="container"><div class="d-flex justify-content-between align-items-end gap-3 mb-4"><div><div class="eyebrow">SHOP BY STYLE</div><h2 class="section-title">Furniture for the rooms you use most.</h2></div><a class="link-arrow" href="{% url 'gallery' %}">View all <i class="fa-solid fa-arrow-right"></i></a></div>
+<div class="row g-4">{% for category in categories %}<div class="col-6 col-lg-4"><a class="category-card" href="{% url 'category_detail' category.slug %}"><div><span>{{ category.name }}</span><small>{{ category.product_count }} pieces available</small></div><i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>{% empty %}<div class="col-12"><div class="empty-state compact"><h3>Our catalog is being refreshed.</h3><p>Explore the full gallery to see the latest furniture added by the team.</p><a href="{% url 'gallery' %}" class="btn btn-brand">Browse gallery</a></div></div>{% endfor %}</div></div></section>
 
-<!-- ==================== PRODUCT PREVIEW ==================== -->
-<section class="product-section py-5">
-    <div class="container">
-        <h2 class="section-title text-center fw-bold mb-5">Crafted with Excellent Material</h2>
-        <div class="row g-4">
-            <!-- Product 1 -->
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="product-card card h-100 border-0 shadow-sm">
-                    <img src="{% static 'images/n3.jpg' %}" class="card-img-top" alt="Furniture 1" style="height: 250px; object-fit: cover;">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Modern Sofa</h5>
-                        <p class="card-text text-muted">Elegant and comfortable</p>
-                        <a href="#" class="btn btn-outline-warning btn-sm">View Details</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Product 2 -->
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="product-card card h-100 border-0 shadow-sm">
-                    <img src="{% static 'images/n4.jpg' %}" class="card-img-top" alt="Furniture 2" style="height: 250px; object-fit: cover;">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Wooden Dining Set</h5>
-                        <p class="card-text text-muted">Rustic charm</p>
-                        <a href="#" class="btn btn-outline-warning btn-sm">View Details</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Product 3 -->
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="product-card card h-100 border-0 shadow-sm">
-                    <img src="{% static 'images/n5.jpg' %}" class="card-img-top" alt="Furniture 3" style="height: 250px; object-fit: cover;">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Comfort Bed</h5>
-                        <p class="card-text text-muted">Solid wood craftsmanship</p>
-                        <a href="#" class="btn btn-outline-warning btn-sm">View Details</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Product 4 -->
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="product-card card h-100 border-0 shadow-sm">
-                    <img src="{% static 'images/n6.jpg' %}" class="card-img-top" alt="Furniture 4" style="height: 250px; object-fit: cover;">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Office Chair</h5>
-                        <p class="card-text text-muted">Ergonomic and stylish</p>
-                        <a href="#" class="btn btn-outline-warning btn-sm">View Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'gallery' %}" class="btn btn-warning px-5">View All Products</a>
-        </div>
-    </div>
-</section>
+<section class="section-space bg-soft"><div class="container"><div class="d-flex justify-content-between align-items-end gap-3 mb-4"><div><div class="eyebrow">FEATURED</div><h2 class="section-title">Pieces worth a closer look.</h2></div><a class="link-arrow" href="{% url 'gallery' %}">Shop everything <i class="fa-solid fa-arrow-right"></i></a></div>
+<div class="row g-4">{% for product in featured_products %}<div class="col-12 col-sm-6 col-xl-3"><article class="product-card h-100"><a href="{{ product.get_absolute_url }}" class="product-media">{% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.caption }}" loading="lazy">{% else %}<img src="{% static 'images/placeholder.webp' %}" alt="{{ product.caption }}" loading="lazy">{% endif %}<span class="stock-pill">{% if product.in_stock %}In stock{% else %}Out of stock{% endif %}</span></a><div class="p-3 p-lg-4"><div class="small text-muted mb-2">{{ product.category.name|default:'Furniture' }}</div><h3 class="h5 mb-2"><a href="{{ product.get_absolute_url }}">{{ product.caption }}</a></h3><p class="product-desc">{{ product.description|truncatechars:110|default:'Thoughtfully designed furniture with practical dimensions and materials.' }}</p><div class="d-flex justify-content-between align-items-center"><strong class="price">₹{{ product.price|floatformat:0 }}</strong><a class="btn btn-sm btn-outline-brand" href="{{ product.get_absolute_url }}">View details</a></div></div></article></div>{% empty %}<div class="col-12"><div class="empty-state"><i class="fa-solid fa-couch"></i><h3>Your next favourite piece is coming soon.</h3><p>Once products are published in the catalog, featured pieces will appear here automatically.</p><a href="{% url 'gallery' %}" class="btn btn-brand">Browse gallery</a></div></div>{% endfor %}</div></div></section>
 
-<!-- ==================== WHY CHOOSE US ==================== -->
-<section class="why-choose-us py-5 bg-light">
-    <div class="container">
-        <div class="row g-5 align-items-center">
-            <div class="col-lg-6">
-                <h2 class="fw-bold mb-4">Why Choose Us</h2>
-                <p class="text-muted">
-                    At Lavkush Furniture, we combine premium materials, a wide variety of designs, 
-                    and customizable options to bring you furniture that suits your taste and budget. 
-                    Our affordable pricing, seamless shopping experience, and exceptional customer service 
-                    ensure your home is furnished with care and convenience. Plus, we are committed to 
-                    sustainability — your choices are both stylish and eco-friendly.
-                </p>
-                <div class="row mt-4 g-4">
-                    <div class="col-6">
-                        <div class="feature d-flex align-items-start gap-3">
-                            <i class="fas fa-truck fa-2x text-warning"></i>
-                            <div>
-                                <h5 class="fw-semibold">Fast & Free Shipping</h5>
-                                <p class="small text-muted">Quick, safe delivery at no extra cost.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="feature d-flex align-items-start gap-3">
-                            <i class="fas fa-images fa-2x text-warning"></i>
-                            <div>
-                                <h5 class="fw-semibold">Easy Gallery</h5>
-                                <p class="small text-muted">Clean, user-friendly browsing.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="feature d-flex align-items-start gap-3">
-                            <i class="fas fa-headset fa-2x text-warning"></i>
-                            <div>
-                                <h5 class="fw-semibold">24/7 Support</h5>
-                                <p class="small text-muted">Always here to help.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="feature d-flex align-items-start gap-3">
-                            <i class="fas fa-undo-alt fa-2x text-warning"></i>
-                            <div>
-                                <h5 class="fw-semibold">Hassle-Free Returns</h5>
-                                <p class="small text-muted">No questions asked.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="image-wrap">
-                    <img src="{% static 'images/why-choose-us-img.jpg' %}" 
-                         alt="Why choose us" 
-                         class="img-fluid rounded shadow-lg"
-                         onerror="this.src='https://via.placeholder.com/600x400?text=Why+Choose+Us'">
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<section class="section-space"><div class="container"><div class="row g-4"><div class="col-lg-7"><div class="story-panel"><div class="eyebrow">WHY LAVKUSH</div><h2 class="section-title">A simple promise: good-looking furniture that works hard at home.</h2><p>We keep the shopping experience practical. Product pages surface the information people actually need — dimensions, materials, stock, price and reviews — while the team stays available for questions and custom requirements.</p><div class="row g-3 mt-3"><div class="col-sm-6"><div class="feature-tile"><i class="fa-solid fa-ruler-combined"></i><div><strong>Useful specifications</strong><span>Dimensions and materials are easy to scan.</span></div></div></div><div class="col-sm-6"><div class="feature-tile"><i class="fa-solid fa-shield-halved"></i><div><strong>Secure payments</strong><span>Checkout is separated from browsing.</span></div></div></div><div class="col-sm-6"><div class="feature-tile"><i class="fa-solid fa-truck-fast"></i><div><strong>Delivery updates</strong><span>Orders include shipping and tracking details.</span></div></div></div><div class="col-sm-6"><div class="feature-tile"><i class="fa-solid fa-comments"></i><div><strong>Human support</strong><span>Call or email the team when you need help.</span></div></div></div></div></div></div><div class="col-lg-5"><img class="rounded-4 shadow-sm w-100 h-100 object-cover" src="{% static 'images/why-choose-us-img.webp' %}" alt="Furniture detail and craftsmanship at Lavkush Furniture" loading="lazy"></div></div></div></section>
 
-<!-- ==================== WE HELP SECTION ==================== -->
-<section class="we-help py-5">
-    <div class="container">
-        <div class="row g-5 align-items-center">
-            <div class="col-lg-7">
-                <div class="row g-3">
-                    <div class="col-6">
-                        <img src="{% static 'images/b6.jpg' %}" class="img-fluid rounded shadow-sm" alt="Furniture">
-                    </div>
-                    <div class="col-6">
-                        <img src="{% static 'images/n8.jpg' %}" class="img-fluid rounded shadow-sm" alt="Furniture">
-                    </div>
-                    <div class="col-12">
-                        <img src="{% static 'images/d1.jpg' %}" class="img-fluid rounded shadow-sm" alt="Furniture">
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-5">
-                <h2 class="fw-bold mb-3">Transform Your Space with Modern Interior Design</h2>
-                <p class="text-muted">
-                    Experience the perfect blend of comfort, elegance, and durability. 
-                    Each handcrafted piece reflects timeless design and modern craftsmanship 
-                    — made to enrich your lifestyle and turn your house into a home.
-                </p>
-                <ul class="list-unstyled mt-3">
-                    <li><i class="fas fa-check-circle text-warning me-2"></i> Expertly handcrafted with detail</li>
-                    <li><i class="fas fa-check-circle text-warning me-2"></i> Elegant, timeless designs</li>
-                    <li><i class="fas fa-check-circle text-warning me-2"></i> Premium, long-lasting materials</li>
-                    <li><i class="fas fa-check-circle text-warning me-2"></i> Ergonomic comfort</li>
-                    <li><i class="fas fa-check-circle text-warning me-2"></i> Fully customizable</li>
-                    <li><i class="fas fa-check-circle text-warning me-2"></i> Eco-friendly practices</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ==================== CALL TO ACTION ==================== -->
-<section class="cta-section py-5" style="background: #2c3e50; color: #fff;">
-    <div class="container text-center">
-        <h2 class="fw-bold">Ready to Redefine Your Space?</h2>
-        <p class="lead mb-4">Explore our collection and find the perfect piece for your home.</p>
-        <a href="{% url 'gallery' %}" class="btn btn-warning btn-lg px-5">
-            <i class="fas fa-arrow-right"></i> Start Shopping
-        </a>
-    </div>
-</section>
-
+<section class="cta-band"><div class="container d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-4"><div><div class="eyebrow text-white-50">NEED SOMETHING CUSTOM?</div><h2 class="text-white mb-2">Tell us what you have in mind.</h2><p class="mb-0 text-white-50">Share the room, size, style or material you are looking for and our team can guide you.</p></div><a href="{% url 'contactus' %}" class="btn btn-light btn-lg">Start a conversation</a></div></section>
 {% endblock %}

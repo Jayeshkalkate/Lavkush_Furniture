@@ -49,6 +49,8 @@ def edit_team_member(request, pk):
 
 @user_passes_test(is_admin)
 def delete_team_member(request, pk):
+    if request.method != 'POST':
+        return redirect('our_team')
     member = get_object_or_404(TeamMember, pk=pk)
     member_name = member.name
     member.delete()
