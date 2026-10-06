@@ -1,1 +1,318 @@
-{% extends 'base.html' %}{% block title %}Our Team | Lavkush Furniture{% endblock %}{% block description %}Meet the Lavkush Furniture team in Nandurbar.{% endblock %}{% block content %}<div class="container section-space pt-4"><div class="text-center content-narrow mx-auto"><div class="eyebrow">THE PEOPLE</div><h1>Meet the team behind Lavkush.</h1><p class="text-muted">A local team focused on practical furniture, customer conversations and getting the details right.</p></div><div class="row g-4 mt-4">{% for member in team_members %}<div class="col-md-6 col-lg-4"><article class="team-card">{% if member.image %}<img src="{{ member.image.url }}" alt="{{ member.name }}" loading="lazy">{% endif %}<div class="p-4"><h2 class="h5 mb-1">{{ member.name }}</h2><div class="small text-brand mb-2">{{ member.role }}</div><p class="text-muted mb-0">{{ member.bio }}</p></div></article></div>{% empty %}<div class="col-12"><div class="empty-state compact">Team profiles will appear here as they are published.</div></div>{% endfor %}</div></div>{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Our Team | Lavkush Furniture{% endblock %}
+
+{% block description %}
+Meet the people behind Lavkush Furniture in Nandurbar. Our team is focused on quality furniture, customer service, practical solutions, and a smooth buying experience.
+{% endblock %}
+
+{% block content %}
+
+<!-- =========================
+     OUR TEAM HERO
+========================= -->
+<section class="team-hero">
+    <div class="container">
+
+        <div class="team-hero-inner text-center">
+
+            <div class="eyebrow">
+                THE PEOPLE BEHIND LAVKUSH
+            </div>
+
+            <h1 class="team-hero-title">
+                Meet the team behind Lavkush.
+            </h1>
+
+            <p class="team-hero-text">
+                Great furniture is more than products on a showroom floor.
+                It is about understanding people, paying attention to details,
+                and helping customers make the right choice.
+            </p>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================
+     TEAM MEMBERS
+========================= -->
+<section class="container section-space pt-0">
+
+    <div class="team-section-heading">
+
+        <div>
+            <div class="eyebrow">
+                OUR PEOPLE
+            </div>
+
+            <h2 class="mb-2">
+                The people you can count on.
+            </h2>
+
+            <p class="text-muted mb-0">
+                Meet the team working behind the scenes and on the showroom floor
+                to make every Lavkush experience better.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="row g-4 g-lg-4 mt-4">
+
+        {% for member in team_members %}
+
+        <div class="col-12 col-sm-6 col-lg-4">
+
+            <article class="team-card h-100">
+
+                <!-- Image -->
+                {% if member.image %}
+
+                    <div class="team-card-image-wrap">
+
+                        <img
+                            src="{{ member.image.url }}"
+                            alt="{{ member.name }}{% if member.role %}, {{ member.role }}{% endif %}"
+                            class="team-card-image"
+                            loading="lazy"
+                            decoding="async"
+                        >
+
+                    </div>
+
+                {% else %}
+
+                    <!-- Graceful fallback when no image exists -->
+                    <div
+                        class="team-card-image-wrap team-card-image-placeholder"
+                        aria-hidden="true"
+                    >
+                        <div class="team-card-placeholder-mark">
+                            LF
+                        </div>
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Content -->
+                <div class="team-card-content">
+
+                    <div class="team-card-name">
+                        {{ member.name|default:"Team Member" }}
+                    </div>
+
+
+                    {% if member.role %}
+                    <div class="team-card-role">
+                        {{ member.role }}
+                    </div>
+                    {% endif %}
+
+
+                    {% if member.bio %}
+
+                    <div class="team-card-bio text-muted">
+                        {{ member.bio|linebreaksbr }}
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+        </div>
+
+        {% empty %}
+
+        <!-- Empty state -->
+        <div class="col-12">
+
+            <div class="team-empty-state text-center">
+
+                <div class="team-empty-icon" aria-hidden="true">
+                    LF
+                </div>
+
+                <h2 class="h4 mb-2">
+                    Our team is growing.
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Team profiles will appear here as they are published.
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     OUR VALUES
+========================= -->
+<section class="team-values-section">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-5">
+
+                <div class="eyebrow">
+                    WHAT WE BELIEVE
+                </div>
+
+                <h2 class="team-values-title">
+                    Furniture should feel right,
+                    from the first conversation
+                    to everyday use.
+                </h2>
+
+                <p class="text-muted mb-0">
+                    We focus on honest guidance, dependable service,
+                    practical furniture choices, and attention to the
+                    details that matter to our customers.
+                </p>
+
+            </div>
+
+
+            <div class="col-lg-7">
+
+                <div class="row g-3">
+
+                    <div class="col-sm-6">
+                        <div class="team-value-card">
+                            <div class="team-value-number">
+                                01
+                            </div>
+
+                            <h3>
+                                Customer First
+                            </h3>
+
+                            <p>
+                                We listen carefully and help customers choose
+                                furniture that genuinely fits their needs.
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="team-value-card">
+                            <div class="team-value-number">
+                                02
+                            </div>
+
+                            <h3>
+                                Quality Focus
+                            </h3>
+
+                            <p>
+                                We care about materials, finishing, comfort,
+                                durability, and everyday practicality.
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="team-value-card">
+                            <div class="team-value-number">
+                                03
+                            </div>
+
+                            <h3>
+                                Honest Advice
+                            </h3>
+
+                            <p>
+                                We aim to make furniture decisions simple,
+                                clear, and comfortable for every customer.
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="team-value-card">
+                            <div class="team-value-number">
+                                04
+                            </div>
+
+                            <h3>
+                                Local Service
+                            </h3>
+
+                            <p>
+                                We are proud to serve customers locally and
+                                build relationships that last beyond a purchase.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CTA
+========================= -->
+<section class="container section-space">
+
+    <div class="team-cta">
+
+        <div class="team-cta-content">
+
+            <div class="eyebrow">
+                VISIT LAVKUSH FURNITURE
+            </div>
+
+            <h2>
+                Have a furniture requirement?
+            </h2>
+
+            <p>
+                Talk to our team and let us help you find a practical,
+                comfortable, and suitable solution for your home or space.
+            </p>
+
+        </div>
+
+
+        <div class="team-cta-actions">
+
+            <a href="{% url 'contact' %}" class="btn btn-primary">
+                Talk to Us
+            </a>
+
+            <a href="{% url 'shop' %}" class="btn btn-outline-primary">
+                Explore Furniture
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
