@@ -48,3 +48,10 @@ services:
         sync: false
       - key: BULK_IMAGE_ALLOWED_HOSTS
         sync: false
+
+  # Free static site (never sleeps): shows "Application loading" and wakes the Django service.
+  - type: web
+    name: lavkush-furniture-loader
+    runtime: static
+    staticPublishPath: ./loader
+    pullRequestPreviewsEnabled: false

@@ -12,9 +12,16 @@ if not DEBUG and len(SECRET_KEY) < 32:
 
 SITE_URL = config('SITE_URL', default='http://127.0.0.1:8000').rstrip('/')
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
+# Render injects the service's public hostname; trust it so health checks and the site work
+# even before ALLOWED_HOSTS / CSRF_TRUSTED_ORIGINS are set in the dashboard.
+_render_host = config('RENDER_EXTERNAL_HOSTNAME', default='')
+if _render_host and _render_host not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(_render_host)
 if not DEBUG and not ALLOWED_HOSTS:
     raise RuntimeError('ALLOWED_HOSTS must be configured when DEBUG=False.')
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
+if _render_host and f'https://{_render_host}' not in CSRF_TRUSTED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{_render_host}')
 
 # Database: SQLite for local development; PostgreSQL when DATABASE_URL is provided.
 database_url = config('DATABASE_URL', default='')
@@ -117,6 +124,7 @@ BULK_IMAGE_ALLOWED_HOSTS = config('BULK_IMAGE_ALLOWED_HOSTS', default='', cast=l
 
 # Production hardening. Keep DEBUG=true and local cookies for development.
 SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=not DEBUG, cast=bool)
+SECURE_REDIRECT_EXEMPT = [r'^healthz/$']  # platform health checks arrive over plain HTTP
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=not DEBUG, cast=bool)
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=not DEBUG, cast=bool)
 SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=31536000 if not DEBUG else 0, cast=int)

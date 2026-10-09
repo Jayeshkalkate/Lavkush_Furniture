@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
 from django.core.validators import validate_email
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from .forms import ProfileForm, UserForm
 from account.models import Items
@@ -23,7 +23,15 @@ def homepage(request):
 
 
 def healthz(request):
-    return HttpResponse('ok', content_type='text/plain')
+    """DB-free health check for Render and the wake-up loader page.
+
+    The CORS header lets the static loader (another origin) read the answer; while the
+    service is asleep Render replies without it, so the loader simply keeps waiting.
+    """
+    response = JsonResponse({'status': 'ok'})
+    response['Access-Control-Allow-Origin'] = '*'
+    response['Cache-Control'] = 'no-store'
+    return response
 
 
 def aboutus(request):
